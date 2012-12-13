@@ -1,5 +1,8 @@
 'use strict'
 
+# TODO
+# Notification off switch
+# Refresh button
 
 omgFeed = "http://feeds.feedburner.com/d0od?format=xml"
 
@@ -14,11 +17,15 @@ chromeVersion = parseInt window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1]
 db = undefined
 DB_VERSION = 1
 
+# Defaults set up
 if typeof localStorage['unread'] is 'undefined'
   localStorage['unread'] = 0
 
 if typeof localStorage['pollInterval'] is 'undefined'
   localStorage['pollInterval'] = 600000
+
+if typeof localStorage['notificationsEnabled'] is 'undefined'
+  localStorage['notificationsEnabled'] = 0
 
 
 omgBackground = angular.module 'omgBackground', ['omgUtil']
@@ -108,9 +115,11 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
   }
 ]
 
-omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope, LocalStorage)->
+omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification', ($q, $rootScope, LocalStorage, Notification)->
   getLatestArticles = () ->
     deferred = $q.defer()
+    # Resets notification on every go
+    localStorage['newArticles'] = 0
     promises = []
     $.ajax
       url: omgFeed
@@ -128,6 +137,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope
           addArticle = _addArticle(articleObj)
           promises.push addArticle
         $q.all(promises).then () ->
+          Notification.start()
           deferred.resolve()
       error: () ->
         $rootScope.$apply () ->
@@ -140,6 +150,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope
     addArticle.onsuccess = (event) ->
       # TODO increment unread if matches categories list
       LocalStorage.increment()
+      localStorage['newArticles'] = parseInt(localStorage['newArticles']) + 1
       $rootScope.$apply () ->
         deferred.resolve()
     addArticle.onerror = (event) ->
@@ -159,7 +170,8 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope
         if articles.length < 20
           articles.push cursor.value
         else
-          console.log "Would delete #{cursor.value.title}"
+          if cursor.value.unread is true
+            LocalStorage.decrement()
           db.transaction(['articles'], 'readwrite').objectStore('articles').delete(cursor.key)
         cursor.continue()
       else
@@ -185,7 +197,6 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope
       getArticles().then () ->
         getArticlesOnTimeout()
     ,localStorage['pollInterval']
-    # TODO timeout function that does getArticles and can reset its own timer
 
   {
     getArticles: getArticles
@@ -246,5 +257,31 @@ omgUtil.service 'LocalStorage', ['Badge', (Badge)->
     increment: increment
     decrement: decrement
     reset: reset
+  }
+]
+
+omgUtil.service 'Notification', ['$filter', ($filter) ->
+  start = () ->
+    if localStorage['notificationsEnabled'] == "0" then return
+    if localStorage['newArticles'] == "0" then return
+    if localStorage['newArticles'] == "1"
+      objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
+      objectStore.openCursor(null, "prev").onsuccess = (event) ->
+        cursor = event.target.result
+        if cursor
+          singleNotify(cursor.value)
+    if localStorage['newArticles'] > 1
+      multiNotify(localStorage['newArticles'])
+  singleNotify = (article) ->
+    if localStorage['notificationsEnabled'] == "0" then return
+    webkitNotifications.createNotification('/images/icon48.png', "New article! #{article.title}", "#{$filter('truncate')(article.summary, 100)}").show()
+  multiNotify = (number) ->
+    if localStorage['notificationsEnabled'] == "0" then return
+    webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "#{number} new articles on OMG! Ubuntu!").show()
+
+  {
+    start: start
+    singleNotify: singleNotify
+    multiNotify: multiNotify
   }
 ]

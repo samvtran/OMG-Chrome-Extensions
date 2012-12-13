@@ -28,6 +28,10 @@
     localStorage['pollInterval'] = 600000;
   }
 
+  if (typeof localStorage['notificationsEnabled'] === 'undefined') {
+    localStorage['notificationsEnabled'] = 0;
+  }
+
   omgBackground = angular.module('omgBackground', ['omgUtil']);
 
   omgBackground.controller('backgroundCtrl', [
@@ -153,11 +157,12 @@
   ]);
 
   omgUtil.service('Articles', [
-    '$q', '$rootScope', 'LocalStorage', function($q, $rootScope, LocalStorage) {
+    '$q', '$rootScope', 'LocalStorage', 'Notification', function($q, $rootScope, LocalStorage, Notification) {
       var getArticles, getArticlesOnTimeout, getLatestArticles, _addArticle, _getArticlesFromDatabase;
       getLatestArticles = function() {
         var deferred, promises;
         deferred = $q.defer();
+        localStorage['newArticles'] = 0;
         promises = [];
         $.ajax({
           url: omgFeed,
@@ -179,6 +184,7 @@
               promises.push(addArticle);
             }
             return $q.all(promises).then(function() {
+              Notification.start();
               return deferred.resolve();
             });
           },
@@ -196,6 +202,7 @@
         addArticle = db.transaction(['articles'], 'readwrite').objectStore('articles').add(articleObj);
         addArticle.onsuccess = function(event) {
           LocalStorage.increment();
+          localStorage['newArticles'] = parseInt(localStorage['newArticles']) + 1;
           return $rootScope.$apply(function() {
             return deferred.resolve();
           });
@@ -220,7 +227,9 @@
             if (articles.length < 20) {
               articles.push(cursor.value);
             } else {
-              console.log("Would delete " + cursor.value.title);
+              if (cursor.value.unread === true) {
+                LocalStorage.decrement();
+              }
               db.transaction(['articles'], 'readwrite').objectStore('articles')["delete"](cursor.key);
             }
             return cursor["continue"]();
@@ -345,6 +354,51 @@
         increment: increment,
         decrement: decrement,
         reset: reset
+      };
+    }
+  ]);
+
+  omgUtil.service('Notification', [
+    '$filter', function($filter) {
+      var multiNotify, singleNotify, start;
+      start = function() {
+        var objectStore;
+        if (localStorage['notificationsEnabled'] === "0") {
+          return;
+        }
+        if (localStorage['newArticles'] === "0") {
+          return;
+        }
+        if (localStorage['newArticles'] === "1") {
+          objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
+          objectStore.openCursor(null, "prev").onsuccess = function(event) {
+            var cursor;
+            cursor = event.target.result;
+            if (cursor) {
+              return singleNotify(cursor.value);
+            }
+          };
+        }
+        if (localStorage['newArticles'] > 1) {
+          return multiNotify(localStorage['newArticles']);
+        }
+      };
+      singleNotify = function(article) {
+        if (localStorage['notificationsEnabled'] === "0") {
+          return;
+        }
+        return webkitNotifications.createNotification('/images/icon48.png', "New article! " + article.title, "" + ($filter('truncate')(article.summary, 100))).show();
+      };
+      multiNotify = function(number) {
+        if (localStorage['notificationsEnabled'] === "0") {
+          return;
+        }
+        return webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "" + number + " new articles on OMG! Ubuntu!").show();
+      };
+      return {
+        start: start,
+        singleNotify: singleNotify,
+        multiNotify: multiNotify
       };
     }
   ]);
