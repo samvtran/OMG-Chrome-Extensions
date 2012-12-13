@@ -26,7 +26,7 @@ omgBackground = angular.module 'omgBackground', ['omgUtil']
 omgBackground.controller 'backgroundCtrl', ['databaseService', 'Badge', 'Articles', (databaseService, Badge, Articles) ->
   Badge.notify()
   databaseService.open().then (event) ->
-    Articles.getArticles()
+    Articles.getLatestArticles()
   Articles.getArticlesOnTimeout()
 ]
 
@@ -109,7 +109,7 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
 ]
 
 omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope, LocalStorage)->
-  _getLatestArticles = () ->
+  getLatestArticles = () ->
     deferred = $q.defer()
     promises = []
     $.ajax
@@ -172,7 +172,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope
     objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
     objectStore.count().onsuccess = (event) ->
       if event.target.result < 20
-        _getLatestArticles().then () ->
+        getLatestArticles().then () ->
           _getArticlesFromDatabase().then (articles) ->
             deferred.resolve articles
       else _getArticlesFromDatabase().then (articles) ->
@@ -182,13 +182,15 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope
   getArticlesOnTimeout = () ->
     setTimeout () ->
       console.log "Timeout going!"
-      getArticles()
+      getArticles().then () ->
+        getArticlesOnTimeout()
     ,localStorage['pollInterval']
     # TODO timeout function that does getArticles and can reset its own timer
 
   {
     getArticles: getArticles
     getArticlesOnTimeout: getArticlesOnTimeout
+    getLatestArticles: getLatestArticles
   }
 ]
 
@@ -218,10 +220,10 @@ omgUtil.service 'Badge', [->
     if localStorage['unread'] is "0"
       console.log "Clearing badge"
       chrome.browserAction.setBadgeText text: ""
-      chrome.browserAction.setIcon path: '/images/icon_unread48.png'
+      chrome.browserAction.setIcon path: '/images/icon_unread19.png'
     else
       chrome.browserAction.setBadgeText text: localStorage['unread']
-      chrome.browserAction.setIcon path: '/images/icon48.png'
+      chrome.browserAction.setIcon path: '/images/icon19.png'
 
   {
     notify: notify

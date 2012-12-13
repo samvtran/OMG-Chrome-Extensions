@@ -34,7 +34,7 @@
     'databaseService', 'Badge', 'Articles', function(databaseService, Badge, Articles) {
       Badge.notify();
       databaseService.open().then(function(event) {
-        return Articles.getArticles();
+        return Articles.getLatestArticles();
       });
       return Articles.getArticlesOnTimeout();
     }
@@ -154,8 +154,8 @@
 
   omgUtil.service('Articles', [
     '$q', '$rootScope', 'LocalStorage', function($q, $rootScope, LocalStorage) {
-      var getArticles, getArticlesOnTimeout, _addArticle, _getArticlesFromDatabase, _getLatestArticles;
-      _getLatestArticles = function() {
+      var getArticles, getArticlesOnTimeout, getLatestArticles, _addArticle, _getArticlesFromDatabase;
+      getLatestArticles = function() {
         var deferred, promises;
         deferred = $q.defer();
         promises = [];
@@ -238,7 +238,7 @@
         objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
         objectStore.count().onsuccess = function(event) {
           if (event.target.result < 20) {
-            return _getLatestArticles().then(function() {
+            return getLatestArticles().then(function() {
               return _getArticlesFromDatabase().then(function(articles) {
                 return deferred.resolve(articles);
               });
@@ -254,12 +254,15 @@
       getArticlesOnTimeout = function() {
         return setTimeout(function() {
           console.log("Timeout going!");
-          return getArticles();
+          return getArticles().then(function() {
+            return getArticlesOnTimeout();
+          });
         }, localStorage['pollInterval']);
       };
       return {
         getArticles: getArticles,
-        getArticlesOnTimeout: getArticlesOnTimeout
+        getArticlesOnTimeout: getArticlesOnTimeout,
+        getLatestArticles: getLatestArticles
       };
     }
   ]);
@@ -303,14 +306,14 @@
             text: ""
           });
           return chrome.browserAction.setIcon({
-            path: '/images/icon_unread48.png'
+            path: '/images/icon_unread19.png'
           });
         } else {
           chrome.browserAction.setBadgeText({
             text: localStorage['unread']
           });
           return chrome.browserAction.setIcon({
-            path: '/images/icon48.png'
+            path: '/images/icon19.png'
           });
         }
       };
