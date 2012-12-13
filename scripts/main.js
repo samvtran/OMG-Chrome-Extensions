@@ -81,9 +81,11 @@
       $scope.refresh = function() {
         $scope.refreshing = true;
         return databaseService.open().then(function(event) {
-          return Articles.getArticles().then(function(articles) {
-            $scope.latestArticles = articles;
-            return $scope.refreshing = false;
+          return Articles.getLatestArticles().then(function() {
+            return Articles.getArticles().then(function(articles) {
+              $scope.latestArticles = articles;
+              return $scope.refreshing = false;
+            });
           });
         });
       };

@@ -150,6 +150,7 @@ a:hover {
 }
 /* line 57, ../sass/popup.scss */
 .popup-header .refresh {
+  outline: none;
   font-size: 24px;
   color: white;
   position: absolute;
@@ -157,39 +158,39 @@ a:hover {
   top: 50%;
   margin-top: -12px;
 }
-/* line 64, ../sass/popup.scss */
+/* line 65, ../sass/popup.scss */
 .popup-header .refresh:hover {
   text-decoration: none;
 }
 
-/* line 68, ../sass/popup.scss */
+/* line 69, ../sass/popup.scss */
 .latest-news {
   margin-bottom: 2.5rem;
 }
-/* line 69, ../sass/popup.scss */
+/* line 70, ../sass/popup.scss */
 .latest-news article {
   border-bottom: 1px dotted #ddd;
   padding: 1rem 1rem .5rem;
 }
-/* line 72, ../sass/popup.scss */
+/* line 73, ../sass/popup.scss */
 .latest-news article h3 {
   line-height: 18px;
 }
-/* line 75, ../sass/popup.scss */
+/* line 76, ../sass/popup.scss */
 .latest-news article .icon-bookmark {
   color: #f15d22;
 }
-/* line 78, ../sass/popup.scss */
+/* line 79, ../sass/popup.scss */
 .latest-news article p {
   padding: 8px 0;
   line-height: 16px;
 }
-/* line 83, ../sass/popup.scss */
+/* line 84, ../sass/popup.scss */
 .latest-news article footer .read-more {
   text-transform: uppercase;
 }
 
-/* line 92, ../sass/popup.scss */
+/* line 93, ../sass/popup.scss */
 .popup-footer {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(30%, rgba(255, 255, 255, 0.25)), color-stop(50%, #ffffff), color-stop(100%, #ffffff));
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);

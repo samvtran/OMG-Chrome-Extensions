@@ -57,9 +57,10 @@ omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalS
   $scope.refresh = () ->
     $scope.refreshing = true;
     databaseService.open().then (event) ->
-      Articles.getArticles().then (articles) ->
-        $scope.latestArticles = articles
-        $scope.refreshing = false;
+      Articles.getLatestArticles().then () ->
+        Articles.getArticles().then (articles) ->
+          $scope.latestArticles = articles
+          $scope.refreshing = false;
 
   $scope.optionsPage = () ->
     chrome.tabs.create
