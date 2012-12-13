@@ -39,7 +39,6 @@ omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalS
   Badge.notify()
   databaseService.open().then (event) ->
     Articles.getArticles().then (articles) ->
-      console.log articles
       $scope.latestArticles = articles
 
   $scope.markAsRead = (index) ->
@@ -185,7 +184,6 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
     objectStore.openCursor(null, "prev").onsuccess = (event) ->
       cursor = event.target.result
       if cursor
-        console.log cursor
         if articles.length < 20
           articles.push cursor.value
         else
@@ -247,10 +245,8 @@ omgUtil.filter 'truncate', () -> (input, count) ->
   return final + "..."
 
 omgUtil.service 'Badge', [->
-  console.log "Badge!"
   notify = () ->
     if localStorage['unread'] is "0"
-      console.log "Clearing badge"
       chrome.browserAction.setBadgeText text: ""
       chrome.browserAction.setIcon path: '/images/icon_unread19.png'
     else

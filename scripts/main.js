@@ -51,7 +51,6 @@
       Badge.notify();
       databaseService.open().then(function(event) {
         return Articles.getArticles().then(function(articles) {
-          console.log(articles);
           return $scope.latestArticles = articles;
         });
       });
@@ -261,7 +260,6 @@
           var cursor;
           cursor = event.target.result;
           if (cursor) {
-            console.log(cursor);
             if (articles.length < 20) {
               articles.push(cursor.value);
             } else {
@@ -349,10 +347,8 @@
   omgUtil.service('Badge', [
     function() {
       var notify;
-      console.log("Badge!");
       notify = function() {
         if (localStorage['unread'] === "0") {
-          console.log("Clearing badge");
           chrome.browserAction.setBadgeText({
             text: ""
           });
