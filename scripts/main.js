@@ -195,7 +195,7 @@
   ]);
 
   omgUtil.service('Articles', [
-    '$q', '$rootScope', 'LocalStorage', 'Notification', function($q, $rootScope, LocalStorage, Notification) {
+    '$q', '$rootScope', 'LocalStorage', 'Notification', 'databaseService', function($q, $rootScope, LocalStorage, Notification, databaseService) {
       var getArticles, getArticlesOnTimeout, getLatestArticles, _addArticle, _getArticlesFromDatabase;
       getLatestArticles = function() {
         var deferred, promises;
@@ -301,8 +301,12 @@
       getArticlesOnTimeout = function() {
         return setTimeout(function() {
           console.log("Timeout going!");
-          return getArticles().then(function() {
-            return getArticlesOnTimeout();
+          return databaseService.open().then(function(event) {
+            return getLatestArticles().then(function() {
+              return getArticles().then(function() {
+                return getArticlesOnTimeout();
+              });
+            });
           });
         }, localStorage['pollInterval']);
       };

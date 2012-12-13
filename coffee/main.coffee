@@ -134,7 +134,7 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
   }
 ]
 
-omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification', ($q, $rootScope, LocalStorage, Notification)->
+omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification', 'databaseService', ($q, $rootScope, LocalStorage, Notification, databaseService)->
   getLatestArticles = () ->
     deferred = $q.defer()
     # Resets notification on every go
@@ -213,8 +213,10 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
   getArticlesOnTimeout = () ->
     setTimeout () ->
       console.log "Timeout going!"
-      getArticles().then () ->
-        getArticlesOnTimeout()
+      databaseService.open().then (event) ->
+        getLatestArticles().then () ->
+          getArticles().then () ->
+            getArticlesOnTimeout()
     ,localStorage['pollInterval']
 
   {
