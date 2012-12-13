@@ -163,20 +163,24 @@ a:hover {
   padding: 1rem 1rem .5rem;
 }
 /* line 68, ../sass/popup.scss */
+.latest-news article h3 {
+  line-height: 18px;
+}
+/* line 71, ../sass/popup.scss */
 .latest-news article .icon-bookmark {
   color: #f15d22;
 }
-/* line 71, ../sass/popup.scss */
+/* line 74, ../sass/popup.scss */
 .latest-news article p {
   padding: 8px 0;
   line-height: 16px;
 }
-/* line 76, ../sass/popup.scss */
+/* line 79, ../sass/popup.scss */
 .latest-news article footer .read-more {
   text-transform: uppercase;
 }
 
-/* line 85, ../sass/popup.scss */
+/* line 88, ../sass/popup.scss */
 .popup-footer {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(30%, rgba(255, 255, 255, 0.25)), color-stop(50%, #ffffff), color-stop(100%, #ffffff));
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);

@@ -42,12 +42,20 @@
           if (chromeVersion <= 22) {
             if (db.version !== "1" || typeof db.version === "undefined") {
               versionReq = db.setVersion(DB_VERSION);
-              versionReq.onfailure = console.log("Couldn't set db version");
+              versionReq.onfailure = function() {
+                return $rootScope.$apply(function() {
+                  return deferred.resolve();
+                });
+              };
               return versionReq.onsuccess = function(event) {
                 return createStores().then(function() {
                   return deferred.resolve();
                 });
               };
+            } else {
+              return $rootScope.$apply(function() {
+                return deferred.resolve();
+              });
             }
           } else {
             return $rootScope.$apply(function() {
@@ -56,7 +64,7 @@
           }
         };
         request.onupgradeneeded = function(event) {
-          console.log("Chrome > 23; Database needs upgrading!");
+          console.log("Chrome >= 23: Database needs upgrading");
           db = event.target.result;
           return createStores().then(function() {
             return deferred.resolve();
@@ -71,7 +79,7 @@
           keyPath: "date"
         });
         createEvent.onsuccess = function(event) {
-          console.log("Successfully created object stores!");
+          console.log("Successfully created object stores");
           return $rootScope.$apply(function() {
             return deferred.resolve();
           });
@@ -89,7 +97,6 @@
       var getArticles, _addArticle, _getArticlesFromDatabase, _getLatestArticles;
       _getLatestArticles = function() {
         var deferred, promises;
-        console.log("Getting latest!");
         deferred = $q.defer();
         promises = [];
         $.ajax({
@@ -108,12 +115,10 @@
                 date: moment(article.find('pubDate').text(), 'ddd, DD MMM YYYY HH:mm:ss PST').valueOf(),
                 unread: true
               };
-              console.log(articleObj);
               addArticle = _addArticle(articleObj);
               promises.push(addArticle);
             }
             return $q.all(promises).then(function() {
-              console.log("All promises returned!");
               return deferred.resolve();
             });
           },
@@ -130,15 +135,13 @@
         deferred = $q.defer();
         addArticle = db.transaction(['articles'], 'readwrite').objectStore('articles').add(articleObj);
         addArticle.onsuccess = function(event) {
-          console.log("Added entry successfully!");
           return $rootScope.$apply(function() {
-            return deferred.resolve(1);
+            return deferred.resolve();
           });
         };
         addArticle.onerror = function(event) {
-          console.log("Got an old one");
           $rootScope.$apply(function() {
-            return deferred.resolve(0);
+            return deferred.resolve();
           });
         };
         return deferred.promise;
@@ -201,22 +204,20 @@
   omgApp.controller('popupCtrl', [
     '$scope', '$resource', 'databaseService', 'Articles', function($scope, $resource, databaseService, Articles) {
       databaseService.open().then(function(event) {
+        console.log("Moving on");
         return Articles.getArticles().then(function(articles) {
-          console.log("Got back articles");
           console.log(articles);
           return $scope.latestArticles = articles;
         });
       });
       $scope.markAsRead = function(index) {
         if ($scope.latestArticles[index].unread === true) {
-          console.log("Marking as unread");
           $scope.latestArticles[index].unread = false;
           return db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index]);
         }
       };
       return $scope.markAllAsRead = function() {
         var article, _i, _len, _ref, _results;
-        console.log("Marking all as read");
         _ref = $scope.latestArticles;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {

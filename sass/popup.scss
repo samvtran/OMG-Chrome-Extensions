@@ -65,6 +65,9 @@ a:hover {
   article {
     border-bottom: 1px dotted #ddd;
     padding: 1rem 1rem .5rem;
+    h3 {
+      line-height: 18px;
+    }
     .icon-bookmark {
       color: $orange;
     }

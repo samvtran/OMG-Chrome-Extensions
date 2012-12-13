@@ -27,16 +27,21 @@ omgApp.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
       if chromeVersion <= 22
         if db.version != "1" || typeof db.version is "undefined"
           versionReq = db.setVersion(DB_VERSION)
-          versionReq.onfailure = console.log "Couldn't set db version"
+          versionReq.onfailure = () ->
+            $rootScope.$apply () ->
+              deferred.resolve()
           versionReq.onsuccess = (event) ->
             # Note: Old indexeddb uses keypath as already descended in object
             createStores().then () ->
                 deferred.resolve()
+        else
+          $rootScope.$apply () ->
+            deferred.resolve()
       else
         $rootScope.$apply () ->
           deferred.resolve()
     request.onupgradeneeded = (event) ->
-      console.log "Chrome > 23; Database needs upgrading!"
+      console.log "Chrome >= 23: Database needs upgrading"
       db = event.target.result
       # Note: new indexeddb uses keypath including object
       createStores().then () ->
@@ -47,7 +52,7 @@ omgApp.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
     deferred = $q.defer()
     createEvent = db.createObjectStore "articles", keyPath: "date"
     createEvent.onsuccess = (event) ->
-      console.log "Successfully created object stores!"
+      console.log "Successfully created object stores"
       $rootScope.$apply () ->
         deferred.resolve()
 
@@ -60,7 +65,6 @@ omgApp.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
 
 omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
   _getLatestArticles = () ->
-    console.log "Getting latest!"
     deferred = $q.defer()
     promises = []
     $.ajax
@@ -76,11 +80,9 @@ omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
             link: article.find('origLink').text()
             date: moment(article.find('pubDate').text(), 'ddd, DD MMM YYYY HH:mm:ss PST').valueOf()
             unread: true
-          console.log articleObj
           addArticle = _addArticle(articleObj)
           promises.push addArticle
         $q.all(promises).then () ->
-          console.log "All promises returned!"
           deferred.resolve()
       error: () ->
         $rootScope.$apply () ->
@@ -91,13 +93,12 @@ omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
     deferred = $q.defer()
     addArticle = db.transaction(['articles'], 'readwrite').objectStore('articles').add(articleObj)
     addArticle.onsuccess = (event) ->
-      console.log "Added entry successfully!"
+      # TODO increment unread if matches categories list
       $rootScope.$apply () ->
-        deferred.resolve 1
+        deferred.resolve()
     addArticle.onerror = (event) ->
-      console.log "Got an old one"
       $rootScope.$apply () ->
-        deferred.resolve 0
+        deferred.resolve()
       return
     deferred.promise
   _getArticlesFromDatabase = () ->
@@ -142,19 +143,17 @@ omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
 ]
 omgApp.controller 'popupCtrl', ['$scope', '$resource', 'databaseService', 'Articles', ($scope, $resource, databaseService, Articles) ->
   databaseService.open().then (event) ->
+    console.log "Moving on"
     Articles.getArticles().then (articles) ->
-      console.log "Got back articles"
       console.log articles
       $scope.latestArticles = articles
 
   $scope.markAsRead = (index) ->
     if $scope.latestArticles[index].unread is true
-      console.log "Marking as unread"
       $scope.latestArticles[index].unread = false;
       db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index])
 
   $scope.markAllAsRead = () ->
-    console.log "Marking all as read"
     for article in $scope.latestArticles
       if article.unread is true
         article.unread = false
