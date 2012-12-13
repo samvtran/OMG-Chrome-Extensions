@@ -13,6 +13,9 @@
         "default_title": "OMG! Ubuntu!",
         "default_popup": "popup.html"
     },
+    "background": {
+      "page": "background.html"
+    },
     "permissions": [
       "http://feeds.feedburner.com/d0od"
     ]

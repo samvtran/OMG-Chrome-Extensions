@@ -2,9 +2,7 @@
 (function() {
   'use strict';
 
-  var DB_VERSION, chromeVersion, db, omgApp, omgFeed;
-
-  omgApp = angular.module('omgApp', ['ngResource']);
+  var DB_VERSION, chromeVersion, db, omgApp, omgBackground, omgFeed, omgUtil;
 
   omgFeed = "http://feeds.feedburner.com/d0od?format=xml";
 
@@ -22,12 +20,74 @@
 
   DB_VERSION = 1;
 
-  omgApp.service('databaseService', [
+  if (typeof localStorage['unread'] === 'undefined') {
+    localStorage['unread'] = 0;
+  }
+
+  if (typeof localStorage['pollInterval'] === 'undefined') {
+    localStorage['pollInterval'] = 600000;
+  }
+
+  omgBackground = angular.module('omgBackground', ['omgUtil']);
+
+  omgBackground.controller('backgroundCtrl', [
+    'databaseService', 'Badge', 'Articles', function(databaseService, Badge, Articles) {
+      Badge.notify();
+      databaseService.open().then(function(event) {
+        return Articles.getArticles();
+      });
+      return Articles.getArticlesOnTimeout();
+    }
+  ]);
+
+  omgApp = angular.module('omgApp', ['omgUtil']);
+
+  omgApp.controller('popupCtrl', [
+    '$scope', 'databaseService', 'Articles', 'LocalStorage', 'Badge', function($scope, databaseService, Articles, LocalStorage, Badge) {
+      Badge.notify();
+      databaseService.open().then(function(event) {
+        return Articles.getArticles().then(function(articles) {
+          console.log(articles);
+          return $scope.latestArticles = articles;
+        });
+      });
+      $scope.markAsRead = function(index) {
+        LocalStorage.decrement();
+        if ($scope.latestArticles[index].unread === true) {
+          $scope.latestArticles[index].unread = false;
+          return db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index]);
+        }
+      };
+      return $scope.markAllAsRead = function() {
+        var article, _i, _len, _ref, _results;
+        LocalStorage.reset();
+        _ref = $scope.latestArticles;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          article = _ref[_i];
+          if (article.unread === true) {
+            article.unread = false;
+            _results.push(db.transaction(['articles'], 'readwrite').objectStore('articles').put(article));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+    }
+  ]);
+
+  omgUtil = angular.module('omgUtil', ['ngResource']);
+
+  omgUtil.service('databaseService', [
     '$q', '$rootScope', function($q, $rootScope) {
       var createStores, open;
       open = function() {
         var deferred, request;
         deferred = $q.defer();
+        if (typeof db !== "undefined") {
+          deferred.resolve();
+        }
         request = indexedDB.open('OMGUbuntu', DB_VERSION);
         request.onerror = function(event) {
           console.log("Couldn't open the database");
@@ -92,9 +152,9 @@
     }
   ]);
 
-  omgApp.service('Articles', [
-    '$q', '$rootScope', function($q, $rootScope) {
-      var getArticles, _addArticle, _getArticlesFromDatabase, _getLatestArticles;
+  omgUtil.service('Articles', [
+    '$q', '$rootScope', 'LocalStorage', function($q, $rootScope, LocalStorage) {
+      var getArticles, getArticlesOnTimeout, _addArticle, _getArticlesFromDatabase, _getLatestArticles;
       _getLatestArticles = function() {
         var deferred, promises;
         deferred = $q.defer();
@@ -135,6 +195,7 @@
         deferred = $q.defer();
         addArticle = db.transaction(['articles'], 'readwrite').objectStore('articles').add(articleObj);
         addArticle.onsuccess = function(event) {
+          LocalStorage.increment();
           return $rootScope.$apply(function() {
             return deferred.resolve();
           });
@@ -173,17 +234,12 @@
       };
       getArticles = function() {
         var deferred, objectStore;
-        console.log("Getting articles");
         deferred = $q.defer();
         objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
         objectStore.count().onsuccess = function(event) {
-          console.log("Got back " + event.target.result + " articles");
           if (event.target.result < 20) {
             return _getLatestArticles().then(function() {
-              console.log("Got latest articles");
               return _getArticlesFromDatabase().then(function(articles) {
-                console.log("Got latest articles from database");
-                console.log(articles);
                 return deferred.resolve(articles);
               });
             });
@@ -195,46 +251,20 @@
         };
         return deferred.promise;
       };
+      getArticlesOnTimeout = function() {
+        return setTimeout(function() {
+          console.log("Timeout going!");
+          return getArticles();
+        }, localStorage['pollInterval']);
+      };
       return {
-        getArticles: getArticles
+        getArticles: getArticles,
+        getArticlesOnTimeout: getArticlesOnTimeout
       };
     }
   ]);
 
-  omgApp.controller('popupCtrl', [
-    '$scope', '$resource', 'databaseService', 'Articles', function($scope, $resource, databaseService, Articles) {
-      databaseService.open().then(function(event) {
-        console.log("Moving on");
-        return Articles.getArticles().then(function(articles) {
-          console.log(articles);
-          return $scope.latestArticles = articles;
-        });
-      });
-      $scope.markAsRead = function(index) {
-        if ($scope.latestArticles[index].unread === true) {
-          $scope.latestArticles[index].unread = false;
-          return db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index]);
-        }
-      };
-      return $scope.markAllAsRead = function() {
-        var article, _i, _len, _ref, _results;
-        _ref = $scope.latestArticles;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          article = _ref[_i];
-          if (article.unread === true) {
-            article.unread = false;
-            _results.push(db.transaction(['articles'], 'readwrite').objectStore('articles').put(article));
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
-      };
-    }
-  ]);
-
-  omgApp.filter('truncate', function() {
+  omgUtil.filter('truncate', function() {
     return function(input, count) {
       var final, i, truncated, truncatedTest, _i, _ref;
       final = input;
@@ -261,5 +291,56 @@
       return final + "...";
     };
   });
+
+  omgUtil.service('Badge', [
+    function() {
+      var notify;
+      console.log("Badge!");
+      notify = function() {
+        if (localStorage['unread'] === "0") {
+          console.log("Clearing badge");
+          chrome.browserAction.setBadgeText({
+            text: ""
+          });
+          return chrome.browserAction.setIcon({
+            path: '/images/icon_unread48.png'
+          });
+        } else {
+          chrome.browserAction.setBadgeText({
+            text: localStorage['unread']
+          });
+          return chrome.browserAction.setIcon({
+            path: '/images/icon48.png'
+          });
+        }
+      };
+      return {
+        notify: notify
+      };
+    }
+  ]);
+
+  omgUtil.service('LocalStorage', [
+    'Badge', function(Badge) {
+      var decrement, increment, reset;
+      increment = function() {
+        localStorage['unread'] = parseInt(localStorage['unread']) + 1;
+        return Badge.notify();
+      };
+      decrement = function() {
+        localStorage['unread'] = parseInt(localStorage['unread']) - 1;
+        return Badge.notify();
+      };
+      reset = function() {
+        localStorage['unread'] = 0;
+        return Badge.notify();
+      };
+      return {
+        increment: increment,
+        decrement: decrement,
+        reset: reset
+      };
+    }
+  ]);
 
 }).call(this);

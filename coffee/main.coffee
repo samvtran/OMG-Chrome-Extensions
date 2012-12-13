@@ -1,5 +1,6 @@
 'use strict'
-omgApp = angular.module 'omgApp', ['ngResource']
+
+
 omgFeed = "http://feeds.feedburner.com/d0od?format=xml"
 
 # IndexedDB
@@ -13,9 +14,54 @@ chromeVersion = parseInt window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1]
 db = undefined
 DB_VERSION = 1
 
-omgApp.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
+if typeof localStorage['unread'] is 'undefined'
+  localStorage['unread'] = 0
+
+if typeof localStorage['pollInterval'] is 'undefined'
+  localStorage['pollInterval'] = 600000
+
+
+omgBackground = angular.module 'omgBackground', ['omgUtil']
+
+omgBackground.controller 'backgroundCtrl', ['databaseService', 'Badge', 'Articles', (databaseService, Badge, Articles) ->
+  Badge.notify()
+  databaseService.open().then (event) ->
+    Articles.getArticles()
+  Articles.getArticlesOnTimeout()
+]
+
+
+omgApp = angular.module 'omgApp', ['omgUtil']
+
+omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalStorage', 'Badge', ($scope, databaseService, Articles, LocalStorage, Badge) ->
+  Badge.notify()
+  databaseService.open().then (event) ->
+    Articles.getArticles().then (articles) ->
+      console.log articles
+      $scope.latestArticles = articles
+
+  $scope.markAsRead = (index) ->
+    LocalStorage.decrement()
+    if $scope.latestArticles[index].unread is true
+      $scope.latestArticles[index].unread = false;
+      db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index])
+
+  $scope.markAllAsRead = () ->
+    LocalStorage.reset()
+    for article in $scope.latestArticles
+      if article.unread is true
+        article.unread = false
+        db.transaction(['articles'], 'readwrite').objectStore('articles').put(article)
+
+]
+
+# Util functions
+omgUtil = angular.module 'omgUtil', ['ngResource']
+
+omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
   open = () ->
     deferred = $q.defer()
+    if typeof db != "undefined" then deferred.resolve()
     request = indexedDB.open 'OMGUbuntu', DB_VERSION
     request.onerror = (event) ->
       console.log "Couldn't open the database"
@@ -55,7 +101,6 @@ omgApp.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
       console.log "Successfully created object stores"
       $rootScope.$apply () ->
         deferred.resolve()
-
     deferred.promise
 
   {
@@ -63,7 +108,7 @@ omgApp.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
   }
 ]
 
-omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
+omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', ($q, $rootScope, LocalStorage)->
   _getLatestArticles = () ->
     deferred = $q.defer()
     promises = []
@@ -87,13 +132,14 @@ omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
       error: () ->
         $rootScope.$apply () ->
           deferred.reject "Issue getting articles"
-
     deferred.promise
+
   _addArticle = (articleObj) ->
     deferred = $q.defer()
     addArticle = db.transaction(['articles'], 'readwrite').objectStore('articles').add(articleObj)
     addArticle.onsuccess = (event) ->
       # TODO increment unread if matches categories list
+      LocalStorage.increment()
       $rootScope.$apply () ->
         deferred.resolve()
     addArticle.onerror = (event) ->
@@ -101,6 +147,7 @@ omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
         deferred.resolve()
       return
     deferred.promise
+
   _getArticlesFromDatabase = () ->
     deferred = $q.defer()
     articles = []
@@ -121,47 +168,31 @@ omgApp.service 'Articles', ['$q', '$rootScope', ($q, $rootScope)->
     deferred.promise
 
   getArticles = () ->
-    console.log "Getting articles"
     deferred = $q.defer()
     objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
     objectStore.count().onsuccess = (event) ->
-      console.log "Got back #{event.target.result} articles"
       if event.target.result < 20
         _getLatestArticles().then () ->
-          console.log "Got latest articles"
           _getArticlesFromDatabase().then (articles) ->
-            console.log "Got latest articles from database"
-            console.log articles
             deferred.resolve articles
       else _getArticlesFromDatabase().then (articles) ->
         deferred.resolve articles
     deferred.promise
 
+  getArticlesOnTimeout = () ->
+    setTimeout () ->
+      console.log "Timeout going!"
+      getArticles()
+    ,localStorage['pollInterval']
+    # TODO timeout function that does getArticles and can reset its own timer
+
   {
     getArticles: getArticles
+    getArticlesOnTimeout: getArticlesOnTimeout
   }
 ]
-omgApp.controller 'popupCtrl', ['$scope', '$resource', 'databaseService', 'Articles', ($scope, $resource, databaseService, Articles) ->
-  databaseService.open().then (event) ->
-    console.log "Moving on"
-    Articles.getArticles().then (articles) ->
-      console.log articles
-      $scope.latestArticles = articles
 
-  $scope.markAsRead = (index) ->
-    if $scope.latestArticles[index].unread is true
-      $scope.latestArticles[index].unread = false;
-      db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index])
-
-  $scope.markAllAsRead = () ->
-    for article in $scope.latestArticles
-      if article.unread is true
-        article.unread = false
-        db.transaction(['articles'], 'readwrite').objectStore('articles').put(article)
-
-]
-
-omgApp.filter 'truncate', () -> (input, count) ->
+omgUtil.filter 'truncate', () -> (input, count) ->
   final = input;
   if input == undefined then return "";
   if input.length <= count
@@ -180,3 +211,37 @@ omgApp.filter 'truncate', () -> (input, count) ->
       final = truncated.substring(0, truncated.length - i)
       break;
   return final + "..."
+
+omgUtil.service 'Badge', [->
+  console.log "Badge!"
+  notify = () ->
+    if localStorage['unread'] is "0"
+      console.log "Clearing badge"
+      chrome.browserAction.setBadgeText text: ""
+      chrome.browserAction.setIcon path: '/images/icon_unread48.png'
+    else
+      chrome.browserAction.setBadgeText text: localStorage['unread']
+      chrome.browserAction.setIcon path: '/images/icon48.png'
+
+  {
+    notify: notify
+  }
+]
+
+omgUtil.service 'LocalStorage', ['Badge', (Badge)->
+  increment = () ->
+    localStorage['unread'] = parseInt(localStorage['unread']) + 1
+    Badge.notify()
+  decrement = () ->
+    localStorage['unread'] = parseInt(localStorage['unread']) - 1
+    Badge.notify()
+  reset = () ->
+    localStorage['unread'] = 0
+    Badge.notify()
+
+  {
+    increment: increment
+    decrement: decrement
+    reset: reset
+  }
+]
