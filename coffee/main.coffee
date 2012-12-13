@@ -1,9 +1,4 @@
 'use strict'
-
-# TODO
-# Notification off switch
-# Refresh button
-
 omgFeed = "http://feeds.feedburner.com/d0od?format=xml"
 
 # IndexedDB
@@ -25,7 +20,7 @@ if typeof localStorage['pollInterval'] is 'undefined'
   localStorage['pollInterval'] = 600000
 
 if typeof localStorage['notificationsEnabled'] is 'undefined'
-  localStorage['notificationsEnabled'] = 0
+  localStorage['notificationsEnabled'] = true
 
 
 omgBackground = angular.module 'omgBackground', ['omgUtil']
@@ -59,7 +54,30 @@ omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalS
       if article.unread is true
         article.unread = false
         db.transaction(['articles'], 'readwrite').objectStore('articles').put(article)
+  $scope.refresh = () ->
+    $scope.refreshing = true;
+    databaseService.open().then (event) ->
+      Articles.getArticles().then (articles) ->
+        $scope.latestArticles = articles
+        $scope.refreshing = false;
 
+  $scope.optionsPage = () ->
+    chrome.tabs.create
+      url: "options.html"
+]
+
+
+omgOptions = angular.module 'omgOptions', []
+
+omgOptions.controller 'optionCtrl', ['$scope', ($scope) ->
+  $scope.notificationsEnabled = (localStorage['notificationsEnabled'] == "true" ? true : false)
+
+  $scope.$watch 'notificationsEnabled', (newValue) ->
+    if newValue != (localStorage['notificationsEnabled'] == "true" ? true : false)
+      localStorage['notificationsEnabled'] = newValue
+
+  $scope.showExampleNotification = () ->
+    webkitNotifications.createNotification('/images/icon48.png', "Example notification", "A summary of the new article or the number of new articles would go here!").show()
 ]
 
 # Util functions
@@ -141,7 +159,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
           deferred.resolve()
       error: () ->
         $rootScope.$apply () ->
-          deferred.reject "Issue getting articles"
+          deferred.resolve()
     deferred.promise
 
   _addArticle = (articleObj) ->
@@ -262,7 +280,7 @@ omgUtil.service 'LocalStorage', ['Badge', (Badge)->
 
 omgUtil.service 'Notification', ['$filter', ($filter) ->
   start = () ->
-    if localStorage['notificationsEnabled'] == "0" then return
+    if localStorage['notificationsEnabled'] == "false" then return
     if localStorage['newArticles'] == "0" then return
     if localStorage['newArticles'] == "1"
       objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
@@ -273,10 +291,10 @@ omgUtil.service 'Notification', ['$filter', ($filter) ->
     if localStorage['newArticles'] > 1
       multiNotify(localStorage['newArticles'])
   singleNotify = (article) ->
-    if localStorage['notificationsEnabled'] == "0" then return
+    if localStorage['notificationsEnabled'] == "false" then return
     webkitNotifications.createNotification('/images/icon48.png', "New article! #{article.title}", "#{$filter('truncate')(article.summary, 100)}").show()
   multiNotify = (number) ->
-    if localStorage['notificationsEnabled'] == "0" then return
+    if localStorage['notificationsEnabled'] == "false" then return
     webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "#{number} new articles on OMG! Ubuntu!").show()
 
   {

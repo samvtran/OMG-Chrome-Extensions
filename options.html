@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" ng-app="omgOptions" ng-csp>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/stylesheets/options.css">
+  <script type="text/javascript" src="/scripts/angular.min.js"></script>
+  <script type="text/javascript" src="/scripts/angular-resource.min.js"></script>
+  <script type="text/javascript" src="/scripts/main.js"></script>
+  <title>OMG! Ubuntu! Extension Options</title>
+</head>
+<body ng-controller="optionCtrl">
+  <header>
+    <a href="http://www.omgubuntu.co.uk" class="logo" title="Visit OMG! Ubuntu!"><img class="logo" src="/images/icon128.png" height="48" width="48"></a>
+    <h1>OMG! Ubuntu! Extension Options</h1>
+  </header>
+  <h2>Options</h2>
+  <div class="pane">
+    <p><input ng-model="notificationsEnabled" type="checkbox" id="notifications-enabled"><label for="notifications-enabled">Message Notifications</label><a class="example" ng-click="showExampleNotification()">Example</a></p>
+  </div>
+  <h2>About The Extension</h2>
+  <div class="pane">
+    <p>This extension is released under the GPLv3 with source code available on <a href="https://github.com/samvtran/OMG-Ubuntu-Chrome" title="OMG! Ubuntu! Extension on GitHub">GitHub</a>.</p>
+  </div>
+  <h2>About OMG! Ubuntu!</h2>
+  <div class="pane">
+    <p>We're the worlds larget linux-orientated site on the web, bringing the latest news, reviews and tutorials to over 2 million unique readers a month.</p>
+    <p>But we're more than just a website &ndash; we're also a vibrant community, boasting over 200,000 subscribers across <a href="http://twitter.com/omgubuntu" title="OMG! Ubuntu! on Twitter">Twitter</a>, <a href="http://facebook.com/omgubuntu" title="OMG! Ubuntu! on Facebook">Facebook</a>, <a href="http://youtube.com/omgubuntu" title="OMG! Ubuntu! on Youtube">Youtube</a> and more.</p>
+    <p>And by using this extension - you're part of that, too!</p>
+    <p>OMG! Ubuntu! is part of <strong><a href="http://ohso.co" title="Ohso Ltd">Ohso Ltd</a></strong>, a New-Zealand based media and software publishing company founded in 2010.</p>
+  </div>
+</body>
+</html>

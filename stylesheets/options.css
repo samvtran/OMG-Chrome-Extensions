@@ -63,12 +63,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 7, ../sass/popup.scss */
+/* line 7, ../sass/options.scss */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
-/* line 11, ../sass/popup.scss */
+/* line 11, ../sass/options.scss */
 ::-webkit-scrollbar-track {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -77,7 +77,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   border-radius: 10px;
 }
 
-/* line 15, ../sass/popup.scss */
+/* line 15, ../sass/options.scss */
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -87,119 +87,87 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background: #ccc;
 }
 
-/* line 20, ../sass/popup.scss */
+/* line 20, ../sass/options.scss */
 ::-webkit-scrollbar-thumb:window-inactive {
   background: #eee;
 }
 
-/* line 23, ../sass/popup.scss */
+/* line 23, ../sass/options.scss */
 html {
-  font-size: 12px;
+  font-size: 14px;
 }
 
-/* line 24, ../sass/popup.scss */
+/* line 24, ../sass/options.scss */
 body {
-  font-family: "Ubuntu";
-  width: 448px;
-  min-height: 512px;
+  font-family: "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
   color: #555;
+  margin: auto;
+  padding-top: 8px;
+  max-width: 720px;
 }
 
-/* line 30, ../sass/popup.scss */
+/* line 31, ../sass/options.scss */
+p {
+  line-height: 18px;
+  margin: 12px 0;
+}
+
+/* line 32, ../sass/options.scss */
+h1 {
+  font-size: 32px;
+  line-height: 48px;
+}
+
+/* line 33, ../sass/options.scss */
+h2 {
+  font-size: 24px;
+  line-height: 28px;
+}
+
+/* line 34, ../sass/options.scss */
 h3 {
   font-size: 16px;
 }
 
-/* line 31, ../sass/popup.scss */
+/* line 35, ../sass/options.scss */
 a {
   text-decoration: none;
   color: #792354;
 }
 
-/* line 35, ../sass/popup.scss */
+/* line 39, ../sass/options.scss */
 a:hover {
   text-decoration: underline;
 }
 
-/* line 38, ../sass/popup.scss */
-.right {
-  float: right;
+/* line 44, ../sass/options.scss */
+header {
+  margin-bottom: 12px;
 }
-
-/* line 41, ../sass/popup.scss */
-.hide {
-  display: none;
+/* line 45, ../sass/options.scss */
+header h1 {
+  padding-left: 52px;
 }
-
-/* line 44, ../sass/popup.scss */
-.popup-header {
-  height: 32px;
-  padding: 0 1rem;
-  margin: .5rem 0;
-  background: #792354;
+/* line 46, ../sass/options.scss */
+header .logo {
   position: relative;
 }
-/* line 50, ../sass/popup.scss */
-.popup-header .logo {
-  outline: none;
-}
-/* line 52, ../sass/popup.scss */
-.popup-header .logo img {
+/* line 48, ../sass/options.scss */
+header .logo img {
   position: absolute;
-  top: -8px;
-}
-/* line 57, ../sass/popup.scss */
-.popup-header .refresh {
-  font-size: 24px;
-  color: white;
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  margin-top: -12px;
-}
-/* line 64, ../sass/popup.scss */
-.popup-header .refresh:hover {
-  text-decoration: none;
+  top: 0;
 }
 
-/* line 68, ../sass/popup.scss */
-.latest-news {
-  margin-bottom: 2.5rem;
+/* line 55, ../sass/options.scss */
+.pane {
+  margin: 6px 0 24px;
 }
-/* line 69, ../sass/popup.scss */
-.latest-news article {
-  border-bottom: 1px dotted #ddd;
-  padding: 1rem 1rem .5rem;
+/* line 57, ../sass/options.scss */
+.pane .example {
+  margin-left: 16px;
 }
-/* line 72, ../sass/popup.scss */
-.latest-news article h3 {
-  line-height: 18px;
-}
-/* line 75, ../sass/popup.scss */
-.latest-news article .icon-bookmark {
-  color: #f15d22;
-}
-/* line 78, ../sass/popup.scss */
-.latest-news article p {
-  padding: 8px 0;
-  line-height: 16px;
-}
-/* line 83, ../sass/popup.scss */
-.latest-news article footer .read-more {
-  text-transform: uppercase;
-}
-
-/* line 92, ../sass/popup.scss */
-.popup-footer {
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(30%, rgba(255, 255, 255, 0.25)), color-stop(50%, #ffffff), color-stop(100%, #ffffff));
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
-  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
-  text-transform: uppercase;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 18px 6px 6px 12px;
+/* line 60, ../sass/options.scss */
+.pane input[type="checkbox"] {
+  margin: 0 8px 0 2px;
+  vertical-align: middle;
 }

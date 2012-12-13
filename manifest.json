@@ -23,5 +23,6 @@
     ],
     "web_accessible_resources": [
       "/images/icon48.png"
-    ]
+    ],
+    "options_page": "options.html"
 }

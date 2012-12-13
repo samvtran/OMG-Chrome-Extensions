@@ -2,7 +2,7 @@
 (function() {
   'use strict';
 
-  var DB_VERSION, chromeVersion, db, omgApp, omgBackground, omgFeed, omgUtil;
+  var DB_VERSION, chromeVersion, db, omgApp, omgBackground, omgFeed, omgOptions, omgUtil;
 
   omgFeed = "http://feeds.feedburner.com/d0od?format=xml";
 
@@ -29,7 +29,7 @@
   }
 
   if (typeof localStorage['notificationsEnabled'] === 'undefined') {
-    localStorage['notificationsEnabled'] = 0;
+    localStorage['notificationsEnabled'] = true;
   }
 
   omgBackground = angular.module('omgBackground', ['omgUtil']);
@@ -62,7 +62,7 @@
           return db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index]);
         }
       };
-      return $scope.markAllAsRead = function() {
+      $scope.markAllAsRead = function() {
         var article, _i, _len, _ref, _results;
         LocalStorage.reset();
         _ref = $scope.latestArticles;
@@ -77,6 +77,42 @@
           }
         }
         return _results;
+      };
+      $scope.refresh = function() {
+        $scope.refreshing = true;
+        return databaseService.open().then(function(event) {
+          return Articles.getArticles().then(function(articles) {
+            $scope.latestArticles = articles;
+            return $scope.refreshing = false;
+          });
+        });
+      };
+      return $scope.optionsPage = function() {
+        return chrome.tabs.create({
+          url: "options.html"
+        });
+      };
+    }
+  ]);
+
+  omgOptions = angular.module('omgOptions', []);
+
+  omgOptions.controller('optionCtrl', [
+    '$scope', function($scope) {
+      var _ref;
+      $scope.notificationsEnabled = (_ref = localStorage['notificationsEnabled'] === "true") != null ? _ref : {
+        "true": false
+      };
+      $scope.$watch('notificationsEnabled', function(newValue) {
+        var _ref1;
+        if (newValue !== ((_ref1 = localStorage['notificationsEnabled'] === "true") != null ? _ref1 : {
+          "true": false
+        })) {
+          return localStorage['notificationsEnabled'] = newValue;
+        }
+      });
+      return $scope.showExampleNotification = function() {
+        return webkitNotifications.createNotification('/images/icon48.png', "Example notification", "A summary of the new article or the number of new articles would go here!").show();
       };
     }
   ]);
@@ -190,7 +226,7 @@
           },
           error: function() {
             return $rootScope.$apply(function() {
-              return deferred.reject("Issue getting articles");
+              return deferred.resolve();
             });
           }
         });
@@ -363,7 +399,7 @@
       var multiNotify, singleNotify, start;
       start = function() {
         var objectStore;
-        if (localStorage['notificationsEnabled'] === "0") {
+        if (localStorage['notificationsEnabled'] === "false") {
           return;
         }
         if (localStorage['newArticles'] === "0") {
@@ -384,13 +420,13 @@
         }
       };
       singleNotify = function(article) {
-        if (localStorage['notificationsEnabled'] === "0") {
+        if (localStorage['notificationsEnabled'] === "false") {
           return;
         }
         return webkitNotifications.createNotification('/images/icon48.png', "New article! " + article.title, "" + ($filter('truncate')(article.summary, 100))).show();
       };
       multiNotify = function(number) {
-        if (localStorage['notificationsEnabled'] === "0") {
+        if (localStorage['notificationsEnabled'] === "false") {
           return;
         }
         return webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "" + number + " new articles on OMG! Ubuntu!").show();
