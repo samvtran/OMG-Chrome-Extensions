@@ -1,0 +1,192 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/* line 17, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../../../var/lib/gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 12, ../sass/popup.scss */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* line 16, ../sass/popup.scss */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* line 20, ../sass/popup.scss */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+  background: #ccc;
+}
+
+/* line 25, ../sass/popup.scss */
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #eee;
+}
+
+/* line 28, ../sass/popup.scss */
+html {
+  font-size: 12px;
+}
+
+/* line 29, ../sass/popup.scss */
+body {
+  font-family: "Ubuntu";
+  width: 448px;
+  min-height: 512px;
+  color: #555;
+}
+
+/* line 35, ../sass/popup.scss */
+h3 {
+  font-size: 16px;
+}
+
+/* line 36, ../sass/popup.scss */
+a {
+  text-decoration: none;
+  color: #792354;
+}
+
+/* line 40, ../sass/popup.scss */
+a:hover {
+  text-decoration: underline;
+}
+
+/* line 43, ../sass/popup.scss */
+.right {
+  float: right;
+}
+
+/* line 46, ../sass/popup.scss */
+.hide {
+  text-indent: 9999em;
+}
+
+/* line 49, ../sass/popup.scss */
+.popup-header {
+  height: 32px;
+  padding: 0 1rem;
+  margin: .5rem 0;
+  background: #792354;
+  position: relative;
+}
+/* line 55, ../sass/popup.scss */
+.popup-header .logo {
+  outline: none;
+}
+/* line 57, ../sass/popup.scss */
+.popup-header .logo img {
+  position: absolute;
+  top: -8px;
+}
+
+/* line 64, ../sass/popup.scss */
+.latest-news {
+  margin-bottom: 2.5rem;
+}
+/* line 65, ../sass/popup.scss */
+.latest-news article {
+  border-bottom: 1px dotted #ddd;
+  padding: 1rem 1rem .5rem;
+}
+/* line 68, ../sass/popup.scss */
+.latest-news article .icon-bookmark {
+  color: #f15d22;
+}
+/* line 71, ../sass/popup.scss */
+.latest-news article p {
+  padding: 8px 0;
+  line-height: 16px;
+}
+/* line 76, ../sass/popup.scss */
+.latest-news article footer .read-more {
+  text-transform: uppercase;
+}
+
+/* line 85, ../sass/popup.scss */
+.popup-footer {
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(30%, rgba(255, 255, 255, 0.25)), color-stop(50%, #ffffff), color-stop(100%, #ffffff));
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
+  text-transform: uppercase;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 6px 6px 12px;
+}

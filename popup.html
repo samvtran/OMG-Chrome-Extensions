@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" ng-app="omgApp" ng-csp>
+<head>
+    <meta charset="utf-8">
+    <title>OMG! Ubuntu!</title>
+    <link rel="stylesheet" href="/stylesheets/font-awesome.css">
+    <link rel="stylesheet" href="/stylesheets/popup.css">
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/moment.min.js"></script>
+    <script type="text/javascript" src="/scripts/angular.min.js"></script>
+    <script type="text/javascript" src="/scripts/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/scripts/main.js"></script>
+</head>
+<body ng-controller="popupCtrl">
+  <header class="popup-header">
+    <a href="http://www.omgubuntu.co.uk" class="logo" title="Visit OMG! Ubuntu!"><img class="logo" src="/images/icon128.png" height="48" width="48"><span class="hide">OMG! Ubuntu!</span></a>
+  </header>
+  <section class="latest-news" ng-model="latestArticles">
+    <article ng-repeat="article in latestArticles" ng-click="markAsRead($index)">
+      <h3><i title="Unread" class="icon-bookmark" ng-show="article.unread == true"> </i><a href="{{article.link}}" target="_blank">{{article.title}}</a></h3>
+      <p>{{article.summary | truncate:200}}</p>
+      <footer>
+        <a class="read-more" href="http://omgubuntu.co.uk">Continue Reading</a>
+        <div class="social-links"></div>
+      </footer>
+    </article>
+  </section>
+  <footer class="popup-footer">
+    <a ng-click="markAllAsRead()" title="Change OMG! Ubuntu! options">Options</a>
+    <a class="right" ng-click="markAllAsRead()">Mark All As Read</a>
+  </footer>
+</body>
+</html>

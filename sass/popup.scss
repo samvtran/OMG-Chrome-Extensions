@@ -1,0 +1,93 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+@import "compass/css3";
+
+// #77216f or #5e2750 or #b53e7e
+$purple: #792354;
+$orange: #f15d22;
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @include border-radius(10px);
+}
+
+::-webkit-scrollbar-thumb {
+    @include border-radius(10px);
+    background: #ccc;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: #eee;
+}
+html { font-size: 12px; }
+body {
+  font-family: "Ubuntu";
+  width: 448px;
+  min-height: 512px;
+  color: #555;
+}
+h3 { font-size: 16px; }
+a {
+  text-decoration: none;
+  color: $purple;
+}
+a:hover {
+  text-decoration: underline;
+}
+.right {
+  float: right;
+}
+.hide {
+  text-indent: 9999em;
+}
+.popup-header {
+  height: 32px;
+  padding: 0 1rem;
+  margin: .5rem 0;
+  background: $purple;
+  position: relative;
+  .logo {
+    outline: none;
+    img {
+      position: absolute;
+      top: -8px;
+    }
+  }
+}
+
+.latest-news {
+  article {
+    border-bottom: 1px dotted #ddd;
+    padding: 1rem 1rem .5rem;
+    .icon-bookmark {
+      color: $orange;
+    }
+    p {
+      padding: 8px 0;
+      line-height: 16px;
+    }
+    footer {
+      .read-more {
+        text-transform: uppercase;
+      }
+    }
+  }
+  margin-bottom: 2.5rem;
+}
+
+
+.popup-footer {
+  @include background-image(linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.25) 30%, white 50%, white));
+  text-transform: uppercase;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 6px 6px 12px;
+}
