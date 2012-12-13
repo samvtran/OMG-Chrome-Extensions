@@ -52,8 +52,8 @@
         });
       });
       $scope.markAsRead = function(index) {
-        LocalStorage.decrement();
         if ($scope.latestArticles[index].unread === true) {
+          LocalStorage.decrement();
           $scope.latestArticles[index].unread = false;
           return db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index]);
         }
@@ -331,6 +331,9 @@
         return Badge.notify();
       };
       decrement = function() {
+        if (localStorage['unread'] === "0") {
+          return;
+        }
         localStorage['unread'] = parseInt(localStorage['unread']) - 1;
         return Badge.notify();
       };

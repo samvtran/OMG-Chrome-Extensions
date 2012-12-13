@@ -41,8 +41,8 @@ omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalS
       $scope.latestArticles = articles
 
   $scope.markAsRead = (index) ->
-    LocalStorage.decrement()
     if $scope.latestArticles[index].unread is true
+      LocalStorage.decrement()
       $scope.latestArticles[index].unread = false;
       db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index])
 
@@ -235,6 +235,7 @@ omgUtil.service 'LocalStorage', ['Badge', (Badge)->
     localStorage['unread'] = parseInt(localStorage['unread']) + 1
     Badge.notify()
   decrement = () ->
+    if localStorage['unread'] == "0" then return
     localStorage['unread'] = parseInt(localStorage['unread']) - 1
     Badge.notify()
   reset = () ->
