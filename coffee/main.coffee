@@ -244,6 +244,9 @@ omgUtil.filter 'truncate', () -> (input, count) ->
       break;
   return final + "..."
 
+omgUtil.filter 'uriEncode', () -> (input) ->
+  encodeURIComponent input
+
 omgUtil.service 'Badge', [->
   notify = () ->
     if localStorage['unread'] is "0"

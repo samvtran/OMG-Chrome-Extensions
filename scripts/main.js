@@ -344,6 +344,12 @@
     };
   });
 
+  omgUtil.filter('uriEncode', function() {
+    return function(input) {
+      return encodeURIComponent(input);
+    };
+  });
+
   omgUtil.service('Badge', [
     function() {
       var notify;

@@ -43,7 +43,7 @@ a:hover {
 }
 .popup-header {
   height: 32px;
-  padding: 0 1rem;
+  padding: 0 12px;
   margin: .5rem 0;
   background: $purple;
   position: relative;
@@ -59,7 +59,7 @@ a:hover {
     font-size: 24px;
     color: white;
     position: absolute;
-    right: 6px;
+    right: 12px;
     top: 50%;
     margin-top: -12px;
     &:hover { text-decoration: none; }
@@ -83,6 +83,17 @@ a:hover {
     footer {
       .read-more {
         text-transform: uppercase;
+      }
+      .social-links {
+        float: right;
+        font-size: 20px;
+        line-height: 12px;
+        a {
+          text-decoration: none;
+        }
+        a:hover { opacity: 0.8 }
+        .icon-facebook-sign { color: #3b5998 }
+        .icon-twitter-sign { color: #00a0d1 }
       }
     }
   }

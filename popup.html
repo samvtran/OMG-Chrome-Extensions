@@ -19,10 +19,11 @@
   <section class="latest-news" ng-model="latestArticles">
     <article ng-repeat="article in latestArticles" ng-click="markAsRead($index)">
       <h3><i title="Unread" class="icon-bookmark" ng-show="article.unread == true"> </i><a href="{{article.link}}" target="_blank">{{article.title}}</a></h3>
-      <p>{{article.summary | truncate:200}}</p>
+      <p>{{article.summary|truncate:200}}</p>
       <footer>
         <a class="read-more" href="http://omgubuntu.co.uk">Continue Reading</a>
-        <div class="social-links"></div>
+        <div class="social-links"><a target="_blank" href="https://www.facebook.com/dialog/feed?app_id=272768256180082&link={{article.link|uriEncode}}&name={{article.title|uriEncode}}&description={{article.summary|truncate:200}}&redirect_uri=https://facebook.com" title="Share this article on Facebook"><i class="icon-facebook-sign"></i></a>
+          <a target="_blank" href="https://twitter.com/intent/tweet?url={{article.link|uriEncode}}&text={{article.title|truncate:100|uriEncode}}&via=omgubuntu" title="Share this article on Twitter"><i class="icon-twitter-sign"></i></a></div>
       </footer>
     </article>
   </section>

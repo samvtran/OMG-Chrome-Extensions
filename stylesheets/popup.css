@@ -134,7 +134,7 @@ a:hover {
 /* line 44, ../sass/popup.scss */
 .popup-header {
   height: 32px;
-  padding: 0 1rem;
+  padding: 0 12px;
   margin: .5rem 0;
   background: #792354;
   position: relative;
@@ -154,7 +154,7 @@ a:hover {
   font-size: 24px;
   color: white;
   position: absolute;
-  right: 6px;
+  right: 12px;
   top: 50%;
   margin-top: -12px;
 }
@@ -189,8 +189,30 @@ a:hover {
 .latest-news article footer .read-more {
   text-transform: uppercase;
 }
+/* line 87, ../sass/popup.scss */
+.latest-news article footer .social-links {
+  float: right;
+  font-size: 20px;
+  line-height: 12px;
+}
+/* line 91, ../sass/popup.scss */
+.latest-news article footer .social-links a {
+  text-decoration: none;
+}
+/* line 94, ../sass/popup.scss */
+.latest-news article footer .social-links a:hover {
+  opacity: 0.8;
+}
+/* line 95, ../sass/popup.scss */
+.latest-news article footer .social-links .icon-facebook-sign {
+  color: #3b5998;
+}
+/* line 96, ../sass/popup.scss */
+.latest-news article footer .social-links .icon-twitter-sign {
+  color: #00a0d1;
+}
 
-/* line 93, ../sass/popup.scss */
+/* line 104, ../sass/popup.scss */
 .popup-footer {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(30%, rgba(255, 255, 255, 0.25)), color-stop(50%, #ffffff), color-stop(100%, #ffffff));
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25) 30%, #ffffff 50%, #ffffff);
