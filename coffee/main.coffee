@@ -1,3 +1,19 @@
+###
+Copyright (C) 2012 Ohso Ltd
+
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements. You may obtain a
+copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+###
 'use strict'
 omgFeed = "http://feeds.feedburner.com/d0od?format=xml"
 
@@ -7,7 +23,7 @@ window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange
 window.IDBCursor = window.IDBCursor || window.webkitIDBCursor
 
-# Chrome < 22 uses deprecated IndexedDB upgrading
+# Chrome < 22 uses deprecated IndexedDB upgrading, so we need to catch it
 chromeVersion = parseInt window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10
 db = undefined
 DB_VERSION = 1
@@ -70,10 +86,10 @@ omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalS
 omgOptions = angular.module 'omgOptions', []
 
 omgOptions.controller 'optionCtrl', ['$scope', ($scope) ->
-  $scope.notificationsEnabled = (localStorage['notificationsEnabled'] == "true" ? true : false)
+  $scope.notificationsEnabled = (localStorage['notificationsEnabled'] is "true" ? true : false)
 
   $scope.$watch 'notificationsEnabled', (newValue) ->
-    if newValue != (localStorage['notificationsEnabled'] == "true" ? true : false)
+    if newValue != (localStorage['notificationsEnabled'] is "true" ? true : false)
       localStorage['notificationsEnabled'] = newValue
 
   $scope.showExampleNotification = () ->
@@ -93,18 +109,18 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
       $rootScope.$apply () ->
         deferred.reject "Couldn't open the database"
     request.onsuccess = (event) ->
-      console.log "Opened db #{request.result.version} successfully"
       db = request.result
       if chromeVersion <= 22
         if db.version != "1" || typeof db.version is "undefined"
-          versionReq = db.setVersion(DB_VERSION)
-          versionReq.onfailure = () ->
+          versionReq = db.setVersion DB_VERSION
+          versionReq.onfailure = (event) ->
             $rootScope.$apply () ->
               deferred.resolve()
           versionReq.onsuccess = (event) ->
             # Note: Old indexeddb uses keypath as already descended in object
-            createStores().then () ->
-                deferred.resolve()
+            createStores()
+            $rootScope.$apply () ->
+              deferred.resolve()
         else
           $rootScope.$apply () ->
             deferred.resolve()
@@ -115,19 +131,13 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
       console.log "Chrome >= 23: Database needs upgrading"
       db = event.target.result
       # Note: new indexeddb uses keypath including object
-      createStores().then () ->
-        deferred.resolve()
-    deferred.promise
-
-  createStores = () ->
-    deferred = $q.defer()
-    createEvent = db.createObjectStore "articles", keyPath: "date"
-    createEvent.onsuccess = (event) ->
-      console.log "Successfully created object stores"
+      createStores()
       $rootScope.$apply () ->
         deferred.resolve()
     deferred.promise
 
+  createStores = () ->
+    db.createObjectStore "articles", keyPath: "date"
   {
     open: open
   }
@@ -150,7 +160,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
             title: article.find('title').text()
             summary: $('<div>' + article.find('description').text() + '</div>').text()
             link: article.find('origLink').text()
-            date: moment(article.find('pubDate').text(), 'ddd, DD MMM YYYY HH:mm:ss PST').valueOf()
+            date: Date.parse article.find('pubDate').text()
             unread: true
           addArticle = _addArticle(articleObj)
           promises.push addArticle
@@ -210,7 +220,6 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
 
   getArticlesOnTimeout = () ->
     setTimeout () ->
-      console.log "Timeout going!"
       databaseService.open().then (event) ->
         getLatestArticles().then () ->
           getArticles().then () ->
@@ -226,7 +235,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
 
 omgUtil.filter 'truncate', () -> (input, count) ->
   final = input;
-  if input == undefined then return "";
+  if typeof input is "undefined" then return "";
   if input.length <= count
     return final
   truncated = input.substring(0, (count))
@@ -237,6 +246,7 @@ omgUtil.filter 'truncate', () -> (input, count) ->
   if input.substring(truncated.length, truncated.length + 1).match(/\s/)
     final = truncated
 
+  # Search backwards until we hit whitespace or the end of the string.
   for i in [1 .. (truncated.length - 1)]
     truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1));
     if truncatedTest.match(/\s/)
@@ -266,7 +276,7 @@ omgUtil.service 'LocalStorage', ['Badge', (Badge)->
     localStorage['unread'] = parseInt(localStorage['unread']) + 1
     Badge.notify()
   decrement = () ->
-    if localStorage['unread'] == "0" then return
+    if localStorage['unread'] is "0" then return
     localStorage['unread'] = parseInt(localStorage['unread']) - 1
     Badge.notify()
   reset = () ->
@@ -282,9 +292,9 @@ omgUtil.service 'LocalStorage', ['Badge', (Badge)->
 
 omgUtil.service 'Notification', ['$filter', ($filter) ->
   start = () ->
-    if localStorage['notificationsEnabled'] == "false" then return
-    if localStorage['newArticles'] == "0" then return
-    if localStorage['newArticles'] == "1"
+    if localStorage['notificationsEnabled'] is "false" then return
+    if localStorage['newArticles'] is "0" then return
+    if localStorage['newArticles'] is "1"
       objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
       objectStore.openCursor(null, "prev").onsuccess = (event) ->
         cursor = event.target.result
@@ -293,10 +303,10 @@ omgUtil.service 'Notification', ['$filter', ($filter) ->
     if localStorage['newArticles'] > 1
       multiNotify(localStorage['newArticles'])
   singleNotify = (article) ->
-    if localStorage['notificationsEnabled'] == "false" then return
+    if localStorage['notificationsEnabled'] is "false" then return
     webkitNotifications.createNotification('/images/icon48.png', "New article! #{article.title}", "#{$filter('truncate')(article.summary, 100)}").show()
   multiNotify = (number) ->
-    if localStorage['notificationsEnabled'] == "false" then return
+    if localStorage['notificationsEnabled'] is "false" then return
     webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "#{number} new articles on OMG! Ubuntu!").show()
 
   {
