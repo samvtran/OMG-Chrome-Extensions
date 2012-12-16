@@ -6,7 +6,7 @@ The official [OMG! Ubuntu!](http://omgubuntu.co.uk) Chrome extension
 The extension is available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/omg-ubuntu/nhmmlbjenhdockdgpklmdiamollflljn) or can be downloaded from this repo and used as an "unpacked" extension.
 
 ## Compatibility
-The extension has been tested on Chromium version 22.0.1229.94 on Ubuntu 12.10 and with the latest Chrome dev releases.
+The extension has been tested on Chromium version 22.0.1229.94 on Ubuntu 12.10 and with the latest Chrome dev releases. IndexedDB changed somewhere between Chrome/ium 17 and 22, so the extension may not function properly in versions of Chrome/ium < 22.
 
 ## Libraries, et al.
 This extension uses [CoffeeScript](http://coffeescript.org/) and [Sass](http://sass-lang.com/) and the following amazing projects:
