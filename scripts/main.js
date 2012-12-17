@@ -21,7 +21,7 @@ under the License.
 (function() {
   'use strict';
 
-  var DB_VERSION, chromeVersion, db, omgApp, omgBackground, omgFeed, omgOptions, omgUtil;
+  var DB_VERSION, chromeVersion, cursorPrev, db, omgApp, omgBackground, omgFeed, omgOptions, omgUtil, readOnly, readWrite;
 
   omgFeed = "http://feeds.feedburner.com/d0od?format=xml";
 
@@ -32,6 +32,12 @@ under the License.
   window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
 
   window.IDBCursor = window.IDBCursor || window.webkitIDBCursor;
+
+  readWrite = typeof IDBTransaction.READ_WRITE === 'undefined' ? 'readwrite' : IDBTransaction.READ_WRITE;
+
+  readOnly = typeof IDBTransaction.READ_ONLY === 'undefined' ? 'readonly' : IDBTransaction.READ_ONLY;
+
+  cursorPrev = typeof IDBTransaction.PREV === 'undefined' ? 'prev' : IDBTransaction.PREV;
 
   chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
 
@@ -77,7 +83,7 @@ under the License.
         if ($scope.latestArticles[index].unread === true) {
           LocalStorage.decrement();
           $scope.latestArticles[index].unread = false;
-          return db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index]);
+          return db.transaction(['articles'], readWrite).objectStore('articles').put($scope.latestArticles[index]);
         }
       };
       $scope.markAllAsRead = function() {
@@ -89,7 +95,7 @@ under the License.
           article = _ref[_i];
           if (article.unread === true) {
             article.unread = false;
-            _results.push(db.transaction(['articles'], 'readwrite').objectStore('articles').put(article));
+            _results.push(db.transaction(['articles'], readWrite).objectStore('articles').put(article));
           } else {
             _results.push(void 0);
           }
@@ -247,7 +253,7 @@ under the License.
       _addArticle = function(articleObj) {
         var addArticle, deferred;
         deferred = $q.defer();
-        addArticle = db.transaction(['articles'], 'readwrite').objectStore('articles').add(articleObj);
+        addArticle = db.transaction(['articles'], readWrite).objectStore('articles').add(articleObj);
         addArticle.onsuccess = function(event) {
           LocalStorage.increment();
           localStorage['newArticles'] = parseInt(localStorage['newArticles']) + 1;
@@ -266,8 +272,8 @@ under the License.
         var articles, deferred, objectStore;
         deferred = $q.defer();
         articles = [];
-        objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
-        objectStore.openCursor(null, "prev").onsuccess = function(event) {
+        objectStore = db.transaction(['articles'], readOnly).objectStore('articles');
+        objectStore.openCursor(null, cursorPrev).onsuccess = function(event) {
           var cursor;
           cursor = event.target.result;
           if (cursor) {
@@ -277,7 +283,7 @@ under the License.
               if (cursor.value.unread === true) {
                 LocalStorage.decrement();
               }
-              db.transaction(['articles'], 'readwrite').objectStore('articles')["delete"](cursor.key);
+              db.transaction(['articles'], readWrite).objectStore('articles')["delete"](cursor.key);
             }
             return cursor["continue"]();
           } else {
@@ -291,7 +297,7 @@ under the License.
       getArticles = function() {
         var deferred, objectStore;
         deferred = $q.defer();
-        objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
+        objectStore = db.transaction(['articles'], readOnly).objectStore('articles');
         objectStore.count().onsuccess = function(event) {
           if (event.target.result < 20) {
             return getLatestArticles().then(function() {
@@ -424,8 +430,8 @@ under the License.
           return;
         }
         if (localStorage['newArticles'] === "1") {
-          objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
-          objectStore.openCursor(null, "prev").onsuccess = function(event) {
+          objectStore = db.transaction(['articles'], readOnly).objectStore('articles');
+          objectStore.openCursor(null, cursorPrev).onsuccess = function(event) {
             var cursor;
             cursor = event.target.result;
             if (cursor) {
