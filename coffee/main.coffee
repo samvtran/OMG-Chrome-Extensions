@@ -191,7 +191,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
     deferred = $q.defer()
     articles = []
     objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
-    objectStore.openCursor(null, "prev").onsuccess = (event) ->
+    objectStore.openCursor(null, typeof IDBTransaction.READ_WRITE is 'undefined' ? "prev" : IDBTransaction.READ_WRITE).onsuccess = (event) ->
       cursor = event.target.result
       if cursor
         if articles.length < 20
@@ -296,7 +296,7 @@ omgUtil.service 'Notification', ['$filter', ($filter) ->
     if localStorage['newArticles'] is "0" then return
     if localStorage['newArticles'] is "1"
       objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
-      objectStore.openCursor(null, "prev").onsuccess = (event) ->
+      objectStore.openCursor(null, typeof IDBTransaction.READ_WRITE is 'undefined' ? "prev" : IDBTransaction.READ_WRITE).onsuccess = (event) ->
         cursor = event.target.result
         if cursor
           singleNotify(cursor.value)

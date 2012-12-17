@@ -13,7 +13,6 @@ This extension uses [CoffeeScript](http://coffeescript.org/) and [Sass](http://s
 
 - [AngularJS](http://angularjs.org)
 - [jQuery](http://jquery.com)
-- [Moment.js](http://momentjs.com)
 - [Compass](http://compass-style.org/)
 
 This extension also uses [Font Awesome](http://fortawesome.github.com/Font-Awesome) (CC BY 3.0)
