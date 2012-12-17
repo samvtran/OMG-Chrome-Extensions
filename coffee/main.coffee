@@ -61,14 +61,14 @@ omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalS
     if $scope.latestArticles[index].unread is true
       LocalStorage.decrement()
       $scope.latestArticles[index].unread = false;
-      db.transaction(['articles'], 'readwrite').objectStore('articles').put($scope.latestArticles[index])
+      db.transaction(['articles'], typeof IDBTransaction.READ_WRITE is 'undefined' ? 'readwrite' : IDBTransaction.READ_WRITE).objectStore('articles').put($scope.latestArticles[index])
 
   $scope.markAllAsRead = () ->
     LocalStorage.reset()
     for article in $scope.latestArticles
       if article.unread is true
         article.unread = false
-        db.transaction(['articles'], 'readwrite').objectStore('articles').put(article)
+        db.transaction(['articles'], typeof IDBTransaction.READ_WRITE is 'undefined' ? 'readwrite' : IDBTransaction.READ_WRITE).objectStore('articles').put(article)
   $scope.refresh = () ->
     $scope.refreshing = true;
     databaseService.open().then (event) ->
@@ -174,7 +174,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
 
   _addArticle = (articleObj) ->
     deferred = $q.defer()
-    addArticle = db.transaction(['articles'], 'readwrite').objectStore('articles').add(articleObj)
+    addArticle = db.transaction(['articles'], typeof IDBTransaction.READ_WRITE is 'undefined' ? 'readwrite' : IDBTransaction.READ_WRITE).objectStore('articles').add(articleObj)
     addArticle.onsuccess = (event) ->
       # TODO increment unread if matches categories list
       LocalStorage.increment()
@@ -190,8 +190,8 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
   _getArticlesFromDatabase = () ->
     deferred = $q.defer()
     articles = []
-    objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
-    objectStore.openCursor(null, typeof IDBTransaction.READ_WRITE is 'undefined' ? "prev" : IDBTransaction.READ_WRITE).onsuccess = (event) ->
+    objectStore = db.transaction(['articles'], typeof IDBTransaction.READ_ONLY is 'undefined' ? 'readonly' : IDBTransaction.READ_ONLY).objectStore('articles')
+    objectStore.openCursor(null, typeof IDBTransaction.PREV is 'undefined' ? "prev" : IDBTransaction.PREV).onsuccess = (event) ->
       cursor = event.target.result
       if cursor
         if articles.length < 20
@@ -199,7 +199,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
         else
           if cursor.value.unread is true
             LocalStorage.decrement()
-          db.transaction(['articles'], 'readwrite').objectStore('articles').delete(cursor.key)
+          db.transaction(['articles'], typeof IDBTransaction.READ_WRITE is 'undefined' ? 'readwrite' : IDBTransaction.READ_WRITE).objectStore('articles').delete(cursor.key)
         cursor.continue()
       else
         $rootScope.$apply () ->
@@ -208,7 +208,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
 
   getArticles = () ->
     deferred = $q.defer()
-    objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
+    objectStore = db.transaction(['articles'], typeof IDBTransaction.READ_ONLY is 'undefined' ? 'readonly' : IDBTransaction.READ_ONLY).objectStore('articles')
     objectStore.count().onsuccess = (event) ->
       if event.target.result < 20
         getLatestArticles().then () ->
@@ -295,8 +295,8 @@ omgUtil.service 'Notification', ['$filter', ($filter) ->
     if localStorage['notificationsEnabled'] is "false" then return
     if localStorage['newArticles'] is "0" then return
     if localStorage['newArticles'] is "1"
-      objectStore = db.transaction(['articles'], 'readonly').objectStore('articles')
-      objectStore.openCursor(null, typeof IDBTransaction.READ_WRITE is 'undefined' ? "prev" : IDBTransaction.READ_WRITE).onsuccess = (event) ->
+      objectStore = db.transaction(['articles'], typeof IDBTransaction.READ_ONLY is 'undefined' ? 'readonly' : IDBTransaction.READ_ONLY).objectStore('articles')
+      objectStore.openCursor(null, typeof IDBTransaction.PREV is 'undefined' ? "prev" : IDBTransaction.PREV).onsuccess = (event) ->
         cursor = event.target.result
         if cursor
           singleNotify(cursor.value)
