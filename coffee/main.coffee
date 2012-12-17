@@ -90,10 +90,10 @@ omgApp.controller 'popupCtrl', ['$scope', 'databaseService', 'Articles', 'LocalS
 omgOptions = angular.module 'omgOptions', []
 
 omgOptions.controller 'optionCtrl', ['$scope', ($scope) ->
-  $scope.notificationsEnabled = (localStorage['notificationsEnabled'] is "true" ? true : false)
+  $scope.notificationsEnabled = (if localStorage['notificationsEnabled'] is "true" then true else false)
 
   $scope.$watch 'notificationsEnabled', (newValue) ->
-    if newValue != (localStorage['notificationsEnabled'] is "true" ? true : false)
+    if newValue != (if localStorage['notificationsEnabled'] is "true" then true else false)
       localStorage['notificationsEnabled'] = newValue
 
   $scope.showExampleNotification = () ->

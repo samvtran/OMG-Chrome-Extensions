@@ -125,15 +125,9 @@ under the License.
 
   omgOptions.controller('optionCtrl', [
     '$scope', function($scope) {
-      var _ref;
-      $scope.notificationsEnabled = (_ref = localStorage['notificationsEnabled'] === "true") != null ? _ref : {
-        "true": false
-      };
+      $scope.notificationsEnabled = (localStorage['notificationsEnabled'] === "true" ? true : false);
       $scope.$watch('notificationsEnabled', function(newValue) {
-        var _ref1;
-        if (newValue !== ((_ref1 = localStorage['notificationsEnabled'] === "true") != null ? _ref1 : {
-          "true": false
-        })) {
+        if (newValue !== (localStorage['notificationsEnabled'] === "true" ? true : false)) {
           return localStorage['notificationsEnabled'] = newValue;
         }
       });
