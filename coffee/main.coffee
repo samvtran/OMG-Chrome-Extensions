@@ -308,10 +308,18 @@ omgUtil.service 'Notification', ['$filter', ($filter) ->
       multiNotify(localStorage['newArticles'])
   singleNotify = (article) ->
     if localStorage['notificationsEnabled'] is "false" then return
-    webkitNotifications.createNotification('/images/icon48.png', "New article! #{article.title}", "#{$filter('truncate')(article.summary, 100)}").show()
+    notification = webkitNotifications.createNotification('/images/icon48.png', "New article! #{article.title}", "#{$filter('truncate')(article.summary, 100)}")
+    notification.show()
+    setTimeout () ->
+      notification.cancel()
+    , 7500
   multiNotify = (number) ->
     if localStorage['notificationsEnabled'] is "false" then return
-    webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "#{number} new articles on OMG! Ubuntu!").show()
+    notification = webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "#{number} new articles on OMG! Ubuntu!")
+    notification.show()
+    setTimeout () ->
+      notification.cancel()
+    , 7500
 
   {
     start: start

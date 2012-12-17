@@ -438,16 +438,26 @@ under the License.
         }
       };
       singleNotify = function(article) {
+        var notification;
         if (localStorage['notificationsEnabled'] === "false") {
           return;
         }
-        return webkitNotifications.createNotification('/images/icon48.png', "New article! " + article.title, "" + ($filter('truncate')(article.summary, 100))).show();
+        notification = webkitNotifications.createNotification('/images/icon48.png', "New article! " + article.title, "" + ($filter('truncate')(article.summary, 100)));
+        notification.show();
+        return setTimeout(function() {
+          return notification.cancel();
+        }, 7500);
       };
       multiNotify = function(number) {
+        var notification;
         if (localStorage['notificationsEnabled'] === "false") {
           return;
         }
-        return webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "" + number + " new articles on OMG! Ubuntu!").show();
+        notification = webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "" + number + " new articles on OMG! Ubuntu!");
+        notification.show();
+        return setTimeout(function() {
+          return notification.cancel();
+        }, 7500);
       };
       return {
         start: start,
