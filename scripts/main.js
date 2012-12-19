@@ -263,17 +263,19 @@ under the License.
         return deferred.promise;
       };
       _getArticlesFromDatabase = function() {
-        var articles, deferred, objectStore;
+        var articles, deferred, objectStore, totalCount;
         deferred = $q.defer();
         articles = [];
+        totalCount = 0;
         objectStore = db.transaction(['articles'], readOnly).objectStore('articles');
         objectStore.openCursor(null, cursorPrev).onsuccess = function(event) {
           var cursor;
           cursor = event.target.result;
           if (cursor) {
+            totalCount++;
             if (articles.length < 20) {
               articles.push(cursor.value);
-            } else {
+            } else if (totalCount > 30) {
               if (cursor.value.unread === true) {
                 LocalStorage.decrement();
               }

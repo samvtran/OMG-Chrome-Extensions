@@ -194,13 +194,15 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
   _getArticlesFromDatabase = () ->
     deferred = $q.defer()
     articles = []
+    totalCount = 0
     objectStore = db.transaction(['articles'], readOnly).objectStore('articles')
     objectStore.openCursor(null, cursorPrev).onsuccess = (event) ->
       cursor = event.target.result
       if cursor
+        totalCount++
         if articles.length < 20
           articles.push cursor.value
-        else
+        else if totalCount > 30 #Safe guard against deleted articles
           if cursor.value.unread is true
             LocalStorage.decrement()
           db.transaction(['articles'], readWrite).objectStore('articles').delete(cursor.key)
