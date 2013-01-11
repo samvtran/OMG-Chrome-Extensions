@@ -250,7 +250,7 @@ under the License.
         addArticle = db.transaction(['articles'], readWrite).objectStore('articles').add(articleObj);
         addArticle.onsuccess = function(event) {
           LocalStorage.increment();
-          localStorage['newArticles'] = parseInt(localStorage['newArticles']) + 1;
+          localStorage['newArticles'] = ~~localStorage['newArticles'] + 1;
           return $rootScope.$apply(function() {
             return deferred.resolve();
           });
@@ -339,17 +339,15 @@ under the License.
         return final;
       }
       truncated = input.substring(0, count);
-      if (truncated.substring(truncated.length - 1).match(/\s/)) {
-        final = truncated;
-      }
       if (input.substring(truncated.length, truncated.length + 1).match(/\s/)) {
         final = truncated;
-      }
-      for (i = _i = 1, _ref = truncated.length - 1; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-        truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1));
-        if (truncatedTest.match(/\s/)) {
-          final = truncated.substring(0, truncated.length - i);
-          break;
+      } else {
+        for (i = _i = 1, _ref = truncated.length - 1; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+          truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1));
+          if (truncatedTest.match(/\s/)) {
+            final = truncated.substring(0, truncated.length - i);
+            break;
+          }
         }
       }
       return final + "...";
@@ -392,14 +390,14 @@ under the License.
     'Badge', function(Badge) {
       var decrement, increment, reset;
       increment = function() {
-        localStorage['unread'] = parseInt(localStorage['unread']) + 1;
+        localStorage['unread'] = ~~localStorage['unread'] + 1;
         return Badge.notify();
       };
       decrement = function() {
         if (localStorage['unread'] === "0") {
           return;
         }
-        localStorage['unread'] = parseInt(localStorage['unread']) - 1;
+        localStorage['unread'] = ~~localStorage['unread'] - 1;
         return Badge.notify();
       };
       reset = function() {
@@ -445,6 +443,10 @@ under the License.
           return;
         }
         notification = webkitNotifications.createNotification('/images/icon48.png', "New article! " + article.title, "" + ($filter('truncate')(article.summary, 100)));
+        notification.addEventListener('click', function() {
+          notification.cancel();
+          return window.open(article.link);
+        });
         notification.show();
         return setTimeout(function() {
           return notification.cancel();
@@ -456,6 +458,10 @@ under the License.
           return;
         }
         notification = webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "" + number + " new articles on OMG! Ubuntu!");
+        notification.addEventListener('click', function() {
+          notification.cancel();
+          return window.open('http://omgubuntu.co.uk');
+        });
         notification.show();
         return setTimeout(function() {
           return notification.cancel();

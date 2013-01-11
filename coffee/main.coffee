@@ -182,7 +182,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', 'LocalStorage', 'Notification',
     addArticle.onsuccess = (event) ->
       # TODO increment unread if matches categories list
       LocalStorage.increment()
-      localStorage['newArticles'] = parseInt(localStorage['newArticles']) + 1
+      localStorage['newArticles'] = ~~localStorage['newArticles'] + 1
       $rootScope.$apply () ->
         deferred.resolve()
     addArticle.onerror = (event) ->
@@ -244,21 +244,18 @@ omgUtil.filter 'truncate', () -> (input, count) ->
   if typeof input is "undefined" then return "";
   if input.length <= count
     return final
-  truncated = input.substring(0, (count))
-  # Is the current EOL whitespace?
-  if truncated.substring(truncated.length - 1).match(/\s/)
-    final = truncated
+  truncated = input.substring(0, count)
+
   # Is the character after whitespace?
   if input.substring(truncated.length, truncated.length + 1).match(/\s/)
     final = truncated
-
-  # Search backwards until we hit whitespace or the end of the string.
-  for i in [1 .. (truncated.length - 1)]
-    truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1));
-    if truncatedTest.match(/\s/)
-      final = truncated.substring(0, truncated.length - i)
-      break;
-  return final + "..."
+  else # Search backwards until we hit whitespace or the end of the string.
+    for i in [1 .. (truncated.length - 1)]
+      truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1))
+      if truncatedTest.match(/\s/)
+        final = truncated.substring(0, truncated.length - i)
+        break
+  final + "..."
 
 omgUtil.filter 'uriEncode', () -> (input) ->
   encodeURIComponent input
@@ -279,11 +276,11 @@ omgUtil.service 'Badge', [->
 
 omgUtil.service 'LocalStorage', ['Badge', (Badge)->
   increment = () ->
-    localStorage['unread'] = parseInt(localStorage['unread']) + 1
+    localStorage['unread'] = ~~localStorage['unread'] + 1
     Badge.notify()
   decrement = () ->
     if localStorage['unread'] is "0" then return
-    localStorage['unread'] = parseInt(localStorage['unread']) - 1
+    localStorage['unread'] = ~~localStorage['unread'] - 1
     Badge.notify()
   reset = () ->
     localStorage['unread'] = 0
@@ -307,10 +304,13 @@ omgUtil.service 'Notification', ['$filter', ($filter) ->
         if cursor
           singleNotify(cursor.value)
     if localStorage['newArticles'] > 1
-      multiNotify(localStorage['newArticles'])
+      multiNotify localStorage['newArticles']
   singleNotify = (article) ->
     if localStorage['notificationsEnabled'] is "false" then return
     notification = webkitNotifications.createNotification('/images/icon48.png', "New article! #{article.title}", "#{$filter('truncate')(article.summary, 100)}")
+    notification.addEventListener 'click', () ->
+      notification.cancel()
+      window.open article.link
     notification.show()
     setTimeout () ->
       notification.cancel()
@@ -318,6 +318,9 @@ omgUtil.service 'Notification', ['$filter', ($filter) ->
   multiNotify = (number) ->
     if localStorage['notificationsEnabled'] is "false" then return
     notification = webkitNotifications.createNotification('/images/icon48.png', 'New articles!', "#{number} new articles on OMG! Ubuntu!")
+    notification.addEventListener 'click', () ->
+      notification.cancel()
+      window.open 'http://omgubuntu.co.uk'
     notification.show()
     setTimeout () ->
       notification.cancel()
