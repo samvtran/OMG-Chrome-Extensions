@@ -15,7 +15,7 @@ under the License.
 */
 @import "compass/reset";
 @import "compass/css3";
-
+@import url(http://fonts.googleapis.com/css?family=Raleway:500);
 // #77216f or #5e2750 or #b53e7e
 $purple: #792354;
 $orange: #f15d22;
@@ -37,7 +37,7 @@ $orange: #f15d22;
 }
 html { font-size: 14px; }
 body {
-  font-family: "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-family: "Raleway", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
   color: #555;
   margin: auto;
   padding-top: 8px;
