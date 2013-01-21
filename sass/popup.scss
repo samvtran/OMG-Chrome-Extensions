@@ -25,6 +25,7 @@ $orange: #f15d22;
 
 ::-webkit-scrollbar-track {
     @include border-radius(10px);
+    background: inherit;
 }
 
 ::-webkit-scrollbar-thumb {
