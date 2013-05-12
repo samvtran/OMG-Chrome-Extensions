@@ -1,28 +1,37 @@
-# OMG! Ubuntu! Chrome!
+# OMG! Chrome! Extension
 
-The official [OMG! Ubuntu!](http://omgubuntu.co.uk) Chrome extension
+The official [OMG! Chrome!](http://omgchrome.com) Chrome extension
 
 ## Availability
-The extension is available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/omg-ubuntu/nhmmlbjenhdockdgpklmdiamollflljn) or can be downloaded from this repo and used as an "unpacked" extension.
+The extension is available in the Chrome Web Store or can be downloaded from this repo and used as an "unpacked" extension.
 
 ## Compatibility
-The extension has been tested on Chromium version 22.0.1229.94 on Ubuntu 12.10 and with the latest Chrome dev releases. IndexedDB changed somewhere between Chrome/ium 17 and 22, so the extension may not function properly in versions of Chrome/ium < 22.
+The extension has been tested on the latest Chrome dev releases. The extension may not function properly with outdated versions of Chrome/ium.
 
 ## Libraries, et al.
 This extension uses [CoffeeScript](http://coffeescript.org/) and [Sass](http://sass-lang.com/) and the following amazing projects:
 
 - [AngularJS](http://angularjs.org)
-- [jQuery](http://jquery.com)
 - [Compass](http://compass-style.org/)
 
-This extension also uses [Font Awesome](http://fortawesome.github.com/Font-Awesome) (CC BY 3.0)
+## Usage
+Please run `npm i -g grunt-cli` (as sudo if necessary) to install the necessary prerequisites, then run `npm install` to install the rest of the dependencies.
+
+To generate a production build, just run `grunt build` and a production directory will be ready for usage!
+
+## Development
+Please run `npm i -g grunt-cli istanbul karma@~0.9 jasmine-node` (as sudo if needed) to install all the development and testing prerequisites, then run `npm install` to install the rest of the dependencies.
+
+To start development and have SASS and CoffeeScript built automatically, run `grunt dev` and use the dev folder as the Chrome extension.
+
+To run the test suite (***currently in progress***) run `karma start test/karma.conf.js` from the main repository. This will keep karma running in the background and rerunning tests any time you make changes.
 
 ## License, et al.
-Ubuntu is a registered trademark of [Canonical Ltd](http://canonical.com/).
+Chrome is a registered trademark of [Google Inc]](http://google.com/).
 
-OMG! Ubuntu! is a member of the Ohso Ltd Network.
+OMG! Chrome! is a member of the Ohso Ltd Network.
 
-Copyright (C) 2012 [Ohso Ltd](http://ohso.co/)
+Copyright (C) 2012-2013 [Ohso Ltd](http://ohso.co/)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

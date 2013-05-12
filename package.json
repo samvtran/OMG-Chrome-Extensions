@@ -1,0 +1,17 @@
+{
+  "name": "omg-chrome-extensions",
+  "version": "0.0.0",
+  "devDependencies": {
+    "coffee-script": "~1.4.0",
+    "karma-coverage": "~0.0.1",
+    "grunt": "~0.4.0",
+    "grunt-karma": "~0.4.0",
+    "karma-jasmine": "~0.0.1",
+    "grunt-contrib-watch": "~0.2.0",
+    "grunt-contrib-coffee": "~0.4.0",
+    "grunt-coffeelint": "0.0.6",
+    "grunt-contrib-compass": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-clean": "latest"
+  }
+}

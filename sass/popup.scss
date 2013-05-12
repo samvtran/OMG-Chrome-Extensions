@@ -15,21 +15,43 @@ under the License.
 */
 @import "compass/reset";
 @import "compass/css3";
-@import url(http://fonts.googleapis.com/css?family=Raleway:500);
+@import url(http://fonts.googleapis.com/css?family=Roboto:300);
 // #77216f or #5e2750 or #b53e7e
+@font-face {
+    font-family: 'omgregular';
+    src: url('../fonts/omg-regular.eot');
+    src: url('../fonts/omg-regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/omg-regular.woff') format('woff'),
+         url('../fonts/omg-regular.ttf') format('truetype'),
+         url('../fonts/omg-regular.svg#omgregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class*="omgicon-"]:before {
+  font-family: 'omgregular';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+.omgicon-refresh:before { content: "\e204" }
+.omgicon-time:before { content: "\e205" }
+.omgicon-bookmark:before { content: "\e206" }
+
 $purple: #5e2750;
 $orange: #f15d22;
+$blue: #185c85;
+$light-blue: #389bf0;
 ::-webkit-scrollbar {
     width: 8px;
 }
 
-::-webkit-scrollbar-track {
-    @include border-radius(10px);
-}
 ::-webkit-scrollbar-track-piece { background-color: white }
 ::-webkit-scrollbar-thumb {
-    @include border-radius(10px);
     background: #ccc;
+    border: 1px solid #bfbfbf;
 }
 
 ::-webkit-scrollbar-thumb:window-inactive {
@@ -37,15 +59,22 @@ $orange: #f15d22;
 }
 html { font-size: 12px; }
 body {
-  font-family: "Raleway", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-family: "Roboto", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-weight: 300;
   width: 448px;
   min-height: 512px;
   color: #555;
 }
-h3 { font-size: 16px; }
+h3 {
+  font-size: 18px;
+  line-height: 24px;
+}
+h3 > a {
+  color: #333;
+}
 a {
   text-decoration: none;
-  color: $purple;
+  color: $blue;
 }
 a:hover {
   text-decoration: underline;
@@ -57,10 +86,10 @@ a:hover {
   display: none;
 }
 .popup-header {
+  z-index: 1;
   height: 32px;
   padding: 0 12px;
-  margin: .5rem 0;
-  background: $purple;
+  background: $blue;
   position: relative;
   .logo {
     outline: none;
@@ -76,7 +105,7 @@ a:hover {
     position: absolute;
     right: 12px;
     top: 50%;
-    margin-top: -12px;
+    margin-top: -10px;
     &:hover { text-decoration: none; }
   }
 }
@@ -84,35 +113,41 @@ a:hover {
 .latest-news {
   article {
     border-bottom: 1px dotted #ddd;
-    padding: 1rem 1rem .5rem;
-    h3 {
-      line-height: 18px;
+    padding: 6px 18px;
+    position: relative;
+    &:hover {
+      background: #efefef;
     }
-    .icon-bookmark {
+    .unread-indicator {
+      position: absolute;
+      left: 0;
+      top: 1px;
+      font-size: 16px;
       color: $orange;
+      width: 18px;
+      text-align: center;
     }
-    p {
-      padding: 8px 0;
-      line-height: 16px;
+    h3 {
+      display: inline-block;
+      width: 75%;
+      vertical-align: middle;
+      padding-right: 10px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
     }
-    footer {
-      .read-more {
-        text-transform: uppercase;
-      }
-      .social-links {
-        float: right;
-        font-size: 20px;
-        line-height: 12px;
-        a {
-          text-decoration: none;
-        }
-        a:hover { opacity: 0.8 }
-        .icon-facebook-sign { color: #3b5998 }
-        .icon-twitter-sign { color: #00a0d1 }
+    .thumbnail-wrapper {
+      vertical-align: middle;
+      display: inline-block;
+      width: 25%;
+      margin: 10px 0 10px 0;
+      img {
+        border: none;
+        height: 57px;
+        width: 100px;
       }
     }
   }
-  margin-bottom: 2.5rem;
+  margin-bottom: 28px;
 }
 
 
