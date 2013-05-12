@@ -309,24 +309,6 @@ omgUtil.service 'Articles', ['$q', '$rootScope', '$http', 'LocalStorage', 'Notif
   }
 ]
 
-omgUtil.filter 'truncate', -> (input, count) ->
-  final = input
-  if typeof input is "undefined" then return ""
-  if input.length <= count
-    return final
-  truncated = input.substring(0, count)
-
-  # Is the character after whitespace?
-  if input.substring(truncated.length, truncated.length + 1).match(/\s/)
-    final = truncated
-  else # Search backwards until we hit whitespace or the end of the string.
-    for i in [1 .. (truncated.length - 1)]
-      truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1))
-      if truncatedTest.match(/\s/)
-        final = truncated.substring(0, truncated.length - i)
-        break
-  final + "..."
-
 omgUtil.service 'Badge', [ ->
   notify = () ->
     if localStorage['unread'] is "0"

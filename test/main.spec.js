@@ -212,29 +212,6 @@ describe('omgUtil module', function() {
     }));
   });
 
-  describe('truncateFilter', function() {
-    // 150 character string, then 140 and 40 character strings that truncate appropriately
-    var testString = 'qQ5ozw0oT8OkSoX0o0RFHkqXlzfSXyTEvB MjcieehLKCL43rdHrpcwaTd0hbBc0rECxIlJnQ3 EGf84xX7rOPdzaJkOyB2N7OjcH9GZ8w2OMftv 8wttZgNedWxSBxVMY5 SqfbJIaUlAM5sKpSj2';
-    var testStringAt40 = 'qQ5ozw0oT8OkSoX0o0RFHkqXlzfSXyTEvB...';
-    var testStringAt140 = 'qQ5ozw0oT8OkSoX0o0RFHkqXlzfSXyTEvB MjcieehLKCL43rdHrpcwaTd0hbBc0rECxIlJnQ3 EGf84xX7rOPdzaJkOyB2N7OjcH9GZ8w2OMftv 8wttZgNedWxSBxVMY5...';
-    var testStringAt131 = 'qQ5ozw0oT8OkSoX0o0RFHkqXlzfSXyTEvB MjcieehLKCL43rdHrpcwaTd0hbBc0rECxIlJnQ3 EGf84xX7rOPdzaJkOyB2N7OjcH9GZ8w2OMftv 8wttZgNedWxSBxVMY5...';
-
-    it('truncates a line greater than N characters and finds the first word break < N to break on', inject(function(truncateFilter) {
-      expect(truncateFilter(testString, 150)).toEqual(testString);
-      expect(truncateFilter(testString, 140)).toEqual(testStringAt140);
-      expect(truncateFilter(testString, 40)).toEqual(testStringAt40);
-    }));
-
-    it('returns an empty string if the input is undefined', inject(function(truncateFilter) {
-      expect(truncateFilter(undefined, 150)).toEqual('');
-    }));
-
-    it('finishes truncation if the next character was a space', inject(function(truncateFilter) {
-      expect(truncateFilter(testString, 131)).toEqual(testStringAt131);
-    }));
-
-  });
-
   describe('LocalStorage service', function() {
     beforeEach(function() {
       localStorage['unread'] = 2;
