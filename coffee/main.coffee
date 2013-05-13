@@ -411,7 +411,7 @@ omgUtil.service 'Notification', ['$filter', 'databaseService', ($filter, databas
       "#{number} new articles on OMG! Ubuntu!")
     notification.addEventListener 'click', () ->
       notification.cancel()
-      window.open 'http://omgubuntu.co.uk'
+      window.open 'http://www.omgchrome.com'
     notification.show()
     setTimeout () ->
       notification.cancel()

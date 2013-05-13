@@ -17,7 +17,7 @@ files = [
 ];
 
 preprocessors = {
-  'public/scripts/main.js': 'coverage',
+  'dev/scripts/main.js': 'coverage',
 };
 
 reporters = ['progress', 'coverage', 'dots'];
@@ -30,7 +30,7 @@ exclude = [
 
 // test results reporter to use
 // possible values: 'dots', 'progress', 'junit'
-//reporters = ['progress'];
+//reporters = ['coverage'];
 
 
 // web server port

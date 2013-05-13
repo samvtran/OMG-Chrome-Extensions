@@ -17,7 +17,7 @@ under the License.
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>OMG! Ubuntu!</title>
+    <title>OMG! Chrome!</title>
     <link rel="stylesheet" href="stylesheets/popup.css">
     <script type="text/javascript" src="scripts/angular.min.js"></script>
     <script type="text/javascript" src="scripts/angular-resource.min.js"></script>
@@ -25,7 +25,7 @@ under the License.
 </head>
 <body ng-controller="popupCtrl" ng-app="omgApp" ng-csp>
   <header class="popup-header">
-    <a target="_blank" href="http://www.omgubuntu.co.uk" class="logo" title="Visit OMG! Ubuntu!"><img class="logo" src="images/icon128.png" height="48" width="48"><span class="hide">OMG! Ubuntu!</span></a>
+    <a target="_blank" href="http://www.omgchrome.com" class="logo" title="Visit OMG! Chrome!"><img class="logo" src="images/icon128.png" height="48" width="48"><span class="hide">OMG! Chrome!</span></a>
     <a href="#" eat-click ng-click="refresh()" class="refresh"><i ng-class="{true: 'omgicon-time', false: 'omgicon-refresh'}[refreshing==true]"></i><span class="hide">Refresh</span></a>
   </header>
   <section class="latest-news" ng-model="latestArticles">
@@ -35,7 +35,7 @@ under the License.
     </article>
   </section>
   <footer class="popup-footer">
-    <a ng-click="optionsPage()" title="Change OMG! Ubuntu! options" href="#" eat-click>Options</a>
+    <a ng-click="optionsPage()" title="Change OMG! Chrome! options" href="#" eat-click>Options</a>
     <a class="right" ng-click="markAllAsRead()" href="#" eat-click>Mark All As Read</a>
   </footer>
 </body>

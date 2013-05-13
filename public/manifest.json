@@ -1,6 +1,6 @@
 {
     "name": "OMG! Chrome!",
-    "version": "1.9",
+    "version": "1.10",
     "manifest_version": 2,
     "description": "The official OMG! Chrome! extension",
     "icons": {
