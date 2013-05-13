@@ -15,7 +15,7 @@ under the License.
 */
 @import "compass/reset";
 @import "compass/css3";
-@import url(http://fonts.googleapis.com/css?family=Roboto:300);
+@import url(http://fonts.googleapis.com/css?family=Roboto:300,400);
 // #77216f or #5e2750 or #b53e7e
 @font-face {
     font-family: 'omgregular';
@@ -63,6 +63,7 @@ body {
   font-weight: 300;
   width: 448px;
   min-height: 512px;
+  ovreflow-y: scroll;
   color: #555;
 }
 h3 {
@@ -155,6 +156,7 @@ a:hover {
   @include background-image(linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.25) 30%, white 50%, white));
   text-transform: uppercase;
   position: fixed;
+  font-weight: 400;
   bottom: 0;
   left: 0;
   right: 0;

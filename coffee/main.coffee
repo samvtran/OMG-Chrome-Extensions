@@ -265,7 +265,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', '$http', 'LocalStorage', 'Notif
         cursor = event.target.result
         if cursor
           totalCount++
-          if articles.length < 20
+          if articles.length < 18
             articles.push cursor.value
           else if totalCount > 30 # Safeguard against deleted articles
             if cursor.value.unread is true
@@ -282,7 +282,7 @@ omgUtil.service 'Articles', ['$q', '$rootScope', '$http', 'LocalStorage', 'Notif
     databaseService.getDb().then (db) ->
       objectStore = db.transaction(['articles'], readOnly).objectStore('articles')
       objectStore.count().onsuccess = (event) ->
-        if event.target.result < 20
+        if event.target.result < 18
           getLatestArticles().then ->
             _getArticlesFromDatabase().then (articles) ->
               deferred.resolve articles
