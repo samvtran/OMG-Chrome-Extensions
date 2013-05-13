@@ -1,1 +1,6 @@
 .sass-cache/
+node_modules/
+coverage/
+dev/
+production/
+libpeerconnection.log
