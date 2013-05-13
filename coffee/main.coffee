@@ -374,7 +374,7 @@ omgUtil.filter 'truncate', -> (input, count) ->
   if input.substring(truncated.length, truncated.length + 1).match(/\s/)
     final = truncated
   else # Search backwards until we hit whitespace or the end of the string.
-    for i in [1 .. (truncated.length - 1)]
+    for i in [1 .. (truncated.length - 1)] by 1
       truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1))
       if truncatedTest.match(/\s/)
         final = truncated.substring(0, truncated.length - i)
@@ -389,9 +389,9 @@ omgUtil.service 'Notification', ['$filter', 'databaseService', ($filter, databas
       databaseService.getDb().then (db) ->
         objectStore = db.transaction(['articles'], readOnly).objectStore('articles')
         objectStore.openCursor(null, cursorPrev).onsuccess = (event) ->
-        cursor = event.target.result
-        if cursor
-          singleNotify(cursor.value)
+          cursor = event.target.result
+          if cursor and cursor.value
+            singleNotify(cursor.value)
     if localStorage['newArticles'] > 1
       multiNotify localStorage['newArticles']
   singleNotify = (article, timeout) ->
