@@ -16,6 +16,7 @@ under the License.
 ###
 'use strict'
 omgFeed = 'http://www.omgchrome.com/feed'
+
 # IndexedDB
 window.indexedDB = window.indexedDB || window.webkitIndexedDB
 window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction
@@ -128,11 +129,14 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
                 code: statuses.ERROR
                 message: 'Chrome <= 22 error upgrading database'
           versionReq.onsuccess = (event) ->
-            createStores()
-            $rootScope.$apply () ->
+            createStores().then ->
               deferred.resolve
                 code: statuses.OPENED
                 message: 'Chrome <= 22 database upgraded and opened'
+            , ->
+              deferred.reject
+                code: statuses.ERROR
+                message: 'Upgrading the database failed!'
         else
           $rootScope.$apply () ->
             deferred.resolve
@@ -146,11 +150,15 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
     request.onupgradeneeded = (event) ->
       console.log 'Chrome >= 23: Database needs upgrading'
       setDb event.target.result
-      createStores()
-      $rootScope.$apply () ->
+      createStores().then ->
+        console.log "Database upgraded!"
         deferred.resolve
           code: statuses.OPENED
           message: 'Upgraded database for Chrome >= 23'
+      , ->
+        deferred.reject
+          code: statuses.ERROR
+          message; 'Upgrading the database failed!'
     deferred.promise
 
   clear = ->
@@ -166,8 +174,15 @@ omgUtil.service 'databaseService', ['$q', '$rootScope', ($q, $rootScope) ->
     deferred.promise
 
   createStores = ->
-    db.createObjectStore "articles", keyPath: "date"
-
+    deffered = $q.defer()
+    createAction = db.createObjectStore "articles", keyPath: "date"
+    createAction.onsuccess = ->
+      $rootScope.$apply () ->
+        deferred.resolve
+    createAction.onerror = ->
+      $rootScope.$apply () ->
+        deferred.reject
+    deffered.promise
   getDb = ->
     deferred = $q.defer()
     open().then ->
@@ -347,6 +362,24 @@ omgUtil.service 'LocalStorage', ['Badge', (Badge)->
     reset: reset
   }
 ]
+
+omgUtil.filter 'truncate', -> (input, count) ->
+  final = input
+  if typeof input is "undefined" then return ""
+  if input.length <= count
+    return final
+  truncated = input.substring(0, count)
+
+  # Is the character after whitespace?
+  if input.substring(truncated.length, truncated.length + 1).match(/\s/)
+    final = truncated
+  else # Search backwards until we hit whitespace or the end of the string.
+    for i in [1 .. (truncated.length - 1)]
+      truncatedTest = truncated.substring(truncated.length - i, truncated.length - (i - 1))
+      if truncatedTest.match(/\s/)
+        final = truncated.substring(0, truncated.length - i)
+        break
+  final + "..."
 
 omgUtil.service 'Notification', ['$filter', 'databaseService', ($filter, databaseService) ->
   start = () ->
