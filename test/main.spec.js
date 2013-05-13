@@ -93,8 +93,22 @@ describe('omgUtil module', function() {
     }));
 
     it('updates the database if out of date', function() {
-
+      // TODO, but we haven't had to do this yet.
     });
+
+    // it('queries the database after things are inserted', inject(function(databaseService) {
+    //   var promise = databaseService.getDb();
+    //   var promiseFulfilled = false;
+
+    //   promise.then(function(db) {
+    //     expect(db).toBeTruthy();
+    //   });
+
+    //   waitsFor(function() {
+    //     return promise.then();
+    //   }, "Couldn't open the database", 2500);
+
+    // }));
   });
 
   /*
@@ -336,9 +350,56 @@ describe('omgUtil module', function() {
       expect(webkitNotifications.createNotification).not.toHaveBeenCalled();
     }));
 
-    it('initiates a single-article notification for one new article', inject(function(Notification) {
+    it('initiates a single-article notification for one new article', inject(function(Notification, databaseService) {
+        var dbServiceSpy = databaseService;
+        var callbackCalled = false;
+        var testNotification = {
+          title: "Test",
+          summary: "Test summary"
+        }
+        dbServiceSpy.getDb = function(callback) {
+          return {
+            then: function(callback) {
+              var dbTest = {
+                transaction: function() {
+                  return {
+                    objectStore: function() {
+                      return {
+                        openCursor: function() {
+                          var onsuccess = function(event) {
+                            expect(event.target.result.value.title).toEqual(testNotification.title);
+                            expect(event.target.result.value.summary).toEqual(testNotification.summary);
+                          };
+                          var targetObj = {
+                            target: {
+                              result: {
+                                value: testNotification
+                              }
+                            }
+                          };
+                          onsuccess(targetObj);
+                          return { onsuccess: onsuccess };
+                        }
+                      }
+                    }
+                  }
+                }
+              };
+              callback(dbTest);
+              console.log('called here!');
+              callbackCalled = true;
+            }
+          }
+        }
+
         localStorage['newArticles'] = 1;
         Notification.start();
+
+        spyOn(databaseService, 'getDb').andReturn(dbServiceSpy);
+
+        waitsFor(function() {
+          return callbackCalled;
+        },"blah", 5000);
         // TODO implement openCursor
     }));
 
