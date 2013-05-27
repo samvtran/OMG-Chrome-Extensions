@@ -27,7 +27,7 @@ describe('omgUtil module', function() {
   beforeEach(function() {
     module('omgUtil');
     chrome.browserAction = {
-      setBadgeText: function() {},
+      setBadgeText: function(obj) { return obj; },
       setIcon: function() {}
     }
 
@@ -147,10 +147,8 @@ describe('omgUtil module', function() {
       var articlesActionComplete = false;
       $httpBackend.expectGET('http://www.omgchrome.com/feed');
       var articlesAction = Articles.getLatestArticles().then(function() {
-        console.log("Finished fetching articles");
         articlesActionComplete = true;
       }, function() {
-        console.log("ERrored out");
         articlesActionComplete = true;
       });
 
@@ -175,13 +173,143 @@ describe('omgUtil module', function() {
       }, "Couldn't retrieve the latest articles", 2500);
     }));
 
-    // TODO need 20 entries
-    // it("gets the articles from the database", inject(function(Articles) {
-    //   Articles.getArticles().then(function(articles) {
-    //     console.log(articles);
-    //     expect(articles).toBeDefined();
+    it('gets the articles from the database', inject(function(Articles, databaseService, $q, $http) {
+      Articles.getArticles().then(function(articles) {
+        expect(articles).toBeDefined();
+        expect(articles.length).toEqual(18);
+
+        var testObj = {
+          title: 'Article >30 Test',
+          summary: 'This is a test summary',
+          thumbnail: 'this-goes-nowhere.png',
+          link: 'http://localhost',
+          date: 1336920647026,
+          unread: true
+        }
+
+        var promises = [];
+        var allFulfilled = false;
+        databaseService.getDb().then(function (db) {
+          for (var i = 0; i < 15; i++) {
+            testObj.unread = i % 2 === 0 ? true : false;
+            var deferred = $q.defer();
+            var addArticle = db.transaction(['articles'], readWrite).objectStore('articles').add(testObj);
+            addArticle.onsuccess = function() {
+              deferred.resolve({text: 'hello!'});
+            };
+            testObj.date += 1;
+            promises.push(deferred.promise);
+          }
+        });
+
+        var all = $q.all(promises).then(function() {
+          allFulfilled = true;
+        });
+
+        waitsFor(function() {
+          return promises.length === 15 && allFulfilled === true;
+        }, "Additional articles couldn't be added to the database!", 5000);
+
+        var gettingMoreThan30ArticlesFinished = false;
+        runs(function() {
+          Articles.getArticles().then(function(articles) {
+            expect(articles).toBeDefined();
+            expect(articles.length).toEqual(18);
+            // TODO test for calls on LocalStorage.decrement() and db delete
+            gettingMoreThan30ArticlesFinished = true;
+          });
+        });
+
+        waitsFor(function() {
+          return gettingMoreThan30ArticlesFinished;
+        }, "Couldn't test article count > 30", 5000);
+
+        var testComplete = false;
+        runs(function() {
+          databaseService.getDb().then(function(db) {
+            var objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
+            var deletedCount = 0;
+            objectStore.openCursor(null, cursorPrev).onsuccess = function(event) {
+              var cursor = event.target.result;
+              if (cursor && deletedCount < 16) {
+                db.transaction(['articles'], 'readwrite').objectStore('articles').delete(cursor.key);
+                deletedCount++;
+                cursor.continue();
+              } else {
+                testComplete = true;
+              }
+            };
+          });
+        });
+
+        waitsFor(function() {
+          return testComplete;
+        }, "Couldn't complete test", 5000);
+
+        var getArticlesWhenLessThan18Finished = false;
+        runs(function() {
+          var latest = function() {
+            console.log("Hello!");
+          };
+          spyOn(Articles, 'getLatestArticles').andCallFake(latest);
+
+          Articles.getArticles().then(function() {
+          //   console.log("Waiting finished")
+             getArticlesWhenLessThan18Finished = true;
+          });
+        });
+
+        waitsFor(function() {
+          return getArticlesWhenLessThan18Finished;
+        }, "Couldn't test less than 18 articles", 5000);
+
+      });
+
+    }));
+
+    // it('gets more articles if there are fewer than 18 articles', inject(function(databaseService, Articles) {
+    //   console.log("Test running")
+    //   var testComplete = false;
+    //   databaseService.getDb().then(function(db) {
+    //     var objectStore = db.transaction(['articles'], 'readonly').objectStore('articles');
+    //     var deletedCount = 0;
+    //     objectStore.openCursor(null, cursorPrev).onsuccess = function(event) {
+    //       var cursor = event.target.result;
+    //       if (cursor && deletedCount < 16) {
+    //         db.transaction(['articles'], 'readwrite').objectStore('articles').delete(cursor.key);
+    //         deletedCount++;
+    //         cursor.continue();
+    //       } else {
+    //         console.log("Done")
+    //         testComplete = true;
+    //       }
+    //     };
     //   });
+
+    //   waitsFor(function() {
+    //     console.log(testComplete);
+    //     return testComplete;
+    //   }, "Couldn't complete test", 5000);
+
+    //   runs(function() {
+    //     console.log("finished with the test");
+    //     // var articlesActionComplete = false;
+    //     // $httpBackend.expectGET('http://www.omgchrome.com/feed');
+    //     // var articlesAction = Articles.getLatestArticles().then(function() {
+    //     //   articlesActionComplete = true;
+    //     // }, function() {
+    //     //   articlesActionComplete = true;
+    //     // });
+
+    //     // $httpBackend.flush();
+
+    //     // waitsFor(function() {
+    //     //   return articlesActionComplete;
+    //     // }, "Couldn't retrieve the latest articles", 2500);
+    //   });
+
     // }));
+
   });
 
   describe('Articles service rss failure', function() {
@@ -223,6 +351,39 @@ describe('omgUtil module', function() {
       waitsFor(function() {
         return failActionComplete;
       }, "Didn't error out with invalid input", 2500);
+    }));
+  });
+
+  describe('Badge service', function() {
+    it("doesn't notify the user if there aren't any unread messages", inject(function(Badge) {
+      localStorage['unread'] = 0;
+      Badge.notify();
+      expect(chrome.browserAction.setBadgeText).toHaveBeenCalledWith({text: ''});
+      expect(chrome.browserAction.setIcon).toHaveBeenCalledWith({path: 'images/icon_unread19.png'});
+    }));
+
+    it('notifies the user if one or more articles are new', inject(function(Badge) {
+      var numberOfNew = 1;
+      localStorage['unread'] = numberOfNew;
+      Badge.notify();
+      expect(chrome.browserAction.setBadgeText).toHaveBeenCalledWith({text: localStorage['unread']});
+      expect(chrome.browserAction.setIcon).toHaveBeenCalledWith({path: 'images/icon19.png'});
+    }));
+  });
+
+  describe('eatClickDirective', function() {
+    var element, scope;
+    beforeEach(inject(function($rootScope, $compile) {
+      element = angular.element(
+        '<a href="boo" eat-click>Boourns!</a>'
+      );
+      scope = $rootScope;
+      $compile(element)(scope);
+      scope.$digest();
+    }));
+    it('prevents clicks on links from initializing default events, like preventDefault()', inject(function(eatClickDirective) {
+      expect(element[0].onclick()).toBeFalsy();
+      expect(element[0].click()).toBeFalsy();
     }));
   });
 
@@ -284,23 +445,6 @@ describe('omgUtil module', function() {
     }));
   });
 
-  describe('eatClickDirective', function() {
-    var element, scope;
-    beforeEach(inject(function($rootScope, $compile) {
-      element = angular.element(
-        '<a href="boo" eat-click>Boourns!</a>'
-      );
-      scope = $rootScope;
-      $compile(element)(scope);
-      scope.$digest();
-    }));
-    it('prevents clicks on links from initializing default events, like preventDefault()', inject(function(eatClickDirective) {
-      expect(element[0].onclick()).toBeFalsy();
-      expect(element[0].click()).toBeFalsy();
-    }));
-  });
-
-
   describe('Notification service', function() {
     var notificationCancelled = 0;
     beforeEach(function() {
@@ -312,7 +456,9 @@ describe('omgUtil module', function() {
         }
       };
       var mockwebkitNotification = {
-        addEventListener: function() {},
+        addEventListener: function(name, callback) {
+          callback();
+        },
         show: function() {},
         cancel: function() { notificationCancelled++; }
       };
@@ -326,13 +472,13 @@ describe('omgUtil module', function() {
     };
 
     it('notifies the user of a single article with title and summary', inject(function(Notification) {
-      var singleNotify = Notification.singleNotify(testArticle, 500);
-      var multiNotify = Notification.multiNotify(10, 500);
+      var singleNotify = Notification.singleNotify(testArticle, 250);
+      var multiNotify = Notification.multiNotify(10, 250);
       expect(webkitNotifications.createNotification).toHaveBeenCalled();
 
       waitsFor(function() {
-        return notificationCancelled === 2;
-      }, "Notifications weren't cancelled after 500ms", 1000);
+        return notificationCancelled === 4; // 2 cancel() + 2 addEventListener()
+      }, "Notifications weren't cancelled after 250ms", 1000);
 
     }));
 
@@ -351,42 +497,33 @@ describe('omgUtil module', function() {
     }));
 
     it('initiates a single-article notification for one new article', inject(function(Notification, databaseService) {
-        var dbServiceSpy = databaseService;
         var callbackCalled = false;
         var testNotification = {
           title: "Test",
           summary: "Test summary"
         }
-        dbServiceSpy.getDb = function(callback) {
+        var onSuccessEvent = function(event) {
+          expect(event.target.result.value.title).toEqual(testNotification.title);
+          expect(event.target.result.value.summary).toEqual(testNotification.summary);
+        };
+        var onSuccessObj = {
+          onsuccess: onSuccessEvent
+        };
+        databaseService.getDb = function(callback) {
           return {
             then: function(callback) {
               var dbTest = {
                 transaction: function() {
                   return {
                     objectStore: function() {
-                      return {
-                        openCursor: function() {
-                          var onsuccess = function(event) {
-                            expect(event.target.result.value.title).toEqual(testNotification.title);
-                            expect(event.target.result.value.summary).toEqual(testNotification.summary);
-                          };
-                          var targetObj = {
-                            target: {
-                              result: {
-                                value: testNotification
-                              }
-                            }
-                          };
-                          onsuccess(targetObj);
-                          return { onsuccess: onsuccess };
-                        }
-                      }
+                      return { openCursor: function() { return onSuccessObj; } }
                     }
                   }
                 }
               };
+              onSuccessObj.onsuccess({target:{result:{value: testNotification}}});
               callback(dbTest);
-              console.log('called here!');
+              onSuccessObj.onsuccess({target:{result:{value: testNotification}}});
               callbackCalled = true;
             }
           }
@@ -395,11 +532,11 @@ describe('omgUtil module', function() {
         localStorage['newArticles'] = 1;
         Notification.start();
 
-        spyOn(databaseService, 'getDb').andReturn(dbServiceSpy);
+        //spyOn(databaseService, 'getDb').andReturn(dbServiceSpy);
 
         waitsFor(function() {
           return callbackCalled;
-        },"blah", 5000);
+        },"getDb() callback was never called", 2500);
         // TODO implement openCursor
     }));
 

@@ -20,7 +20,7 @@ preprocessors = {
   'dev/scripts/main.js': 'coverage',
 };
 
-reporters = ['progress', 'coverage', 'dots'];
+reporters = ['progress', 'coverage'];
 
 // list of files to exclude
 exclude = [
