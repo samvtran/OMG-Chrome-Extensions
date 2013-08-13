@@ -1,0 +1,18 @@
+{
+  "name": "omg-chrome-extensions",
+  "version": "2.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "latest",
+    "angular-resource": "latest"
+  },
+  "devDependencies": {
+    "angular-mocks": "latest"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules
+.sass-cache
+dist-ubuntu
+dist-chrome
+.idea
+src/chrome/coffee/config.coffee
+src/ubuntu/coffee/config.coffee
+test/build
+test/lib
+test-results.xml
+coverage
