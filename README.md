@@ -23,7 +23,7 @@ Running `grunt dev` will automagically build and lint Sass and CoffeeScript.
 
 To run the test suite run `grunt test` from the main repository. `grunt test-watch` will keep karma running in the background and rerunning tests any time you make changes.
 
-For CI use, `grunt test` generates a jUnit-formatted XML file, `test-results.xml`, that can be consumed by compatible CI servers.
+For CI use, `grunt test` generates a jUnit-formatted XML file, `test-results.xml`, that can be consumed by compatible CI servers. Karma will also output test pass/fail for TeamCity.
 
 ## License, et al.
 Chrome is a registered trademark of [Google Inc](http://google.com/).

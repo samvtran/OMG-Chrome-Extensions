@@ -16,6 +16,7 @@
     "karma-coverage": "latest",
     "grunt-karma": "latest",
     "karma-phantomjs-launcher": "latest",
-    "karma-junit-reporter": "latest"
+    "karma-junit-reporter": "latest",
+    "karma-teamcity-reporter": "latest"
   }
 }

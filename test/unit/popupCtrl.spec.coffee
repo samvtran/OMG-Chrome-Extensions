@@ -1,43 +1,35 @@
 describe 'popupCtrl', ->
+  $scope = {}
   beforeEach ->
     module 'omgApp'
     chrome.tabs =
       create: ->
     chrome.notifications =
       onClicked:
-        addListener: (callback) ->
-          if notificationTest == 1
-            callback()
+        addListener: ->
       create: ->
       onButtonClicked:
-        addListener: (callback) ->
-          if notificationTest == 2
-            callback(0, 0)
-          if notificationTest == 3
-            callback(0, 1)
+        addListener: ->
       clear: (id, callback) -> callback()
+
+  beforeEach inject ($controller) ->
+    $scope = {}
+    popupCtrl = $controller 'popupCtrl', {$scope: $scope}
+
   afterEach ->
     delete chrome.notifications
     delete chrome.tabs
 
-  it 'should fetch the latest articles', inject ($controller) ->
-    $scope = {}
-    popupCtrl = $controller 'popupCtrl', {$scope: $scope}
+  it 'should fetch the latest articles', ->
     expect($scope.latestArticles).toEqual(angular.fromJson localStorage['articles'])
 
-  it 'should retrieve a thumbnail for a given index value', inject ($controller) ->
-    $scope = {}
-    popupCtrl = $controller 'popupCtrl', {$scope: $scope}
+  it 'should retrieve a thumbnail for a given index value', ->
     expect($scope.getThumbnail(0)).toEqual($scope.latestArticles[0].thumbnail)
 
-  it 'should return a placeholder if no thumbnail exists for an article', inject ($controller) ->
-    $scope = {}
-    popupCtrl = $controller 'popupCtrl', {$scope: $scope}
+  it 'should return a placeholder if no thumbnail exists for an article', ->
     expect($scope.getThumbnail(3)).toEqual('images/placeholder100.png')
 
-  it 'should mark a given article as read', inject ($controller, Articles) ->
-    $scope = {}
-    popupCtrl = $controller 'popupCtrl', {$scope: $scope}
+  it 'should mark a given article as read', inject (Articles) ->
     $scope.latestArticles[0].unread = true
     localStorage['articles'] = angular.toJson $scope.latestArticles
     spyOn(Articles, 'markAsReadAtIndex').andCallThrough()
@@ -47,9 +39,7 @@ describe 'popupCtrl', ->
     expect(angular.fromJson(localStorage['articles'])[0].unread).toBeFalsy()
     expect(Articles.markAsReadAtIndex).toHaveBeenCalled()
 
-  it 'should mark all articles as read', inject (Articles, $controller) ->
-    $scope = {}
-    popupCtrl = $controller 'popupCtrl', {$scope: $scope}
+  it 'should mark all articles as read', inject (Articles) ->
     testIndexes = [0,5,8,9]
     for i in testIndexes
       $scope.latestArticles[i].unread = true
@@ -66,7 +56,7 @@ describe 'popupCtrl', ->
     expect(Articles.markAllAsRead).toHaveBeenCalled()
     expect(Articles.getArticles).toHaveBeenCalled()
 
-  it 'should refresh the article list', inject (Articles, $controller, $httpBackend) ->
+  it 'should refresh the article list', inject (Articles, $httpBackend, $controller) ->
     localStorage['articles'] = angular.toJson(angular.fromJson(localStorage['articles']).slice(1))
     $scope = {}
     popupCtrl = $controller 'popupCtrl', {$scope: $scope}
@@ -81,9 +71,7 @@ describe 'popupCtrl', ->
     $httpBackend.verifyNoOutstandingRequest()
     expect($scope.latestArticles.length).toEqual(18)
 
-  it 'should option the options page', inject ($controller) ->
-    $scope = {}
-    popupCtrl = $controller 'popupCtrl', {$scope: $scope}
+  it 'should option the options page', ->
     spyOn(chrome.tabs, 'create')
     $scope.optionsPage()
     expect(chrome.tabs.create).toHaveBeenCalledWith({url: 'options.html'})

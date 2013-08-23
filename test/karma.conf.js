@@ -22,13 +22,14 @@ module.exports = function(config) {
     'test/testData.js',
     'test/unit/*.spec.coffee'
     ],
-    reporters: ['progress', 'junit', 'coverage'],
+    reporters: ['progress', 'junit', 'teamcity', 'coverage'],
     browsers: ['PhantomJS'],
     plugins: [
       'karma-jasmine',
       'karma-phantomjs-launcher',
       'karma-coffee-preprocessor',
       'karma-junit-reporter',
+      'karma-teamcity-reporter',
       'karma-coverage'
     ]
   });
