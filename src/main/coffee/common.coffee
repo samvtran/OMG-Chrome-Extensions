@@ -160,10 +160,19 @@ omgUtil.service 'Articles', ['$http', '$q', 'Messenger', ($http, $q, Messenger) 
     else
       newArticles = articles
 
-    putArticles newArticles.concat existingArticles
+    putArticles checkExistingArticles(existingArticles, newArticles).concat existingArticles
     unreadArticles = getUnreadArticles()
     Messenger.notify.badge unreadArticles
     Messenger.notify.notification newArticles
+
+  checkExistingArticles = (existing, newArticles) ->
+    uniqueArticles = []
+    paths = existing.map (article) -> article.link
+    for i in [0..newArticles.length - 1] by 1
+      if paths.indexOf(newArticles[i].link) == -1
+        uniqueArticles.push(newArticles[i])
+    uniqueArticles
+
   putArticles = (articlesJson) ->
     localStorage['articles'] = angular.toJson articlesJson.slice(0, 30)
   getArticles = ->
@@ -206,6 +215,7 @@ omgUtil.service 'Articles', ['$http', '$q', 'Messenger', ($http, $q, Messenger) 
     markAllAsRead: markAllAsRead
     markAsRead: markAsRead
     markAsReadAtIndex: markAsReadAtIndex
+    checkExistingArticles: checkExistingArticles
   }
 ]
 
