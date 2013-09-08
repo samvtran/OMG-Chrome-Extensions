@@ -160,10 +160,11 @@ omgUtil.service 'Articles', ['$http', '$q', 'Messenger', ($http, $q, Messenger) 
     else
       newArticles = articles
 
-    putArticles checkExistingArticles(existingArticles, newArticles).concat existingArticles
+    uniqueArticles = checkExistingArticles(existingArticles, newArticles)
+    putArticles uniqueArticles.concat existingArticles
     unreadArticles = getUnreadArticles()
     Messenger.notify.badge unreadArticles
-    Messenger.notify.notification newArticles
+    Messenger.notify.notification uniqueArticles
 
   checkExistingArticles = (existing, newArticles) ->
     uniqueArticles = []
