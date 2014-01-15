@@ -40,7 +40,10 @@ body {
   max-width: 720px;
 }
 p { line-height: 28px; margin: 12px 0; }
-h1, h2, h3 { font-family: "PT Sans", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;}
+h1, h2, h3 {
+  font-family: "PT Sans", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-weight: 700;
+}
 h1 { font-size: 32px; line-height: 48px; }
 h2 { font-size: 24px; line-height: 28px; }
 h3 { font-size: 16px; }

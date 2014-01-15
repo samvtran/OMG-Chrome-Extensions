@@ -9,7 +9,7 @@ The extension is available in the Chrome Web Store or can be downloaded from thi
 This extension uses [CoffeeScript](http://coffeescript.org/) and [Sass](http://sass-lang.com/) and the following amazing projects:
 
 - [AngularJS](http://angularjs.org)
-- [Compass](http://compass-style.org/)
+- [Bourbon](http://bourbon.io/)
 
 ## Usage
 Please run `npm install -g grunt-cli` (as sudo if necessary) to install the necessary prerequisites, then run `npm install --production` to install the extension's local dependencies.

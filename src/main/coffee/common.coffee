@@ -7,6 +7,9 @@ do setup = ->
   if typeof localStorage['notificationsEnabled'] is 'undefined'
     localStorage['notificationsEnabled'] = true
 
+chrome.notifications.onShowSettings.addListener ->
+  chrome.windows.create url: '/options.html', focused: true
+
 # Common utilities and controllers
 omgBackground = angular.module('omgBackground', ['omgUtil'])
 omgBackground.controller('backgroundCtrl', ['Articles', 'Notifier', 'Badge', (Articles, Notifier, Badge) ->
@@ -40,7 +43,7 @@ omgBackground.controller('backgroundCtrl', ['Articles', 'Notifier', 'Badge', (Ar
 
 omgApp = angular.module 'omgApp', ['omgUtil']
 
-omgApp.controller 'popupCtrl', ['$scope', 'Articles', ($scope, Articles) ->
+omgApp.controller 'popupCtrl', ['$scope', 'Articles', 'Notifier', ($scope, Articles, Notifier) ->
   $scope.linkToHome =
     url: GlobalConfig.homepage
     title: GlobalConfig.name
@@ -51,10 +54,12 @@ omgApp.controller 'popupCtrl', ['$scope', 'Articles', ($scope, Articles) ->
     if typeof thumbnail != 'undefined' then thumbnail else 'images/placeholder100.png'
 
   $scope.markAsRead = (index) ->
+    Notifier.dismissAll()
     $scope.latestArticles[index].unread = false
     Articles.markAsReadAtIndex(index)
 
   $scope.markAllAsRead = () ->
+    Notifier.dismissAll()
     Articles.markAllAsRead()
     $scope.latestArticles = Articles.getArticles()
 
@@ -226,6 +231,9 @@ omgUtil.service 'Articles', ['$http', '$q', 'Messenger', ($http, $q, Messenger) 
 
 omgUtil.service('Notifier', ['Articles', (Articles) ->
   richNotificationId = "#{GlobalConfig.tag}ExtensionNotification"
+  dismissAll = ->
+    if hasRichNotifications()
+      chrome.notifications.clear richNotificationId, ->
   hasRichNotifications = ->
     typeof chrome.notifications != 'undefined'
   notify = (unreadArticles) ->
@@ -317,6 +325,7 @@ omgUtil.service('Notifier', ['Articles', (Articles) ->
     notify: notify
     singleNotify: singleNotify
     multiNotify: multiNotify
+    dismissAll: dismissAll
   }
 ])
 

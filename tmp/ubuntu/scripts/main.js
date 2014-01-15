@@ -29,6 +29,13 @@
     }
   })();
 
+  chrome.notifications.onShowSettings.addListener(function() {
+    return chrome.windows.create({
+      url: '/options.html',
+      focused: true
+    });
+  });
+
   omgBackground = angular.module('omgBackground', ['omgUtil']);
 
   omgBackground.controller('backgroundCtrl', [
@@ -74,7 +81,7 @@
   omgApp = angular.module('omgApp', ['omgUtil']);
 
   omgApp.controller('popupCtrl', [
-    '$scope', 'Articles', function($scope, Articles) {
+    '$scope', 'Articles', 'Notifier', function($scope, Articles, Notifier) {
       $scope.linkToHome = {
         url: GlobalConfig.homepage,
         title: GlobalConfig.name
@@ -90,10 +97,12 @@
         }
       };
       $scope.markAsRead = function(index) {
+        Notifier.dismissAll();
         $scope.latestArticles[index].unread = false;
         return Articles.markAsReadAtIndex(index);
       };
       $scope.markAllAsRead = function() {
+        Notifier.dismissAll();
         Articles.markAllAsRead();
         return $scope.latestArticles = Articles.getArticles();
       };
@@ -330,8 +339,13 @@
 
   omgUtil.service('Notifier', [
     'Articles', function(Articles) {
-      var hasRichNotifications, multiNotify, notify, richNotificationId, singleNotify;
+      var dismissAll, hasRichNotifications, multiNotify, notify, richNotificationId, singleNotify;
       richNotificationId = "" + GlobalConfig.tag + "ExtensionNotification";
+      dismissAll = function() {
+        if (hasRichNotifications()) {
+          return chrome.notifications.clear(richNotificationId, function() {});
+        }
+      };
       hasRichNotifications = function() {
         return typeof chrome.notifications !== 'undefined';
       };
@@ -447,7 +461,8 @@
         richNotificationId: richNotificationId,
         notify: notify,
         singleNotify: singleNotify,
-        multiNotify: multiNotify
+        multiNotify: multiNotify,
+        dismissAll: dismissAll
       };
     }
   ]);

@@ -32,7 +32,7 @@ under the License.
 <section class="latest-news" ng-model="latestArticles">
     <article ng-repeat="article in latestArticles" ng-click="markAsRead($index)">
         <div ng-show="article.unread == true" class="unread-indicator"><i title="Unread" class="omgicon-bookmark"> </i></div>
-        <h3><a href="{{article.link}}" target="_blank">{{article.title}}</a></h3><div class="thumbnail-wrapper"><a href="{{article.link}}" target="_blank"><img ng-src="{{getThumbnail($index)}}" alt="{{article.title}}"></a></div>
+      <div class="thumbnail-wrapper"><a href="{{article.link}}" target="_blank"><img ng-src="{{getThumbnail($index)}}" alt="{{article.title}}"></a></div><h3><a href="{{article.link}}" target="_blank">{{article.title}}</a></h3>
     </article>
 </section>
 <footer class="popup-footer">
