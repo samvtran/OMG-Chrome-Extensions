@@ -4,24 +4,24 @@ describe 'backgroundApp', ->
 
   beforeEach -> module 'omgBackground'
   beforeEach ->
-    module ($provide) ->
-      $provide.provider 'Articles', ->
-        @$get = ->
-          {
-            fetchLatestArticles: -> {then: (callback) -> callback() }
-            fetchLatestArticlesOnTimeout: ->
-            markAllAsRead: ->
-            markAsRead: ->
-          }
-      return
-      $provide.provider 'Notifier', ->
-        @$get = ->
-          {
-          notify:
-            badge: ->
-            notification: ->
-          }
-      return
+    mockArticles =
+      fetchLatestArticles: -> {then: (callback) -> callback() }
+      fetchLatestArticlesOnTimeout: ->
+      markAllAsRead: ->
+      markAsRead: ->
+    mockNotifier =
+      notify:
+        badge: ->
+        notification: ->
+      hasRichNotifications: ->
+    angular.mock.module ($provide) ->
+      $provide.value 'Articles', mockArticles
+      null
+    angular.mock.module ($provide) ->
+      $provide.value 'Notifier', mockNotifier
+      null
+
+
     chrome.notifications =
       onClicked:
         addListener: (callback) ->

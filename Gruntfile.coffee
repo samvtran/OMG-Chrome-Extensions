@@ -16,6 +16,13 @@ module.exports = (grunt) ->
           'src/main/coffee/common.coffee'
           'src/ubuntu/coffee/main.coffee'
         ]
+      test:
+        files: 'test/build/main.js': [
+          'src/main/coffee/config.coffee'
+          'test/config.coffee'
+          'src/main/coffee/common.coffee'
+        ]
+        options: bare: true
     uglify:
       chrome:
         files: 'dist-chrome/scripts/main.js': [
@@ -95,6 +102,16 @@ module.exports = (grunt) ->
             dest: 'dist-ubuntu'
           }
         ]
+      tests:
+        files: [
+          {
+            expand: true
+            flatten: true
+            cwd: 'bower_components'
+            src: ['angular-mocks/angular-mocks.js', 'angular/angular.js', 'angular-resource/angular-resource.js']
+            dest: 'test/lib'
+          }
+        ]
     coffeelint:
       app: ['src/main/coffee/**/*.coffee']
       chrome:
@@ -105,16 +122,6 @@ module.exports = (grunt) ->
         indentation:
           level: 'ignore'
         max_line_length: level: 'ignore'
-    tests:
-      files: [
-        {
-          expand: true
-          flatten: true
-          cwd: 'bower_components'
-          src: ['angular-mocks/angular-mocks.js', 'angular/angular.js', 'angular-resource/angular-resource.js']
-          dest: 'test/lib'
-        }
-      ]
     clean:
       chrome: ['dist-chrome', 'tmp/chrome']
       ubuntu: ['dist-ubuntu', 'tmp/ubuntu']
@@ -123,7 +130,7 @@ module.exports = (grunt) ->
       unit:
         configFile: 'test/karma.conf.js'
         singleRun: true
-      'unit-watch': configFile: 'test/karma.conf/js'
+      'unit-watch': configFile: 'test/karma.conf.js'
     watch:
       mainScripts:
         files: ['src/main/coffee/**/*']

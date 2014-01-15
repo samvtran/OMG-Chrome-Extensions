@@ -7,12 +7,13 @@ do setup = ->
   if typeof localStorage['notificationsEnabled'] is 'undefined'
     localStorage['notificationsEnabled'] = true
 
-chrome.notifications.onShowSettings.addListener ->
-  chrome.windows.create url: '/options.html', focused: true
 
 # Common utilities and controllers
 omgBackground = angular.module('omgBackground', ['omgUtil'])
 omgBackground.controller('backgroundCtrl', ['Articles', 'Notifier', 'Badge', (Articles, Notifier, Badge) ->
+  if Notifier.hasRichNotifications()
+    chrome.notifications.onShowSettings.addListener ->
+      chrome.windows.create url: '/options.html', focused: true
   Articles.fetchLatestArticles().then ->
     Articles.fetchLatestArticlesOnTimeout()
   chrome.notifications.onClicked.addListener ->
@@ -326,6 +327,7 @@ omgUtil.service('Notifier', ['Articles', (Articles) ->
     singleNotify: singleNotify
     multiNotify: multiNotify
     dismissAll: dismissAll
+    hasRichNotifications: hasRichNotifications
   }
 ])
 

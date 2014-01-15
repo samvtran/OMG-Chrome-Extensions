@@ -29,17 +29,18 @@
     }
   })();
 
-  chrome.notifications.onShowSettings.addListener(function() {
-    return chrome.windows.create({
-      url: '/options.html',
-      focused: true
-    });
-  });
-
   omgBackground = angular.module('omgBackground', ['omgUtil']);
 
   omgBackground.controller('backgroundCtrl', [
     'Articles', 'Notifier', 'Badge', function(Articles, Notifier, Badge) {
+      if (Notifier.hasRichNotifications()) {
+        chrome.notifications.onShowSettings.addListener(function() {
+          return chrome.windows.create({
+            url: '/options.html',
+            focused: true
+          });
+        });
+      }
       Articles.fetchLatestArticles().then(function() {
         return Articles.fetchLatestArticlesOnTimeout();
       });
@@ -462,7 +463,8 @@
         notify: notify,
         singleNotify: singleNotify,
         multiNotify: multiNotify,
-        dismissAll: dismissAll
+        dismissAll: dismissAll,
+        hasRichNotifications: hasRichNotifications
       };
     }
   ]);
