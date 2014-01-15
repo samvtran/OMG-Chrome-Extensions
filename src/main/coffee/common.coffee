@@ -70,8 +70,9 @@ omgApp.controller 'popupCtrl', ['$scope', 'Articles', ($scope, Articles) ->
 
 omgOptions = angular.module 'omgOptions', ['omgUtil']
 
-omgOptions.controller 'optionCtrl', ['$scope', ($scope) ->
+omgOptions.controller 'optionCtrl', ['$scope', '$sce', ($scope, $sce) ->
   $scope.GlobalConfig = GlobalConfig
+  $scope.intro = $sce.trustAsHtml(GlobalConfig.intro)
   $scope.notificationsEnabled = (if localStorage['notificationsEnabled'] == "true" then true else false)
 
   $scope.$watch 'notificationsEnabled', (newValue) ->

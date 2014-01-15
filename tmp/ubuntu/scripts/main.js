@@ -115,8 +115,9 @@
   omgOptions = angular.module('omgOptions', ['omgUtil']);
 
   omgOptions.controller('optionCtrl', [
-    '$scope', function($scope) {
+    '$scope', '$sce', function($scope, $sce) {
       $scope.GlobalConfig = GlobalConfig;
+      $scope.intro = $sce.trustAsHtml(GlobalConfig.intro);
       $scope.notificationsEnabled = (localStorage['notificationsEnabled'] === "true" ? true : false);
       $scope.$watch('notificationsEnabled', function(newValue) {
         if (newValue !== (localStorage['notificationsEnabled'] === "true" ? true : false)) {
