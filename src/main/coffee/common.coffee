@@ -41,6 +41,9 @@ omgBackground.controller('backgroundCtrl', ['Articles', 'Notifier', 'Badge', (Ar
 omgApp = angular.module 'omgApp', ['omgUtil']
 
 omgApp.controller 'popupCtrl', ['$scope', 'Articles', ($scope, Articles) ->
+  $scope.linkToHome =
+    url: GlobalConfig.homepage
+    title: GlobalConfig.name
   $scope.latestArticles = Articles.getArticles()
 
   $scope.getThumbnail = (index) ->

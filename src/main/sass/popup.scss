@@ -13,8 +13,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-@import "compass/reset";
-@import "compass/css3";
+@import "reset";
+@import "bourbon/bourbon";
 // #77216f or #5e2750 or #b53e7e
 @font-face {
   font-family: 'omgregular';

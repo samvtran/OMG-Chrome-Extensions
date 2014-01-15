@@ -13,18 +13,18 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-@import "compass/reset";
-@import "compass/css3";
+@import "reset";
+@import "bourbon/bourbon";
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @include border-radius(10px);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  @include border-radius(10px);
+  border-radius: 10px;
   background: #ccc;
 }
 

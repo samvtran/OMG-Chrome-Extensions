@@ -4,7 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="chrome_extensions" level="application" />
+    <orderEntry type="library" name="Node.js Dependencies for Chrome Extension" level="project" />
   </component>
 </module>
 
