@@ -2,10 +2,12 @@ node_modules
 .sass-cache
 dist-ubuntu
 dist-chrome
+dist-opera
 .idea
 src/chrome/coffee/config.coffee
 src/ubuntu/coffee/config.coffee
 test/build
 test/lib
+tmp
 test-results.xml
 coverage

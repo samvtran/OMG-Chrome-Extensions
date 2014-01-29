@@ -16,6 +16,13 @@ module.exports = (grunt) ->
           'src/main/coffee/common.coffee'
           'src/ubuntu/coffee/main.coffee'
         ]
+      opera:
+        files: 'tmp/opera/scripts/main.js': [
+          'src/main/coffee/config.coffee'
+          'src/ubuntu/coffee/config.coffee'
+          'src/main/coffee/common.coffee'
+          'src/ubuntu/coffee/main.coffee'
+        ]
       test:
         files: 'test/build/main.js': [
           'src/main/coffee/config.coffee'
@@ -30,18 +37,18 @@ module.exports = (grunt) ->
           'bower_components/angular-resource/angular-resource.min.js'
           'tmp/chrome/scripts/main.js'
         ]
-        options:
-          sourceMap: 'dist-chrome/scripts/main.map.js'
-          sourceMappingURL: 'main.map.js'
+#        options:
+#          sourceMap: 'dist-chrome/scripts/main.map.js'
+#          sourceMappingURL: 'main.map.js'
       ubuntu:
         files: 'dist-ubuntu/scripts/main.js': [
           'bower_components/angular/angular.min.js'
           'bower_components/angular-resource/angular-resource.min.js'
           'tmp/ubuntu/scripts/main.js'
         ]
-        options:
-          sourceMap: 'dist-ubuntu/scripts/main.map.js'
-          sourceMappingURL: 'main.map.js'
+#        options:
+#          sourceMap: 'dist-ubuntu/scripts/main.map.js'
+#          sourceMappingURL: 'main.map.js'
     sass:
       chrome:
         options:
@@ -59,6 +66,14 @@ module.exports = (grunt) ->
           'dist-ubuntu/stylesheets/popup.css': 'src/ubuntu/sass/popup.scss'
           'dist-ubuntu/stylesheets/options.css': 'src/ubuntu/sass/options.scss'
           ]
+      opera:
+        options:
+          style: 'compressed'
+          loadPath: 'bourbon'
+        files: [
+          'dist-opera/stylesheets/popup.css': 'src/ubuntu/sass/popup.scss'
+          'dist-opera/stylesheets/options.css': 'src/ubuntu/sass/options.scss'
+        ]
     copy:
       chrome:
         files: [
@@ -102,6 +117,27 @@ module.exports = (grunt) ->
             dest: 'dist-ubuntu'
           }
         ]
+      opera:
+        files: [
+          {
+            expand: true
+            cwd: 'src/main/assets'
+            src: ['**']
+            dest: 'dist-opera'
+          }
+          {
+            expand: true
+            cwd: 'src/main'
+            src: ['*.html']
+            dest: 'dist-opera'
+          }
+          {
+            expand: true
+            cwd: 'src/ubuntu/assets'
+            src: ['**']
+            dest: 'dist-opera'
+          }
+        ]
       tests:
         files: [
           {
@@ -125,6 +161,7 @@ module.exports = (grunt) ->
     clean:
       chrome: ['dist-chrome', 'tmp/chrome']
       ubuntu: ['dist-ubuntu', 'tmp/ubuntu']
+      opera: ['dist-opera', 'tmp/opera']
       test: ['test/lib', 'coverage', 'test/build']
     karma:
       unit:
@@ -162,12 +199,21 @@ module.exports = (grunt) ->
       ubuntuAssets:
         files: ['src/ubuntu/assets/**/*', 'src/ubuntu/*.html']
         tasks: ['copy:ubuntu']
+    concat:
+      opera:
+        src: [
+          'bower_components/angular/angular.min.js'
+          'bower_components/angular-resource/angular-resource.min.js'
+          'tmp/ubuntu/scripts/main.js'
+        ]
+        dest: 'dist-opera/scripts/main.js'
 
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
+  grunt.loadNpmTasks 'grunt-contrib-concat'
 
   # TODO replace with Bourbon
   grunt.loadNpmTasks 'grunt-contrib-sass'
@@ -179,7 +225,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'dev', ['dist', 'watch']
 
-  grunt.registerTask 'dist', ['clean', 'copy', 'sass', 'coffeelint', 'coffee', 'uglify']
+  grunt.registerTask 'dist', ['clean', 'copy', 'sass', 'coffeelint', 'coffee', 'uglify', 'concat']
 
   grunt.registerTask 'test', ['coffee:test', 'copy:tests', 'karma:unit']
   grunt.registerTask 'test-watch', ['coffee:test', 'copy:tests': 'karma:unit-watch']
