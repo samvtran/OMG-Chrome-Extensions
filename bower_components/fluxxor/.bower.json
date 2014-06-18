@@ -1,0 +1,41 @@
+{
+  "name": "fluxxor",
+  "version": "1.2.1",
+  "main": "build/fluxxor.min.js",
+  "description": "Flux architecture tools for React",
+  "homepage": "https://github.com/BinaryMuse/fluxxor",
+  "authors": [
+    "Brandon Tilley <brandon@brandontilley.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".git",
+    "examples",
+    "lib",
+    "node_modules",
+    "script",
+    "site",
+    "test",
+    ".gitignore",
+    ".travis.yml",
+    "fluxxor.svg",
+    "index.js",
+    "package.json",
+    "version.js",
+    "webpack.config.js"
+  ],
+  "keywords": [
+    "flux",
+    "react"
+  ],
+  "_release": "1.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.2.1",
+    "commit": "bba0baaf6a89ada23d44e6f0cadbd35b1f255058"
+  },
+  "_source": "git://github.com/BinaryMuse/fluxxor.git",
+  "_target": "~1.2.1",
+  "_originalSource": "fluxxor",
+  "_direct": true
+}
