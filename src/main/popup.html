@@ -20,24 +20,9 @@ under the License.
     <title>OMG! Extension</title>
     <link href='http://fonts.googleapis.com/css?family=Roboto:300,400' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="stylesheets/popup.css">
-    <!--<script type="text/javascript" src="scripts/angular.min.js"></script>-->
-    <!--<script type="text/javascript" src="scripts/angular-resource.min.js"></script>-->
-    <script type="text/javascript" src="scripts/main.js"></script>
 </head>
-<body ng-controller="popupCtrl" ng-app="omgApp" ng-csp>
-<header class="popup-header">
-    <a target="_blank" href="{{linkToHome.url}}" class="logo" title="Visit {{linkToHome.title}}"><img class="logo" src="images/icon_logo128.png" height="48" width="48"><span class="hide">{{linkToHome.title}}</span></a>
-    <a href="#" eat-click ng-click="refresh()" class="refresh"><i ng-class="{true: 'omgicon-time', false: 'omgicon-refresh'}[refreshing==true]"></i><span class="hide">Refresh</span></a>
-</header>
-<section class="latest-news" ng-model="latestArticles">
-    <article ng-repeat="article in latestArticles" ng-click="markAsRead($index)">
-        <div ng-show="article.unread == true" class="unread-indicator"><i title="Unread" class="omgicon-bookmark"> </i></div>
-      <div class="thumbnail-wrapper"><a href="{{article.link}}" target="_blank"><img ng-src="{{getThumbnail($index)}}" alt="{{article.title}}"></a></div><h3><a href="{{article.link}}" target="_blank">{{article.title}}</a></h3>
-    </article>
-</section>
-<footer class="popup-footer">
-    <a ng-click="optionsPage()" title="Change OMG! Chrome! options" href="#" eat-click>Options</a>
-    <a class="right" ng-click="markAllAsRead()" href="#" eat-click>Mark All As Read</a>
-</footer>
+<body>
+<div id="popup"></div>
+<script type="text/javascript" src="scripts/popup.js"></script>
 </body>
 </html>

@@ -6,16 +6,19 @@ rimraf = require 'rimraf'
 gulpIf = require 'gulp-if'
 sass = require 'gulp-ruby-sass'
 sequence = require 'run-sequence'
+react = require 'gulp-react'
+source = require 'vinyl-source-stream'
+browserify = require 'browserify'
+es = require 'event-stream'
+coffeeify = require 'coffeeify'
+buffer = require 'vinyl-buffer'
 
 targets = ['chrome', 'ubuntu']
 
 pathsForFlavour = (name) ->
   scripts: [
-    'bower_components/angular/angular.min.js'
-    'bower_components/angular-resource/angular-resource.min.js'
     'src/main/coffee/config.coffee'
     "src/#{name}/coffee/config.coffee"
-    'src/main/coffee/common.coffee'
   ]
   styles: [
     "src/#{name}/sass/options.scss"
@@ -30,13 +33,39 @@ pathsForFlavour = (name) ->
 gulp.task 'clean', (cb) ->
   rimraf('build/', cb)
 
-gulp.task 'scripts', ->
+getPrereqs = (scriptList) ->
+  gulp.src(scriptList)
+
+gulp.task 'reactScripts', ->
+  for page in ['options', 'popup']
+    for target in targets
+      paths = pathsForFlavour(target)
+
+      browserified = browserify("./src/main/coffee/#{page}.coffee").bundle()
+        .pipe source("#{page}.js")
+        .pipe buffer()
+
+      es.merge(
+        gulp.src('bower_components/react/react-with-addons.js')
+        gulp.src(paths.scripts)
+          .pipe gulpIf /[.]coffee$/, coffee()
+        browserified
+      ).pipe concat "#{page}.js"
+      .pipe gulp.dest("build/#{target}/scripts")
+
+gulp.task 'backgroundScript', ->
   for target in targets
     paths = pathsForFlavour(target)
-    gulp.src(paths.scripts)
-      .pipe gulpIf /[.]coffee$/, coffee()
-      .pipe concat('main.js')
-      .pipe gulp.dest("build/#{target}/scripts")
+
+    browserified = browserify('./src/main/coffee/background.coffee').bundle()
+      .pipe source("background.js")
+      .pipe buffer()
+
+    es.merge(
+      gulp.src(paths.scripts).pipe gulpIf(/[.]coffee$/, coffee())
+      browserified
+    ).pipe concat "background.js"
+    .pipe gulp.dest("build/#{target}/scripts")
 
 gulp.task 'styles', ->
   for target in targets
@@ -51,18 +80,22 @@ gulp.task 'assets', ->
     gulp.src(paths.assets)
       .pipe gulp.dest "build/#{target}"
 
+gulp.task 'test', ->
+  # TODO
 
 gulp.task 'watch', ->
   for target in targets
     paths = pathsForFlavour(target)
-    gulp.watch paths.scripts, ['scripts']
+    gulp.watch paths.scripts, ['reactScripts', 'backgroundScript']
+    gulp.watch 'src/main/coffee/**/*.coffee', ['reactScripts', 'backgroundScript']
     gulp.watch paths.styles, ['styles']
+    gulp.watch 'src/main/sass/**/*.scss', ['styles']
     gulp.watch paths.assets, ['assets']
 
 gulp.task 'dev', ['watch', 'build']
 
 gulp.task 'build', ->
-  sequence 'clean', ['scripts', 'styles', 'assets']
+  sequence 'clean', ['reactScripts', 'backgroundScript', 'styles', 'assets']
 
 gulp.task 'default', ->
   console.log """

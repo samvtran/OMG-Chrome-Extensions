@@ -14,31 +14,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<html lang="en" ng-app="omgOptions" ng-csp>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700|Lato:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="stylesheets/options.css">
-    <!--<script type="text/javascript" src="scripts/angular.min.js"></script>-->
-    <!--<script type="text/javascript" src="scripts/angular-resource.min.js"></script>-->
-    <script type="text/javascript" src="scripts/main.js"></script>
     <title>OMG! Extension Options</title>
 </head>
-<body ng-controller="optionCtrl">
-<header>
-    <a href="{{GlobalConfig.homepage}}" class="logo" title="Visit OMG! Chrome!"><img class="logo" src="images/icon_logo128.png" height="48" width="48"></a>
-    <h1>{{GlobalConfig.name}} Extension Options</h1>
-</header>
-<h2>Options</h2>
-<div class="pane">
-    <p><input ng-model="notificationsEnabled" type="checkbox" id="notifications-enabled"><label for="notifications-enabled">New Article Desktop Notifications</label><a class="example" ng-click="showExampleNotification()" href="#" eat-click>Example</a></p>
-</div>
-<h2>About The Extension</h2>
-<div class="pane">
-    <p>This extension is released under the Apache License 2.0 with source code available on <a href="https://github.com/samvtran/OMG-Chrome-Extensions" title="OMG! Extensions on GitHub">GitHub</a>.</p>
-</div>
-<h2>About {{GlobalConfig.name}}</h2>
-<div class="pane" ng-bind-html="intro">
-</div>
+<body>
+<div id="options"></div>
+<script type="text/javascript" src="scripts/options.js"></script>
 </body>
 </html>
