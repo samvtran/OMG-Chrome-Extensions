@@ -39,7 +39,7 @@ getPrereqs = (scriptList) ->
 
 gulp.task 'staticScripts', ->
   for target in targets
-    gulp.src('bower_components/react/react.js')
+    gulp.src('bower_components/react/react.min.js')
       .pipe rename 'react.min.js'
       .pipe gulp.dest "build/#{target}/scripts"
 

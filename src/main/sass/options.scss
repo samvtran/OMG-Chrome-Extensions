@@ -15,6 +15,18 @@ under the License.
 */
 @import "reset";
 @import "bourbon/bourbon";
+@font-face {
+  font-family: 'Lato';
+  src: url('../fonts/LatoLatin-Regular.woff');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('../fonts/LatoLatin-Bold.woff');
+  font-weight: 700;
+  font-style: normal;
+}
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -41,7 +53,6 @@ body {
 }
 p { line-height: 28px; margin: 12px 0; }
 h1, h2, h3 {
-  font-family: "PT Sans", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
   font-weight: 700;
 }
 h1 { font-size: 32px; line-height: 48px; }
