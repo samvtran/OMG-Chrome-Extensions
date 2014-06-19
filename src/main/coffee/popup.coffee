@@ -12,8 +12,9 @@ PopupPage = React.createClass
     refreshing: false
     articleList: this.populateArticles()
   populateArticles: ->
+    refreshFn = this.refreshList
     ArticlesList.getArticles().map (item, i) ->
-      `<Article article={item} key={i} />`
+      `<Article article={item} key={i} refreshList={refreshFn} />`
   handleRefresh: (e) ->
     e.preventDefault()
     if this.state.refreshing then return
@@ -34,6 +35,8 @@ PopupPage = React.createClass
   handleMarkAllAsRead: (e) ->
     e.preventDefault()
     ArticlesList.markAllAsRead()
+    this.refreshList()
+  refreshList: ->
     this.setState
       articleList: this.populateArticles()
       refreshing: this.state.refreshing

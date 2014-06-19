@@ -12,6 +12,7 @@ browserify = require 'browserify'
 es = require 'event-stream'
 coffeeify = require 'coffeeify'
 buffer = require 'vinyl-buffer'
+rename = require 'gulp-rename'
 
 targets = ['chrome', 'ubuntu']
 
@@ -36,6 +37,12 @@ gulp.task 'clean', (cb) ->
 getPrereqs = (scriptList) ->
   gulp.src(scriptList)
 
+gulp.task 'staticScripts', ->
+  for target in targets
+    gulp.src('bower_components/react/react.js')
+      .pipe rename 'react.min.js'
+      .pipe gulp.dest "build/#{target}/scripts"
+
 gulp.task 'reactScripts', ->
   for page in ['options', 'popup']
     for target in targets
@@ -46,7 +53,6 @@ gulp.task 'reactScripts', ->
         .pipe buffer()
 
       es.merge(
-        gulp.src('bower_components/react/react-with-addons.js')
         gulp.src(paths.scripts)
           .pipe gulpIf /[.]coffee$/, coffee()
         browserified
@@ -95,7 +101,7 @@ gulp.task 'watch', ->
 gulp.task 'dev', ['watch', 'build']
 
 gulp.task 'build', ->
-  sequence 'clean', ['reactScripts', 'backgroundScript', 'styles', 'assets']
+  sequence 'clean', ['staticScripts', 'reactScripts', 'backgroundScript', 'styles', 'assets']
 
 gulp.task 'default', ->
   console.log """
