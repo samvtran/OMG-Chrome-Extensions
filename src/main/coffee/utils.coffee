@@ -1,6 +1,0 @@
-###*
-  @jsx React.DOM
-###
-
-
-Badge =

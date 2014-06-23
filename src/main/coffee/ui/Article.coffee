@@ -23,7 +23,7 @@ module.exports = React.createClass
     article = this.props.article
     thumbnail = if typeof article.thumbnail != 'undefined' then article.thumbnail else 'images/placeholder100.png'
     `<article onClick={this.handleMarkAsRead}>
-        <div className={"unread-indicator" + (article.unread ? '' : ' hide')}><i title="Unread" className="omgicon-bookmark"> </i></div>
-        <div className="thumbnail-wrapper"><a href="#" onClick={this.handleOpenArticle}><img src={thumbnail} alt={article.title} /></a></div>
-        <h3><a href="#" onClick={this.handleOpenArticle}>{article.title}</a></h3>
+        <div ref="unread" className={"unread-indicator" + (article.unread ? '' : ' hide')}><i title="Unread" className="omgicon-bookmark"> </i></div>
+        <div className="thumbnail-wrapper"><a href="#" onClick={this.handleOpenArticle}><img src={thumbnail} alt={article.title} ref="thumbnail" /></a></div>
+        <h3><a href="#" ref="title" onClick={this.handleOpenArticle}>{article.title}</a></h3>
       </article>`

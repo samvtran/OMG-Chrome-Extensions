@@ -1,5 +1,0 @@
-GlobalConfig.name = 'KarmaTest'
-GlobalConfig.tag = 'karmaTest'
-GlobalConfig.homepage = 'http://www.omgubuntu.co.uk'
-GlobalConfig.url = 'http://example.com'
-GlobalConfig.intro = 'This will show up at the bottom of the options page'

@@ -11,3 +11,5 @@ test/lib
 build
 test-results.xml
 coverage
+bower_components/jasmine-ajax/*
+!/bower_components/jasmine-ajax/lib/

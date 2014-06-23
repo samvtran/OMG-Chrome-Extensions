@@ -1,4 +1,5 @@
 'use strict'
+
 gulp = require 'gulp'
 coffee = require 'gulp-coffee'
 concat = require 'gulp-concat'
@@ -10,9 +11,12 @@ react = require 'gulp-react'
 source = require 'vinyl-source-stream'
 browserify = require 'browserify'
 es = require 'event-stream'
-coffeeify = require 'coffeeify'
 buffer = require 'vinyl-buffer'
 rename = require 'gulp-rename'
+coffeeify = require 'coffeeify'
+reactify = require 'reactify'
+karma = require('karma').server
+_ = require 'lodash'
 
 targets = ['chrome', 'ubuntu']
 
@@ -31,69 +35,100 @@ pathsForFlavour = (name) ->
     "src/#{name}/assets/**"
   ]
 
-gulp.task 'clean', (cb) ->
-  rimraf('build/', cb)
 
-getPrereqs = (scriptList) ->
-  gulp.src(scriptList)
+buildBrowserify = (entry) ->
+  b = browserify entry
+  b.transform coffeeify
+  b.transform reactify
+  b.bundle()
+
+###
+
+  Scripts
+
+###
+
 
 gulp.task 'staticScripts', ->
   for target in targets
     gulp.src('bower_components/react/react.min.js')
-      .pipe rename 'react.min.js'
-      .pipe gulp.dest "build/#{target}/scripts"
+    .pipe rename 'react.min.js'
+    .pipe gulp.dest "build/#{target}/scripts"
 
 gulp.task 'reactScripts', ->
-  for page in ['options', 'popup']
+  for page in ['options', 'popup', 'background']
     for target in targets
       paths = pathsForFlavour(target)
 
-      browserified = browserify("./src/main/coffee/#{page}.coffee").bundle()
-        .pipe source("#{page}.js")
-        .pipe buffer()
+      browserified = buildBrowserify("./src/main/coffee/#{page}.coffee")
+      .pipe source("#{page}.js")
+      .pipe buffer()
 
       es.merge(
         gulp.src(paths.scripts)
-          .pipe gulpIf /[.]coffee$/, coffee()
+        .pipe gulpIf /[.]coffee$/, coffee()
         browserified
       ).pipe concat "#{page}.js"
       .pipe gulp.dest("build/#{target}/scripts")
 
-gulp.task 'backgroundScript', ->
-  for target in targets
-    paths = pathsForFlavour(target)
 
-    browserified = browserify('./src/main/coffee/background.coffee').bundle()
-      .pipe source("background.js")
-      .pipe buffer()
+###
 
-    es.merge(
-      gulp.src(paths.scripts).pipe gulpIf(/[.]coffee$/, coffee())
-      browserified
-    ).pipe concat "background.js"
-    .pipe gulp.dest("build/#{target}/scripts")
+  Assets
+
+###
+
 
 gulp.task 'styles', ->
   for target in targets
     paths = pathsForFlavour(target)
     gulp.src(paths.styles)
-      .pipe sass style: 'compressed'
-      .pipe gulp.dest("build/#{target}/stylesheets")
+    .pipe sass style: 'compressed'
+    .pipe gulp.dest("build/#{target}/stylesheets")
 
 gulp.task 'assets', ->
   for target in targets
     paths = pathsForFlavour(target)
     gulp.src(paths.assets)
-      .pipe gulp.dest "build/#{target}"
+    .pipe gulp.dest "build/#{target}"
 
-gulp.task 'test', ->
-  # TODO
+
+###
+
+  Testing
+
+###
+
+
+karmaConfig = require './test/karma.conf.js'
+karmaConf = {}
+karmaConfig
+  set: (config) -> karmaConf = config
+
+gulp.task 'test', (done) ->
+  karma.start _.assign({}, karmaConf, singleRun: true, basePath: '.', autoWatch: true), (code) ->
+    done()
+    process.exit(code)
+
+gulp.task 'tdd', (done) ->
+  karma.start _.assign({}, karmaConf, basePath: '.'), ->
+    done()
+
+###
+
+  Run Tasks
+
+###
+
+
+gulp.task 'clean', (cb) ->
+  rimraf('build/', cb)
 
 gulp.task 'watch', ->
   for target in targets
     paths = pathsForFlavour(target)
-    gulp.watch paths.scripts, ['reactScripts', 'backgroundScript']
-    gulp.watch 'src/main/coffee/**/*.coffee', ['reactScripts', 'backgroundScript']
+    gulp.watch paths.scripts, ['reactScripts']
+    gulp.watch 'src/main/coffee/**/*.coffee', ['reactScripts']
     gulp.watch paths.styles, ['styles']
     gulp.watch 'src/main/sass/**/*.scss', ['styles']
     gulp.watch paths.assets, ['assets']
@@ -101,13 +136,13 @@ gulp.task 'watch', ->
 gulp.task 'dev', ['watch', 'build']
 
 gulp.task 'build', ->
-  sequence 'clean', ['staticScripts', 'reactScripts', 'backgroundScript', 'styles', 'assets']
+  sequence 'clean', ['staticScripts', 'reactScripts', 'styles', 'assets']
 
 gulp.task 'default', ->
   console.log """
     Tasks:
       dev:    build all targets and set to watch mode
       build:  build all targets (chrome, ubuntu, and opera)
-      test:   test all targets
+      test:   test
       clean:  cleans all build targets
   """

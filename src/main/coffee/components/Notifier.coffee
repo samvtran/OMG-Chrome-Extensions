@@ -14,6 +14,7 @@ module.exports =
     else
       this.multiNotify(unreadArticles)
   singleNotify: (article) ->
+    if localStorage['notificationsEnabled'] == "false" then return
     if this.hasRichNotifications()
       options =
         type: 'basic'
@@ -73,7 +74,7 @@ module.exports =
             iconUrl: 'images/mark_as_read.png'
           }
         ]
-      localStorage['notification'] = JSON.stringify {type: 'multi', link: GlobalConfig.homepage}
+      localStorage['notification'] = JSON.stringify {type: 'multi'}
       chrome.notifications.create this.richNotificationId, options, ->
     else if typeof webkitNotifications != 'undefined'
       notification = webkitNotifications.createNotification('images/icon_logo48.png',

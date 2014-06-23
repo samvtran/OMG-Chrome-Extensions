@@ -1,6 +1,7 @@
 'use strict'
 
 Dispatch = require './Dispatch.coffee'
+Http = require './Http.coffee'
 
 getArticles = ->
   articles = JSON.parse if typeof localStorage['articles'] == 'undefined' then "[]" else localStorage['articles']
@@ -31,14 +32,13 @@ markAllAsRead = ->
   Dispatch.notifyBadge this.getUnreadArticles()
 
 fetchLatestArticles = (cb) ->
-  request = new XMLHttpRequest()
-  request.onload = ->
+  Http.get GlobalConfig.url, ->
     dom = new DOMParser().parseFromString this.responseText, 'application/xml'
-    if dom.getElementsByTagName('parsererror').length > 0 then return []
+    if dom.getElementsByTagName('parsererror').length > 0 then return cb []
     channel = dom.getElementsByTagName('channel')
-    if channel.length == 0 then return []
+    if channel.length == 0 then return cb []
     items = channel[0].getElementsByTagName('item')
-    if items.length == 0 then return []
+    if items.length == 0 then return cb []
     articles = for item in items
       thumbnail = item.querySelector('thumbnail')
       article =
@@ -50,10 +50,10 @@ fetchLatestArticles = (cb) ->
       if thumbnail != null then article.thumbnail = thumbnail.getAttribute('url')
       article
     putLatestArticlesAndNotify articles
-    cb()
-
-  request.open 'get', GlobalConfig.url, true
-  request.send()
+    cb articles
+  , ->
+    console.log 'ERRORORORO'
+    cb []
 
 putLatestArticlesAndNotify = (articles) ->
   newArticles = []
@@ -67,14 +67,14 @@ putLatestArticlesAndNotify = (articles) ->
   yesterday = yesterday.getTime()
   if existingArticles.length > 0
     latestNewArticleSlice = -1
-    for i in [0..articles.length - 1] by 1
-      if existingArticles[0].link == articles[i].link # Our latest article is at index i in the feed's updated list
-        latestNewArticleSlice = i
-        for j in [i..articles.length - 1] by 1
+    for start in [0..articles.length - 1] by 1
+      if existingArticles[0].link == articles[start].link # Our latest saved article is at index i in the feed's updated list
+        latestNewArticleSlice = start
+        for j in [start..articles.length - 1] by 1
           if articles[j].date > yesterday # Article is less than a day old, so update title and thumbnail if it exists
-            existingArticles[j - i].title = articles[j].title
+            existingArticles[j - start].title = articles[j].title
             if typeof articles[j].thumbnail != 'undefined'
-              existingArticles[j - i].thumbnail = articles[j].thumbnail
+              existingArticles[j - start].thumbnail = articles[j].thumbnail
           else # Exit as soon as we hit an article more than a day old
             break
         break
@@ -117,3 +117,5 @@ module.exports =
   markAsRead: markAsRead
   fetchLatestArticles: fetchLatestArticles
   fetchLatestOnTimeout: fetchLatestOnTimeout
+  putLatestArticlesAndNotify: putLatestArticlesAndNotify
+  checkExistingArticles: checkExistingArticles
