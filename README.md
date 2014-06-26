@@ -8,22 +8,24 @@ The extension is available in the Chrome Web Store or can be downloaded from thi
 ## Libraries
 This extension uses [CoffeeScript](http://coffeescript.org/) and [Sass](http://sass-lang.com/) and the following amazing projects:
 
-- [AngularJS](http://angularjs.org)
+- [React](http://facebook.github.io/react)
 - [Bourbon](http://bourbon.io/)
 
 ## Usage
-Please run `npm install -g grunt-cli` (as sudo if necessary) to install the necessary prerequisites, then run `npm install --production` to install the extension's local dependencies.
+Please run `npm install -g gulp` (as sudo if necessary) to install the necessary prerequisites, then run `npm install` to install the extension's local dependencies.
 
-To generate a production build, just run `grunt build` and a production directory, `dist`, will be built and ready for use!
+To generate a production build, just run `gulp build` and a production directory, `build`, will be built and ready for use!
 
 ## Development
-Running `npm install` without the `--production` flag will install all the test dependencies. You will also want to run `npm install -g karma` to install the Karma test runner.
+You will want to run `npm install -g karma` to install the Karma test runner.
 
-Running `grunt dev` will automagically build and lint Sass and CoffeeScript.
+Running `gulp dev` will watch for file changes and rebuild the extension on the fly.
 
-To run the test suite run `grunt test` from the main repository. `grunt test-watch` will keep karma running in the background and rerunning tests any time you make changes.
+To run the test suite run `gulp test` from the main repository. If, for whatever reason, you wish to use karma on its own, you can run `karma start test/karma.conf.js`
 
-For CI use, `grunt test` generates a jUnit-formatted XML file, `test-results.xml`, that can be consumed by compatible CI servers. Karma will also output test pass/fail for TeamCity.
+For CI use Karma will output test results for TeamCity. Other reporters are available.
+
+Coverage is a bit spotty at the moment, but the console reporter will give you rough figures.
 
 ## License, et al.
 Chrome is a registered trademark of [Google Inc](http://google.com/).
@@ -32,7 +34,7 @@ Ubuntu is a registered trademark of [Canonical Ltd](http://canonical.com).
 
 OMG! Chrome! and OMG! Ubuntu! are members of the Ohso Ltd. Network.
 
-Copyright (C) 2012-2013 [Ohso Ltd](http://ohso.co/).
+Copyright (C) 2012-2014 [Ohso Ltd](http://ohso.co/).
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

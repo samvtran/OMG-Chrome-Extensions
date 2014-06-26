@@ -52,7 +52,6 @@ fetchLatestArticles = (cb) ->
     putLatestArticlesAndNotify articles
     cb articles
   , ->
-    console.log 'ERRORORORO'
     cb []
 
 putLatestArticlesAndNotify = (articles) ->

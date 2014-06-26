@@ -3,39 +3,32 @@ module.exports = function(config) {
     basePath: "..",
     frameworks: ['jasmine-ajax', 'jasmine', 'browserify'],
     preprocessors: {
-      '/**/*.browserify': ['browserify', 'coverage']
+      '/**/*.browserify': ['browserify']
     },
-//    'test/**/*.coffee': ['browserify']
     browserify: {
-      transform: ['coffeeify', 'reactify', 'rewireify'],
+      transform: ['coffeeify', 'reactify', 'rewireify', 'browserify-istanbul'],
       files: ['test/**/*.coffee']
     },
-    coffeePreprocessor: {
-      options: {
-        bare: true
-      },
-      sourceMap: true
-    },
-// TODO fix coverage
+// TODO fix HTML coverage
     coverageReporter: {
       reporters: [
 //        { type: 'html', dir: 'coverage/' },
-//        { type: 'teamcity' },
+        { type: 'lcovonly', dir: 'coverage/' },
+        { type: 'teamcity' },
         { type: 'text-summary' }
-      ]
+      ],
+      instrumenter: {
+        'src/main/**/*.coffee': 'istanbul'
+      }
     },
     files: [
       'test/phantomjs-shims.js',
-//      'bower_components/es5-shim/es5-shim.js',
       'bower_components/react/react-with-addons.js',
-      'test/testData.js',
-//    'test/preflight.coffee'
-//      'test/**/*.spec.coffee'
+      'test/testData.js'
     ],
     reporters: [
       'progress',
-      'junit',
-//    'teamcity'
+      'teamcity',
       'coverage',
       'story'
     ],

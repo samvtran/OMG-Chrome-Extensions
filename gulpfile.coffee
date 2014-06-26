@@ -17,6 +17,7 @@ coffeeify = require 'coffeeify'
 reactify = require 'reactify'
 karma = require('karma').server
 _ = require 'lodash'
+shell = require 'gulp-shell'
 
 targets = ['chrome', 'ubuntu']
 
@@ -41,6 +42,7 @@ buildBrowserify = (entry) ->
   b.transform coffeeify
   b.transform reactify
   b.bundle()
+
 
 ###
 
@@ -110,9 +112,15 @@ gulp.task 'test', (done) ->
     done()
     process.exit(code)
 
+# TODO buggy
 gulp.task 'tdd', (done) ->
   karma.start _.assign({}, karmaConf, basePath: '.'), ->
     done()
+
+gulp.task 'coverage', ['test'], shell.task [
+  'genhtml coverage/PhantomJS*/lcov.info -o coverage/lcovHtml'
+]
+
 
 ###
 

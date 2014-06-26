@@ -24,6 +24,15 @@ describe 'Background Page', ->
     expect(localStorage['pollInterval']).toBeTruthy()
     expect(localStorage['notificationsEnabled']).toEqual 'true'
 
+  it 'shouldn\'t overwrite existing poll interval or notificationEnabled values', ->
+    localStorage['pollInterval'] = '42'
+    localStorage['notificationsEnabled'] = false
+
+    bg.go()
+
+    expect(localStorage['pollInterval']).toEqual '42'
+    expect(localStorage['notificationsEnabled']).toEqual 'false'
+
   it 'should fetch the latest articles and started the backoff', ->
     fetch = spyOn(Articles, 'fetchLatestArticles').and.callFake (cb) -> cb()
     timeout = spyOn(window, 'setTimeout')

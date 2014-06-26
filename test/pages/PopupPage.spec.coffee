@@ -27,18 +27,19 @@ describe 'Popup Page', ->
     expect(list.length).toEqual 18
     for i in [0..list.length - 1] by 1
       articleObj = list[i]
-#      expect(TestUtils.isComponentOfType articleObj, Article).toEqual true
       expect(articleObj.title).toEqual testJson[i].title
 
-  it 'should mark all articles as read', ->
+  it 'should mark all articles as read and dismiss existing notifications', ->
     markAllAsReadFn = spyOn(ArticlesList, 'markAllAsRead')
     getArticles = spyOn(ArticlesList, 'getArticles').and.callThrough()
+    dismissNotifications = spyOn(Notifier, 'dismissAll').and.callFake ->
     doc = renderDoc()
     markAllAsRead = doc.refs.markAllAsRead
     TestUtils.Simulate.click markAllAsRead.getDOMNode()
     expect(markAllAsReadFn).toHaveBeenCalled()
     articles = ArticlesList.getArticles()
     expect(article.unread).toEqual false for article in articles
+    expect(dismissNotifications).toHaveBeenCalled()
 
   it 'should refresh the article list, showing the refresh icon until finish', ->
     fetchLatest = spyOn(ArticlesList, 'fetchLatestArticles').and.callFake (cb) -> cb()

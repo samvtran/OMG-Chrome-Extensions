@@ -29,6 +29,7 @@ module.exports = React.createClass
   handleMarkAllAsRead: (e) ->
     e.preventDefault()
     ArticlesList.markAllAsRead()
+    Notifier.dismissAll()
     this.refreshList()
   refreshList: ->
     this.setState
