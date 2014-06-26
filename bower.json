@@ -9,10 +9,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "latest",
-    "angular-resource": "latest"
   },
   "devDependencies": {
-    "angular-mocks": "latest"
   }
 }

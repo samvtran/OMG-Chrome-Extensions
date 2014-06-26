@@ -8,6 +8,8 @@ src/chrome/coffee/config.coffee
 src/ubuntu/coffee/config.coffee
 test/build
 test/lib
-tmp
+build
 test-results.xml
 coverage
+bower_components/jasmine-ajax/*
+!/bower_components/jasmine-ajax/lib/

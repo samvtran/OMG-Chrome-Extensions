@@ -1,36 +1,50 @@
 module.exports = function(config) {
   config.set({
-    autoWatch: true,
-    basePath: '..',
-    frameworks: ['jasmine'],
+    basePath: "..",
+    frameworks: ['jasmine-ajax', 'jasmine', 'browserify'],
     preprocessors: {
-      'test/**/*.coffee': ['coffee'],
-      'test/build/main.js': ['coverage']
+      '/**/*.browserify': ['browserify']
     },
-    coffeePreprocessor: {
-      options: {
-        bare: true,
-        sourceMap: true
+    browserify: {
+      transform: ['coffeeify', 'reactify', 'rewireify', 'browserify-istanbul'],
+      files: ['test/**/*.coffee']
+    },
+// TODO fix HTML coverage
+    coverageReporter: {
+      reporters: [
+//        { type: 'html', dir: 'coverage/' },
+        { type: 'lcovonly', dir: 'coverage/' },
+        { type: 'teamcity' },
+        { type: 'text-summary' }
+      ],
+      instrumenter: {
+        'src/main/**/*.coffee': 'istanbul'
       }
     },
     files: [
-    'test/lib/angular.js',
-    'test/lib/angular-resource.js',
-    'test/lib/angular-mocks.js',
-    'test/unit.preflight.coffee',
-    'test/build/main.js',
-    'test/testData.js',
-    'test/unit/*.spec.coffee'
+      'test/phantomjs-shims.js',
+      'bower_components/react/react-with-addons.js',
+      'test/testData.js'
     ],
-    reporters: ['progress', 'junit', 'teamcity', 'coverage'],
+    reporters: [
+      'progress',
+      'teamcity',
+      'coverage',
+      'story'
+    ],
     browsers: ['PhantomJS'],
+//    browsers: ['Chrome'],
     plugins: [
       'karma-jasmine',
       'karma-phantomjs-launcher',
-      'karma-coffee-preprocessor',
+      'karma-chrome-launcher',
       'karma-junit-reporter',
       'karma-teamcity-reporter',
-      'karma-coverage'
-    ]
+      'karma-coverage',
+      'karma-browserifast',
+      'karma-story-reporter',
+      'karma-jasmine-ajax'
+    ],
+    usePolling: true
   });
 };

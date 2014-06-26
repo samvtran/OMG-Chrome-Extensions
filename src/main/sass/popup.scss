@@ -22,6 +22,18 @@ under the License.
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Regular.woff');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Light.woff');
+  font-weight: 300;
+  font-style: normal;
+}
 
 [class*="omgicon-"]:before {
   font-family: 'omgregular';
@@ -92,7 +104,8 @@ a:hover {
     outline: none;
     img {
       position: absolute;
-      top: -8px;
+      width: auto;
+      height: 32px;
     }
   }
   .refresh {
