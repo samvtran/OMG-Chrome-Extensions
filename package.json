@@ -1,6 +1,9 @@
 {
   "name": "omg-chrome-extensions",
   "version": "0.0.0",
+  "scripts": {
+    "test": "gulp test"
+  },
   "devDependencies": {
     "browserify": "^4.1.11",
     "coffee-script": "latest",

@@ -1,0 +1,6 @@
+machine:
+  node:
+    version: 0.10.30
+dependencies:
+  pre:
+    - npm install -g gulp karma 
