@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Copyright (C) 2012 – 2013 Ohso Ltd
+<!-- Copyright (C) 2012 – 2015 Ohso Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,20 @@ under the License.
 <head>
     <meta charset="utf-8">
     <title>OMG! Extension</title>
-    <link rel="stylesheet" href="stylesheets/popup.css">
+    <link rel="stylesheet" href="styles/popup.css">
 </head>
 <body>
-<div id="popup"></div>
-<script type="text/javascript" src="scripts/react.min.js"></script>
-<script type="text/javascript" src="scripts/popup.js"></script>
+<div>
+  <header class="popup-header">
+    <a href="#" id="goToHome" class="logo" title="Visit <%= name %>"><img class="logo" src="images/logotype.png" height="48" width="48" /><span class="hide"><%= name %></span></a>
+    <a href="#" id="refresh" class="refresh"><span id="refreshIcon"></span><span class="hide">Refresh</span></a>
+  </header>
+  <section class="latest-news" id="articleList"></section>
+  <footer class="popup-footer">
+    <a id="options" title="Change <%= name %> options" href="#">Options</a>
+    <a id="markAllAsRead" class="right" href="#">Mark All As Read</a>
+  </footer>
+</div>
+<script type="text/javascript" src="popup.js"></script>
 </body>
 </html>

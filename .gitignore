@@ -1,15 +1,4 @@
 node_modules
-.sass-cache
-dist-ubuntu
-dist-chrome
-dist-opera
+dist
 .idea
-src/chrome/coffee/config.coffee
-src/ubuntu/coffee/config.coffee
-test/build
-test/lib
-build
-test-results.xml
-coverage
-bower_components/jasmine-ajax/*
-!/bower_components/jasmine-ajax/lib/
+*.iml
