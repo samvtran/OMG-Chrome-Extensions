@@ -15,37 +15,18 @@ under the License.
 */
 @import "reset";
 @import "bourbon/bourbon";
-// #77216f or #5e2750 or #b53e7e
-@font-face {
-  font-family: 'omgregular';
-  src: url('../fonts/omg-regular.woff');
-  font-weight: normal;
-  font-style: normal;
-}
 @font-face {
   font-family: 'Roboto';
-  src: url('../fonts/Roboto-Regular.woff');
+  src: url('../fonts/Roboto Regular.woff2');
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: 'Roboto';
-  src: url('../fonts/Roboto-Light.woff');
+  src: url('../fonts/Roboto Light.woff2');
   font-weight: 300;
   font-style: normal;
 }
-
-[class*="omgicon-"]:before {
-  font-family: 'omgregular';
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-}
-.omgicon-refresh:before { content: "\e204" }
-.omgicon-time:before { content: "\e205" }
-.omgicon-bookmark:before { content: "\e206" }
 
 //$purple: #5e2750;
 $orange: #f15d22;
@@ -94,77 +75,104 @@ a:hover {
 .hide {
   display: none;
 }
-.popup-header {
+.PopupHeader {
   z-index: 1;
-  height: 32px;
+  height: 36px;
   padding: 0 12px;
   background: $header;
   position: relative;
-  .logo {
-    outline: none;
-    img {
-      position: absolute;
-      width: auto;
-      height: 32px;
-    }
-  }
-  .refresh {
-    outline: none;
-    font-size: 24px;
-    line-height: 26px;
-    color: white;
+}
+.PopupHeader-logo {
+  outline: none;
+  img {
     position: absolute;
-    right: 12px;
-    top: 50%;
-    margin-top: -10px;
-    &:hover { text-decoration: none; }
+    width: auto;
+    height: 30px;
+    top: 3px;
+  }
+}
+.PopupHeader-refresh {
+  outline: none;
+  font-size: 24px;
+  line-height: 26px;
+  color: white;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  margin-top: -10px;
+  &:hover { text-decoration: none; }
+
+  img {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 0;
+    top: -2px;
+  }
+  &.is-refreshing img {
+    @include animation(rotation .5s infinite);
+    @include animation-timing-function(linear);
   }
 }
 
-.latest-news {
-  article {
-    border-bottom: 1px dotted #ddd;
-    padding: 6px 18px;
-    position: relative;
-    &:hover {
-      background: #efefef;
-    }
-    .unread-indicator {
-      position: absolute;
-      right: 0;
-      top: 1px;
-      font-size: 16px;
-      color: $orange;
-      width: 18px;
-      text-align: center;
-    }
-    h3 {
-      display: inline-block;
-      width: 75%;
-      vertical-align: middle;
-      padding-left: 10px;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-    }
-    .thumbnail-wrapper {
-      vertical-align: middle;
-      display: inline-block;
-      width: 100px;
-      height: 57px;
-      margin: 10px 0;
-      text-align: center;
-      img {
-        border: none;
-        max-height: 57px;
-        max-width: 100px;
-      }
-    }
+@include keyframes(rotation) {
+  0% {
+    @include transform(rotate(0deg) scale(1));
   }
+  100% {
+    @include transform(rotate(360deg) scale(1));
+  }
+}
+
+.Latest {
   margin-bottom: 28px;
 }
+.Latest-article {
+  border-bottom: 1px dotted #ddd;
+  padding: 6px 18px;
+  position: relative;
+  &:hover {
+    background: #efefef;
+  }
+  h3 {
+    display: inline-block;
+    width: 75%;
+    vertical-align: middle;
+    padding-left: 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+}
+.Latest-unreadIndicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 16px;
+  color: $orange;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  display: none;
+  &.is-unread {
+    display: block;
+  }
+}
+.Latest-thumbnailWrapper {
+  vertical-align: middle;
+  display: inline-block;
+  width: 100px;
+  height: 57px;
+  margin: 10px 0;
+  text-align: center;
+  img {
+    border: none;
+    max-height: 57px;
+    max-width: 100px;
+  }
+}
 
 
-.popup-footer {
+.PopupFooter {
   @include background-image(linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.25) 30%, white 50%, white));
   text-transform: uppercase;
   position: fixed;

@@ -22,12 +22,12 @@ under the License.
 </head>
 <body>
 <div>
-  <header class="popup-header">
-    <a href="#" id="goToHome" class="logo" title="Visit <%= name %>"><img class="logo" src="images/logotype.png" height="48" width="48" /><span class="hide"><%= name %></span></a>
-    <a href="#" id="refresh" class="refresh"><span id="refreshIcon"></span><span class="hide">Refresh</span></a>
+  <header class="PopupHeader">
+    <a href="#" id="goToHome" class="PopupHeader-logo" title="Visit <%= name %>"><img src="images/logo.svg" height="48" width="48" /><span class="hide"><%= name %></span></a>
+    <a href="#" id="refresh" class="PopupHeader-refresh"><img src="images/refresh.svg" alt="Refresh"><span class="hide">Refresh</span></a>
   </header>
-  <section class="latest-news" id="articleList"></section>
-  <footer class="popup-footer">
+  <section class="Latest" id="articleList"></section>
+  <footer class="PopupFooter">
     <a id="options" title="Change <%= name %> options" href="#">Options</a>
     <a id="markAllAsRead" class="right" href="#">Mark All As Read</a>
   </footer>

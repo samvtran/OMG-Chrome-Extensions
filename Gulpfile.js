@@ -153,7 +153,10 @@ gulp.task('dev', ['build:dev'], function() {
     watch(['src/main/assets/**/*', 'src/' + config.flavor + '/assets/**/*'])
       .pipe(gulpIf( /.*\.svg$/, svgmin({
         plugins: [{ convertShapeToPath: false }]
-      }))).pipe(gulp.dest('dist/' + config.flavor + "-" + (config.opera ? 'opera' : 'chrome')))
+      }))).pipe(gulp.dest('dist/' + config.flavor + "-" + (config.opera ? 'opera' : 'chrome')));
+    watch(['src/main/sass/**/*', 'src/' + config.flavor + '/sass/*'], function() {
+      return buildStyles(config.flavor, false, config.opera);
+    });
   });
 });
 

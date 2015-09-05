@@ -21,6 +21,7 @@
   },
   "permissions": [
     "http://*.omgchrome.com/*",
+    "http://d0od.staging.wpengine.com/*",
     "notifications"
   ],
   "web_accessible_resources": [

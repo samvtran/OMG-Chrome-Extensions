@@ -16,15 +16,9 @@ under the License.
 @import "reset";
 @import "bourbon/bourbon";
 @font-face {
-  font-family: 'Lato';
-  src: url('../fonts/LatoLatin-Regular.woff');
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto Regular.woff2');
   font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Lato';
-  src: url('../fonts/LatoLatin-Bold.woff');
-  font-weight: 700;
   font-style: normal;
 }
 ::-webkit-scrollbar {
@@ -45,7 +39,7 @@ under the License.
 }
 html { font-size: 15px; }
 body {
-  font-family: "Lato", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-family: "Roboto", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
   color: #555;
   margin: auto;
   padding-top: 8px;
