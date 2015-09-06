@@ -5,4 +5,4 @@ test:
   pre:
     - cp example.config.js config.js
   post:
-    - cat coverage/lcov/lcov.info | ./node_modules/.bin/codecov
+    - cat coverage/coverage-final.json | ./node_modules/.bin/codecov

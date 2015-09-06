@@ -15,7 +15,8 @@ module.exports = function(config) {
     coverageReporter: {
       dir: 'coverage/',
       reporters: [
-        { type: 'lcov', subdir: 'lcov' }
+        { type: 'html', subdir: 'html' },
+        { type: 'json', subdir: '.' }
       ]
     },
     junitReporter: {

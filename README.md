@@ -1,6 +1,8 @@
 # OMG! Extensions
 
 [![Stories in Ready](https://badge.waffle.io/samvtran/omg-chrome-extensions.svg?label=ready&title=Ready)](http://waffle.io/samvtran/omg-chrome-extensions)
+[![codecov.io](http://codecov.io/github/samvtran/OMG-Chrome-Extensions/coverage.svg?branch=master)](http://codecov.io/github/samvtran/OMG-Chrome-Extensions?branch=master)
+
 
 The official [OMG! Chrome!](http://www.omgchrome.com) and [OMG! Ubuntu!](http://www.omgubuntu.co.uk) Chrome and Opera extensions.
 
