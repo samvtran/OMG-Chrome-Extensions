@@ -2,5 +2,7 @@ machine:
   node:
     version: iojs-v1.3.0
 test:
+  pre:
+    - cp example.config.js config.js
   post:
     - cat coverage/lcov/lcov.info | ./node_modules/.bin/codecov
