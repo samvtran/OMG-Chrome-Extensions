@@ -1,0 +1,77 @@
+@import "reset";
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto Regular.woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto Light.woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+html { font-size: 12px; }
+body {
+  font-family: "Roboto", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-weight: 300;
+  min-height: 512px;
+  overflow-y: scroll;
+  color: #555;
+}
+h3 {
+  font-size: 18px;
+  line-height: 24px;
+}
+h3 > button.is-link {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #333;
+}
+a {
+  text-decoration: none;
+  color: $link;
+}
+a:hover {
+  text-decoration: underline;
+}
+.hide {
+  display: none;
+}
+
+.u-right {
+  float: right;
+}
+
+@mixin a11yHidden {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.u-a11yHidden {
+  @include a11yHidden;
+}
+
+/*
+  @name a11y hidden
+  @description This prevents hidden text meant for screenreaders from being hidden from screenreaders too
+
+  @markup
+    <p>You shouldn't see anything below</p>
+    <div class="u-a11yHidden">This is off page, but should be read by screenreaders</div>
+
+  @section Utils
+*/
+.u-a11yHidden {
+  @include a11yHidden;
+}
+
+@import 'Components/Components';
+@import 'options';
+@import 'popup';

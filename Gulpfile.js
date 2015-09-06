@@ -1,165 +1,114 @@
 'use strict';
 
 var gulp = require('gulp');
-var plumber = require('gulp-plumber');
+var del = require('del');
 var webpack = require('webpack');
 var gulpWebpack = require('gulp-webpack');
+var devServer = require('webpack-dev-server');
+var plumber = require('gulp-plumber');
 var watch = require('gulp-watch');
-
-var svgmin = require('gulp-svgmin');
 var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var replace = require('gulp-replace');
 var template = require('gulp-template');
-
 var gulpIf = require('gulp-if');
-var es = require('event-stream');
-var del = require('del');
+var file = require('gulp-file');
 
-var configs = [
-  { flavor: 'chrome', opera: false },
-  { flavor: 'ubuntu', opera: false },
-  { flavor: 'ubuntu', opera: true }
-];
+var baseBuild = require('./webpack.config.base');
+var prodBuild = require('./webpack.config.prod');
+var devBuild = require('./webpack.config.dev');
 
-var templateArgs = {
-  chrome: require('./src/chrome/js/config'),
-  ubuntu: require('./src/ubuntu/js/config')
-};
+var config = require('./config.js');
 
-var buildScripts = function(flavor, production, opera) {
-  var conf = {
-    context: __dirname + '/src/main/js',
-    resolve: {
-      alias: {
-        flavor: __dirname + "/src/" + flavor + "/js"
-      },
-      extensions: ['', '.js', '.svg']
-    },
-    module: {
-      loaders: [
-        {
-          test: /\.js$/,
-          loader: 'babel-loader?experimental&optional=runtime',
-          exclude: /node_modules/
-        }
-      ]
-    },
-    output: {
-      filename: '[name].js'
-    },
-    entry: {
-      Background: "./Background.js",
-      Options: "./Options.js",
-      Popup: "./Popup.js"
-    },
-    plugins: [
-      new webpack.NoErrorsPlugin()
-    ]
-  };
+// SVG dependencies
+var svgstore = require('gulp-svgstore');
+var svgmin = require('gulp-svgmin');
+var insert = require('gulp-insert');
+var cheerio = require('gulp-cheerio');
+var rename = require('gulp-rename');
 
-  if (production && !opera) { // Opera doesn't accept extensions with minified JS :(
-    conf.plugins = conf.plugins.concat(
-      new webpack.DefinePlugin({
-        "process.env": {
-          "NODE_ENV": JSON.stringify('production')
-        }
-      }),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin()
-    );
-  }
+//=========================
+// COMMON
+//=========================
 
-  return gulp.src('src/main/js/Background.js')
-    .pipe(gulpWebpack(conf, webpack))
-    .pipe(gulp.dest('dist/' + flavor + "-" + (opera ? 'opera' : 'chrome')));
+function installBootstrap(filename) {
+  return gulp.src('bootstrap-dev.js')
+    .pipe(rename(filename))
+    .pipe(replace('<!-- FILENAME -->', filename))
+    .pipe(gulp.dest('dist/' + config.dev.name));
+}
 
-};
+function buildSass(production) {
+  return gulp.src(['flavors/' + config.dev.directory + '/style.scss'])
+    .pipe(plumber())
+    .pipe(sass({
+      sourceComments: !production,
+      sourceMapEmbed: !production,
+      includePaths: ["src/main"]
+    }))
+    .pipe(autoprefixer({
+      browsers: ['last 2 Chrome versions', 'last 2 Opera versions']
+    }))
+    .pipe(gulp.dest('./dist/' + config.dev.name));
+}
 
-var buildStyles = function(flavor, production, opera) {
-  var config = {
-    includePaths: ['src/' + flavor + '/sass', 'src/main/sass'],
-    sourceComments: !production,
-    style: (production ? 'compressed' : 'expanded')
-  };
+function getStatics(configObj) {
+  return gulp.src(['src/main/*.html', 'src/main/assets/**/*', 'flavors/' + configObj.directory + "/assets/**/*"])
+    .pipe(gulpIf('*.html', template(configObj)))
+    .pipe(file('manifest.json', JSON.stringify(config.manifests[configObj.manifest], null, 2)))
+    .pipe(gulp.dest('./dist/' + configObj.name))
+}
 
-  return es.merge(
-    gulp.src('src/' + flavor + '/sass/options.scss')
-      .pipe(plumber())
-      .pipe(sass(config))
-      .pipe(gulp.dest('dist/' + flavor + "-" + (opera ? 'opera' : 'chrome') + '/styles')),
-    gulp.src('src/' + flavor + '/sass/popup.scss')
-      .pipe(plumber())
-      .pipe(sass(config))
-      .pipe(gulp.dest('dist/' + flavor + "-" + (opera ? 'opera' : 'chrome') + '/styles'))
-  );
-};
 
-var buildAssets = function(flavor, opera) {
-  return es.merge(
-    gulp.src('src/main/assets/**/*').pipe(gulpIf( /.*\.svg$/, svgmin({
-      plugins: [{ convertShapeToPath: false }]
-    }))).pipe(gulp.dest('dist/' + flavor + "-" + (opera ? 'opera' : 'chrome'))),
-    gulp.src('src/' + flavor + '/assets/**/*').pipe(gulpIf( /.*\.svg$/, svgmin({
-      plugins: [{ convertShapeToPath: false }]
-    }))).pipe(gulp.dest('dist/' + flavor + "-" + (opera ? 'opera' : 'chrome')))
-  );
-};
+//=========================
+// GULP TASKS
+//=========================
 
-var buildHtml = function(flavor, opera) {
-  var dest = 'dist/' + flavor + "-" + (opera ? 'opera' : 'chrome');
-  return es.merge(
-    gulp.src('src/main/background.html')
-      .pipe(plumber())
-      .pipe(template(templateArgs[flavor]))
-      .pipe(gulp.dest(dest)),
-    gulp.src('src/main/options.html')
-      .pipe(plumber())
-      .pipe(template(templateArgs[flavor]))
-      .pipe(gulp.dest(dest)),
-    gulp.src('src/main/popup.html')
-      .pipe(plumber())
-      .pipe(template(templateArgs[flavor]))
-      .pipe(gulp.dest(dest))
-  );
-};
-
-var buildAll = function(production) {
-  return es.merge.apply(es, configs.map(function (args) {
-    return es.merge(
-      buildHtml(args.flavor, args.opera),
-      buildScripts(args.flavor, production, args.opera),
-      buildStyles(args.flavor, production, args.opera),
-      buildAssets(args.flavor, args.opera)
-    );
-  }));
-};
-
-gulp.task('build', ['clean'], function() {
-  return buildAll(true);
+gulp.task('default', function() {
+  console.log("===== Gulp Tasks =====");
+  console.log("clean - Removes the dist folder");
+  console.log("dev - Watches for file changes against the dev flavor specified in config.js");
 });
 
-gulp.task('build:dev', ['clean'], function() {
-  return buildAll(false);
+gulp.task('clean', function() {
+  return del.sync(['dist']);
 });
 
-gulp.task('dev', ['build:dev'], function() {
-  configs.forEach(function(config) {
-    watch('src/main/js/**/*', function() {
-      return buildScripts(config.flavor, false, config.opera);
-    });
-    watch('src/main/*.html')
-      .pipe(plumber())
-      .pipe(template(templateArgs[config.flavor]))
-      .pipe(gulp.dest('dist/' + config.flavor + "-" + (config.opera ? 'opera' : 'chrome')));
-    watch(['src/main/assets/**/*', 'src/' + config.flavor + '/assets/**/*'])
-      .pipe(gulpIf( /.*\.svg$/, svgmin({
-        plugins: [{ convertShapeToPath: false }]
-      }))).pipe(gulp.dest('dist/' + config.flavor + "-" + (config.opera ? 'opera' : 'chrome')));
-    watch(['src/main/sass/**/*', 'src/' + config.flavor + '/sass/*'], function() {
-      return buildStyles(config.flavor, false, config.opera);
-    });
+gulp.task('sass:prod', function() {
+  return buildSass(true);
+});
+
+gulp.task('sass:dev', function() {
+  return buildSass(false);
+});
+
+gulp.task('dev', ['clean', 'sass:dev'], function() {
+  // Bootstraps
+  installBootstrap('Options.js');
+  installBootstrap('Background.js');
+  installBootstrap('Popup.js');
+  getStatics(config.dev);
+
+  watch(['flavors/' + config.dev.directory + '/sass/*.scss', 'src/main/sass/*.scss'], function() {
+    console.log("Rebuilding Sass...");
+    return buildSass(false);
   });
+
+  watch(['src/main/*.html', 'src/main/assets/**/*', 'flavors/' + config.dev.directory + "/assets/**/*"], function() {
+    return getStatics(config.dev);
+  });
+
+  new devServer(webpack(devBuild), { publicPath: 'http://localhost:3000/', hot: true }).listen(3000, 'localhost');
 });
 
-gulp.task('clean', function(cb) {
-  del('dist', cb);
+gulp.task('build', ['clean', 'sass:prod'], function(cb) {
+  //return gulp.src('/flavors/')
+  /*webpack(prodBuild, function(err, stats) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("[webpack]", stats.toString());
+    cb();
+  });*/
 });

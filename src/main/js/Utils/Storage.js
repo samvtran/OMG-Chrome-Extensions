@@ -1,7 +1,21 @@
-'use strict';
+import MenuBar from '../Components/MenuBar';
 
 export default class Storage {
-  static notificationsEnabled() {
+  static latestVersion = '3';
+
+  static getVersion(setIfUnset: boolean = false) {
+    if (setIfUnset && localStorage['version'] !== Storage.latestVersion) {
+      Storage.setVersion();
+    }
+
+    return localStorage['version'] || 0;
+  }
+
+  static setVersion() {
+    localStorage['version'] = Storage.latestVersion;
+  }
+
+  static areNotificationsEnabled() {
     if (typeof localStorage['notificationsEnabled'] === 'undefined') {
       localStorage['notificationsEnabled'] = true;
     }
@@ -11,7 +25,7 @@ export default class Storage {
     localStorage['notificationsEnabled'] = enabled;
   }
 
-  static pollInterval() {
+  static getPollInterval() {
     if (typeof localStorage['pollInterval'] === 'undefined') {
       localStorage['pollInterval'] = 900000;  // Default 15 minutes
     }
@@ -21,19 +35,22 @@ export default class Storage {
     localStorage['pollInterval'] = timeInMillis;
   }
 
-  static lastNotification() {
-    if (typeof localStorage['notification'] === 'undefined') return false;
-    return localStorage['notification'];
-  }
-  static setLastNotification(lastNotification) {
-    localStorage['notification'] = lastNotification;
+  static getLastNotification() {
+    return localStorage['notification'] ? JSON.parse(localStorage['notification']) : { type: 'multi', lastId: 0 };
   }
 
-  static articles() {
-    if (typeof localStorage['articles'] === 'undefined') return [];
-    return localStorage['articles'];
+  /**
+   * @param obj An object iwth type as 'single' or 'multi', a lastId integer, and, if single, an article object
+   */
+  static setLastNotification(obj) {
+    localStorage['notification'] = JSON.stringify(obj);
+  }
+
+  static getArticles(): Array {
+    return JSON.parse(localStorage['articles'] || '[]');
   }
   static setArticles(articles) {
-    localStorage['articles'] = articles;
+    MenuBar.updateIcon(articles);
+    localStorage['articles'] = JSON.stringify(articles);
   }
 }

@@ -1,7 +1,11 @@
 'use strict';
 
 import Request from 'superagent';
-import Config from 'flavor/config';
+import Config from 'config!../Config';
+import { Article, getParser } from '../Utils/ResponseParser';
+import Storage from '../Utils/Storage';
+import crel from 'crel';
+
 /*
 TODO fetchArticles
   when reconciling:
@@ -17,44 +21,100 @@ TODO fetchArticles
       4. make first notify as lastNotified
  */
 export default class Articles {
-  static getArticles() {
-    var articles = JSON.parse(typeof localStorage['articles'] === 'undefined' ? '[]' : localStorage['articles']);
-    if (typeof articles === 'undefined') return [];
-    return articles.sort((a, b) => {
-      return b.date - a.date;
+  static populate(dom) {
+    dom.innerHTML = '';
+
+    Articles.getArticles().forEach((article: Article) => {
+      const thumbnail = article.thumbnail || 'images/placeholder100.png';
+      var el = crel('article', {'class': 'Latest-article'},
+        crel('div', {'class': 'Latest-unreadIndicator' + (article.unread ? ' is-unread' : '')},
+          crel('img', {src: 'images/unread.svg', alt: 'Unread'})),
+        crel('div', {'class': 'Latest-thumbnailWrapper'},
+          crel('button', {type: 'button', 'class': 'is-link'}, crel('img', {src: thumbnail, alt: article.title}))),
+        crel('h3', crel('button', {type: 'button', 'class': 'is-link'}, article.title))
+      )
+
+      const markedAsRead = () => {
+        Articles.markAsRead(article.id);
+        el.querySelector('.Latest-unreadIndicator').classList.remove('is-unread');
+      };
+
+      const openArticle = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        markedAsRead();
+        chrome.tabs.create({ url: article.link });
+      };
+
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        markedAsRead();
+      })
+
+      el.querySelector('.Latest-thumbnailWrapper button').addEventListener('click', openArticle);
+      el.querySelector('h3 button').addEventListener('click', openArticle);
+      dom.appendChild(el);
     });
   }
-  static markAsRead(articleId) {
 
+  static getArticles() {
+    return Storage.getArticles().sort((a, b) => b.date - a.date);
   }
-  static fetchArticles(cb) {
+
+  static setArticles(newArticles: Array = [], reconcile: Boolean = false, isUpgrade: Boolean = false) {
+    if (isUpgrade) {
+      Storage.setArticles(newArticles.map((a) => {
+        a.unread = false;
+        return a;
+      }));
+    } else if (reconcile) {
+      const existing = Articles.getArticles().filter(a => ({ id: a.id, unread: a.unread })).reduce((obj, a) => {
+        obj[a.id] = a.unread;
+        return obj;
+      }, {});
+      const toStorage = newArticles.map((a) => {
+        if (typeof existing[a.id] !== 'undefined') {
+          a.unread = existing[a.id];
+        }
+        return a;
+      });
+      Storage.setArticles(toStorage);
+    } else {
+      Storage.setArticles(newArticles);
+    }
+  }
+
+  static markAllAsRead(cb = () => {}) {
+    Storage.setArticles(Articles.getArticles().map((a) => {
+      a.unread = false;
+      return a;
+    }))
+    cb();
+  }
+
+  static markAsRead(articleId: number) {
+    const articles = Articles.getArticles();
+    articles.some((a, idx) => {
+      if (a.id === articleId) {
+        articles[idx].unread = false;
+        Articles.setArticles(articles);
+        return true;
+      }
+      return false;
+    })
+  }
+
+  static fetchArticles(cb, isUpgrade) {
     Request
-      .get(Config.url)
-      .end(function(res) {
+      .get(Config.feedUrl)
+      .end((err, res) => {
         if (res.ok) {
           console.log("OK")
-          console.log(res);
-          var dom = new DOMParser().parseFromString(res.text, 'application/xml');
-          var channel = dom.querySelector('channel');
-          if (!channel) return [];
-          var items = channel.querySelectorAll('item');
-          if (!items) return [];
-          console.log(items)
-          var articles = Array.prototype.map.call(items, function(item) {
-            var thumbnail = item.querySelector('thumbnail');
-            var article = {
-              title: item.querySelector('title').textContent,
-              author: item.querySelector('creator').textContent,
-              link: item.querySelector('link').textContent,
-              date: Date.parse(item.querySelector('pubDate').textContent),
-              pid: item.querySelector('pid').textContent,
-              unread: true,
-            };
-            if (thumbnail !== null) article.thumbnail = thumbnail.getAttribute('url');
-            return article;
-          })
-          console.log(JSON.stringify(articles, null, 2));
+          const articles = getParser(Config.parser)(res.text);
+          Articles.setArticles(articles, true, isUpgrade);
         } else {
+          // Silently fail (for now anyway)
           console.log("NOT OKAY")
         }
         cb();

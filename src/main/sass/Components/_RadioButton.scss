@@ -1,0 +1,70 @@
+.RadioButton {
+  user-select: none;
+  input {
+    display: none;
+  }
+  cursor: pointer;
+  position: relative;
+  padding-left: 2rem;
+  display: inline-block;
+
+  &.on-right {
+    padding-right: 2rem;
+    padding-left: 0;
+  }
+}
+
+.RadioButton-label {
+  user-select: none;
+  display: inline-block;
+
+  .RadioButton input:disabled ~ & {
+    font-style: italic;
+    color: #aaa;
+  }
+}
+
+.RadioButton-state {
+  $button-width: 1.25rem;
+  position: absolute;
+  top: 50%;
+  width: $button-width;
+  height: $button-width;
+  margin-top: - $button-width / 2;
+  border: 2px solid #ddd;
+  border-radius: $button-width;
+  left: 0;
+  background: #fff;
+
+  .RadioButton input:disabled ~ & {
+    background: #efefef;
+  }
+
+  /*.RadioButton input:checked ~ & {
+
+  }*/
+
+  .RadioButton.on-right & {
+    left: auto;
+    right: 0;
+  }
+
+  .RadioButton.on-right input:checked ~ & {
+    //margin-left: auto;
+    //margin-right: .25rem;
+  }
+}
+
+.RadioButton-bubble {
+  background: $accent;
+  transform: scale(0);
+  transition: transform .25s ease;
+  width: 18px;
+  height: 18px;
+  border-radius: 1rem;
+  margin-left: -1px;
+  margin-top: -1px;
+  .RadioButton input:checked ~ .RadioButton-state & {
+    transform: scale(1);
+  }
+}

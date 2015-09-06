@@ -13,73 +13,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-@import "reset";
-@import "bourbon/bourbon";
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto Regular.woff2');
-  font-weight: 400;
-  font-style: normal;
-}
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: #ccc;
-}
-
-::-webkit-scrollbar-thumb:window-inactive {
-  background: #eee;
-}
-html { font-size: 15px; }
-body {
-  font-family: "Roboto", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
-  color: #555;
+.Options {
+  max-width: 1024px;
   margin: auto;
-  padding-top: 8px;
-  max-width: 720px;
-}
-p { line-height: 28px; margin: 12px 0; }
-h1, h2, h3 {
-  font-weight: 700;
-}
-h1 { font-size: 32px; line-height: 48px; }
-h2 { font-size: 24px; line-height: 28px; }
-h3 { font-size: 16px; }
-a {
-  text-decoration: none;
-  color: $accent;
-}
-a:hover {
-  text-decoration: underline;
-}
-header {
-  h1 { padding-left: 52px; }
-  .logo {
-    position: relative;
-    img {
-      position: absolute;
-      top: 0;
+
+  padding: 1.5rem;
+
+  section {
+    font-size: 1.25rem;
+    line-height: 2.5rem;
+    margin: 1rem 0 2rem;
+  }
+
+  h1, h2, h3 {
+    font-weight: 700;
+  }
+  h1 { font-size: 32px; line-height: 48px; }
+  h2 { font-size: 24px; line-height: 28px; }
+  h3 { font-size: 16px; }
+
+  header {
+    h1 {
+      padding-left: 52px;
     }
+    .logo {
+      position: relative;
+      img {
+        position: absolute;
+        top: 0;
+      }
+    }
+    margin-bottom: 12px;
   }
-  margin-bottom: 12px;
-}
-.pane {
-  margin: 6px 0 24px;
-  .example {
-    margin-left: 16px;
-  }
-  input[type="checkbox"] {
-    margin: 0 8px 0 2px;
-    vertical-align: middle;
-  }
-}
-label {
-  display: inline-block;
 }

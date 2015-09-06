@@ -18,18 +18,18 @@ under the License.
 <head>
     <meta charset="utf-8">
     <title>OMG! Extension</title>
-    <link rel="stylesheet" href="styles/popup.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="Popup">
 <div>
   <header class="PopupHeader">
-    <a href="#" id="goToHome" class="PopupHeader-logo" title="Visit <%= name %>"><img src="images/logo.svg" height="48" width="48" /><span class="hide"><%= name %></span></a>
-    <a href="#" id="refresh" class="PopupHeader-refresh"><img src="images/refresh.svg" alt="Refresh"><span class="hide">Refresh</span></a>
+    <button type="button" id="goToHome" class="PopupHeader-logo is-link" title="Visit <%= title %>"><img src="images/logo.svg" height="48" width="48" /><span class="u-a11yHidden"><%= title %></span></button>
+    <button type="button" id="refresh" class="PopupHeader-refresh is-link"><img src="images/refresh.svg" alt="Refresh"><span class="hide">Refresh</span></button>
   </header>
   <section class="Latest" id="articleList"></section>
   <footer class="PopupFooter">
-    <a id="options" title="Change <%= name %> options" href="#">Options</a>
-    <a id="markAllAsRead" class="right" href="#">Mark All As Read</a>
+    <button type="button" id="options" title="Change <%= name %> options" class="is-link">Options</button>
+    <button type="button" id="markAllAsRead" class="is-link u-right">Mark All As Read</button>
   </footer>
 </div>
 <script type="text/javascript" src="popup.js"></script>

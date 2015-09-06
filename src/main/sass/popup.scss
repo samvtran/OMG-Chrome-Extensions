@@ -1,4 +1,4 @@
-/*! Copyright (C) 2012 Ohso Ltd
+/*! Copyright (C) 2012 – 2015 Ohso Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,67 +13,22 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-@import "reset";
-@import "bourbon/bourbon";
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto Regular.woff2');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto Light.woff2');
-  font-weight: 300;
-  font-style: normal;
-}
-
-//$purple: #5e2750;
-$orange: #f15d22;
-//$blue: #185c85;
-//$light-blue: #389bf0;
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track-piece { background-color: white }
-::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border: 1px solid #bfbfbf;
-}
-
-::-webkit-scrollbar-thumb:window-inactive {
-  background: #eee;
-}
-html { font-size: 12px; }
-body {
-  font-family: "Roboto", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
-  font-weight: 300;
+.Popup {
   width: 448px;
-  min-height: 512px;
-  overflow-y: scroll;
-  color: #555;
-}
-h3 {
-  font-size: 18px;
-  line-height: 24px;
-}
-h3 > a {
-  display: block;
-  color: #333;
-}
-a {
-  text-decoration: none;
-  color: $link;
-}
-a:hover {
-  text-decoration: underline;
-}
-.right {
-  float: right;
-}
-.hide {
-  display: none;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track-piece { background-color: white }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border: 1px solid #bfbfbf;
+  }
+
+  &::-webkit-scrollbar-thumb:window-inactive {
+    background: #eee;
+  }
 }
 .PopupHeader {
   z-index: 1;
@@ -110,17 +65,16 @@ a:hover {
     top: -2px;
   }
   &.is-refreshing img {
-    @include animation(rotation .5s infinite);
-    @include animation-timing-function(linear);
+    animation: rotation .5s infinite linear;
   }
 }
 
-@include keyframes(rotation) {
+@keyframes rotation {
   0% {
-    @include transform(rotate(0deg) scale(1));
+    transform: rotate(0deg) scale(1);
   }
   100% {
-    @include transform(rotate(360deg) scale(1));
+    transform: rotate(360deg) scale(1);
   }
 }
 
@@ -139,7 +93,6 @@ a:hover {
     width: 75%;
     vertical-align: middle;
     padding-left: 10px;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
 }
@@ -148,7 +101,7 @@ a:hover {
   right: 0;
   top: 0;
   font-size: 16px;
-  color: $orange;
+  color: $accent;
   width: 24px;
   height: 24px;
   text-align: center;
@@ -171,9 +124,8 @@ a:hover {
   }
 }
 
-
 .PopupFooter {
-  @include background-image(linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.25) 30%, white 50%, white));
+  background-image: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.25) 30%, white 50%, white);
   text-transform: uppercase;
   position: fixed;
   font-weight: 400;

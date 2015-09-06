@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Copyright (C) 2012 – 2013 Ohso Ltd
+<!-- Copyright (C) 2012 – 2015 Ohso Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,32 +16,35 @@ under the License.
 -->
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="styles/options.css">
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <title>OMG! Extension Options</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <title>OMG! Extension Options</title>
 </head>
 <body>
-<div class="pane">
+<div class="Options">
   <header>
-    <a ref="link" target="_blank" href="<%= homepage %>" class="logo" title="Visit the <%= name %> website">
-    <img class="logo" src="images/icon_logo128.png" height="48" width="48" />
+    <a target="_blank" href="<%= homepage %>" class="logo" title="Visit the <%= name %> website">
+      <img class="logo" src="images/icon_logo128.png" height="48" width="48"/>
     </a>
-    <h1 ref="globalHeader"><%= name %> Extension Options</h1>
+    <h1><%= title %> Extension Options</h1>
   </header>
   <h2>Options</h2>
-  <p>
-    <input type="checkbox" id="notifications-enabled" />
-    <label for="notifications-enabled">New Article Desktop Notifications</label>
-    <a id="testNotification" class="example" href="#">Example</a>
-  </p>
+  <section>
+    <label class="Checkbox">
+      <input type="checkbox" id="notificationsEnabled">
+      <strong class="Checkbox-label">New Article Desktop Notifications <button type="button" id="testNotification" class="example">Example</button></strong>
+      <div class="Checkbox-state"></div>
+    </label>
+  </section>
   <h2>About The Extension</h2>
-  <div class="pane">
-    <p>This extension is released under the Apache License 2.0 with source code available on <a href="https://github.com/samvtran/OMG-Chrome-Extensions" title="OMG! Extensions on GitHub">GitHub</a>.</p>
-  </div>
-  <h2 ref="aboutTitle">About <%= name %></h2>
-  <div class="pane"><%= intro %></div>
+  <section>
+    <p>This extension is released under the Apache License 2.0 with source code available on <a
+        href="https://github.com/samvtran/OMG-Chrome-Extensions" title="OMG! Extensions on GitHub">GitHub</a>.</p>
+  </section>
+  <h2>About <%= title %></h2>
+  <section><%= aboutText %></section>
 </div>
-<script type="text/javascript" src="options.js"></script>
+<script type="text/javascript" src="Options.js"></script>
 </body>
 </html>
