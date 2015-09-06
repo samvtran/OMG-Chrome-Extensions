@@ -11,12 +11,15 @@ module.exports = function(config) {
       'blah.js': ['coverage'] // Just so IntelliJ reports coverage even though we're doing it through webpack
     },
     webpack: require('./webpack.config.test.js'),
-    reporters: ['mocha', 'coverage'],
+    reporters: ['mocha', 'coverage', 'junit'],
     coverageReporter: {
       dir: 'coverage/',
       reporters: [
         { type: 'lcov', subdir: 'lcov' }
       ]
+    },
+    junitReporter: {
+      outputDir: (process.env['CIRCLE_TEST_REPORTS'] || 'coverage') + '/junit'
     },
     port: 9876,
     colors: true,
