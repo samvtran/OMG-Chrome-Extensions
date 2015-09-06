@@ -7,7 +7,7 @@ module.exports = function(config) {
     },
     browserify: {
       transform: ['coffeeify', 'reactify', 'rewireify', 'browserify-istanbul'],
-      files: ['test/**/*.coffee']
+      files: ['test-deprecated/**/*.coffee']
     },
 // TODO fix HTML coverage
     coverageReporter: {
@@ -22,9 +22,9 @@ module.exports = function(config) {
       }
     },
     files: [
-      'test/phantomjs-shims.js',
+      'test-deprecated/phantomjs-shims.js',
       'bower_components/react/react-with-addons.js',
-      'test/testData.js'
+      'test-deprecated/testData.js'
     ],
     reporters: [
       'progress',

@@ -2,6 +2,8 @@ import Storage from './Utils/Storage';
 import Config from 'config!./Config';
 import Notifier from './Utils/Notifier';
 
+Notifier.init();
+
 (() => {
   const notificationsEnabled = document.querySelector('#notificationsEnabled');
   notificationsEnabled.checked = Storage.areNotificationsEnabled();

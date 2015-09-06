@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var path = require('path');
-var config = require('./etc/config-loader');
 
 module.exports = function(flavor) {
   return {
@@ -17,7 +16,7 @@ module.exports = function(flavor) {
       loaders: [
         {
           test: /\.js$/,
-          loader: 'babel-loader?optional[]=es7.classProperties&optional[]=es7.objectRestSpread&loose[]=es6.modules',
+          loader: 'babel-loader?optional[]=es7.classProperties&optional[]=es7.objectRestSpread',
           exclude: /node_modules/
         }
       ]

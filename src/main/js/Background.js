@@ -6,6 +6,8 @@ import Storage from './Utils/Storage';
 
 const FETCH_ALARM = 'FETCH_ALARM';
 
+Notifier.init();
+
 chrome.alarms.get(FETCH_ALARM, (alarm) => {
   const intervalInMillis = Storage.getPollInterval();
   if (!alarm) {
@@ -26,7 +28,6 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === FETCH_ALARM) {
-    console.log("GOT ALARM!!!")
     Articles.fetchArticles(() => {
       Notifier.notifyUnread();
       Messenger.updateUI();

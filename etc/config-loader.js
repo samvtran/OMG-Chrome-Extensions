@@ -1,5 +1,5 @@
 var configFile = require('../config.js');
-module.exports = function() {
+module.exports = function(file) {
   var configIdx;
   configFile.production.some(function(p, idx) {
     if (p.name === this.query.substr(1)) {
@@ -8,5 +8,6 @@ module.exports = function() {
     }
     return false;
   }.bind(this));
+  if (!configIdx) return file;
   return "module.exports = " + JSON.stringify(configFile.production[configIdx]);
 };

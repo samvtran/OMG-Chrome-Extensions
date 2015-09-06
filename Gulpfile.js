@@ -29,6 +29,8 @@ var insert = require('gulp-insert');
 var cheerio = require('gulp-cheerio');
 var rename = require('gulp-rename');
 
+require('./Gulpfile.test.js');
+
 //=========================
 // COMMON
 //=========================

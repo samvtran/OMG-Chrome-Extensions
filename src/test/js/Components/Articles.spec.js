@@ -1,0 +1,1 @@
+import Articles from 'js/Components/Articles';

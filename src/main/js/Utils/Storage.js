@@ -2,6 +2,7 @@ import MenuBar from '../Components/MenuBar';
 
 export default class Storage {
   static latestVersion = '3';
+  static defaultPollInterval = 900000;  // Default 15 minutes
 
   static getVersion(setIfUnset: boolean = false) {
     if (setIfUnset && localStorage['version'] !== Storage.latestVersion) {
@@ -27,9 +28,9 @@ export default class Storage {
 
   static getPollInterval() {
     if (typeof localStorage['pollInterval'] === 'undefined') {
-      localStorage['pollInterval'] = 900000;  // Default 15 minutes
+      localStorage['pollInterval'] = Storage.defaultPollInterval;
     }
-    return localStorage['pollInterval'];
+    return ~~localStorage['pollInterval'];
   }
   static setPollInterval(timeInMillis) {
     localStorage['pollInterval'] = timeInMillis;
@@ -40,7 +41,7 @@ export default class Storage {
   }
 
   /**
-   * @param obj An object iwth type as 'single' or 'multi', a lastId integer, and, if single, an article object
+   * @param obj An object with type as 'single' or 'multi', a lastId integer, and, if single, an article object
    */
   static setLastNotification(obj) {
     localStorage['notification'] = JSON.stringify(obj);

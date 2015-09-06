@@ -103,34 +103,36 @@ export default class Notifier {
   static clearRichNotification(single) {
     chrome.notifications.clear(single ? ID_SINGLE : ID_MULTI, () => {});
   }
-}
 
-// Chrome global listeners
-chrome.notifications.onShowSettings.addListener(() => chrome.windows.create({ url: '/options.html', focused: true }));
-chrome.notifications.onClicked.addListener((id) => {
-  const lastNotification = Storage.getLastNotification();
-  if (lastNotification.type === 'single') {
-    const article = lastNotification.article;
-    Articles.markAsRead(article.id);
-    window.open(article.link);
-    Notifier.clearRichNotification(true);
-  } else {
-    Articles.markAllAsRead();
-    window.open(Config.homepage);
-    Notifier.clearRichNotification(false);
+  static init() {
+    // Chrome global listeners
+    chrome.notifications.onShowSettings.addListener(() => chrome.windows.create({ url: '/options.html', focused: true }));
+    chrome.notifications.onClicked.addListener((id) => {
+      const lastNotification = Storage.getLastNotification();
+      if (lastNotification.type === 'single') {
+        const article = lastNotification.article;
+        Articles.markAsRead(article.id);
+        window.open(article.link);
+        Notifier.clearRichNotification(true);
+      } else {
+        Articles.markAllAsRead();
+        window.open(Config.homepage);
+        Notifier.clearRichNotification(false);
+      }
+    });
+    chrome.notifications.onButtonClicked.addListener((id, idx) => {
+      console.log('button clicked!')
+      const lastNotification = Storage.getLastNotification();
+      if (lastNotification.type === 'single') {
+        const article = lastNotification.article;
+        Articles.markAsRead(article.id);
+        if (idx === 0) window.open(article.link);
+        Notifier.clearRichNotification(true);
+      } else {
+        Articles.markAllAsRead();
+        if (idx === 0) window.open(Config.homepage);
+        Notifier.clearRichNotification(false);
+      }
+    });
   }
-});
-chrome.notifications.onButtonClicked.addListener((id, idx) => {
-  console.log('button clicked!')
-  const lastNotification = Storage.getLastNotification();
-  if (lastNotification.type === 'single') {
-    const article = lastNotification.article;
-    Articles.markAsRead(article.id);
-    if (idx === 0) window.open(article.link);
-    Notifier.clearRichNotification(true);
-  } else {
-    Articles.markAllAsRead();
-    if (idx === 0) window.open(Config.homepage);
-    Notifier.clearRichNotification(false);
-  }
-});
+}
