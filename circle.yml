@@ -3,7 +3,7 @@ machine:
     version: iojs-v1.3.0
 dependencies:
   pre:
-    - npm install -g gulp karma covercov.io
+    - npm install -g gulp karma codecov.io
 test:
   post:
     - cat coverage/lcov/lcov.info | ./node_modules/.bin/codecov
