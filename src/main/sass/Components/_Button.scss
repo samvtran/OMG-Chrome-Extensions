@@ -1,0 +1,21 @@
+button.is-link {
+  color: $link;
+  padding: 0;
+  outline: none;
+  border: none;
+  border-radius: 0;
+  background: none;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  box-shadow: none;
+  cursor: pointer;
+  &:hover {
+    color: #333;
+    text-decoration: underline;
+    box-shadow: none;
+  }
+  &:focus {
+    outline: auto;
+  }
+}

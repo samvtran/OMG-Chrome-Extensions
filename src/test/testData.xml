@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+     xmlns:media="http://search.yahoo.com/mrss/"
+        >
+    <channel>
+        <title>OMG! Chrome!</title>
+        <atom:link href="http://www.omgchrome.com/" rel="self" type="application/rss+xml" />
+        <link>http://www.omgchrome.com</link>
+        <description>Chrome, Chromebook and Chromecast News, Apps and More</description>
+        <lastBuildDate>Fri, 04 Sep 2015 17:30:13 +0000</lastBuildDate>
+        <language>en-US</language>
+        <sy:updatePeriod>hourly</sy:updatePeriod>
+        <sy:updateFrequency>1</sy:updateFrequency>
+        <generator>http://wordpress.org/?v=4.3</generator>
+        <item>
+            <title>Reddit Mini Brings a Streamlined Reddit Experience to Chrome</title>
+            <link>http://www.omgchrome.com/reddit-mini-extension-chrome/</link>
+            <pubDate>Fri, 04 Sep 2015 17:15:10 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Extensions]]></category>
+            <category><![CDATA[reddit]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7759</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/09/reddit-mini-350x200.png" width="350" height="200" />
+        </item>
+        <item>
+            <title>Lenovo Launch Their &#8216;Most Affordable Chromebook Ever&#8217;</title>
+            <link>http://www.omgchrome.com/lenovo-chromebook-100s-budget-price/</link>
+            <pubDate>Wed, 02 Sep 2015 12:10:24 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Hardware]]></category>
+            <category><![CDATA[lenovo]]></category>
+            <category><![CDATA[lenovo 100s]]></category>
+            <category><![CDATA[windows 10]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7749</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/09/lenovo-chromebook-100s-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Acer Launch New $299 Convertible Chromebook</title>
+            <link>http://www.omgchrome.com/acer-chromebook-r11convertible-price-specs/</link>
+            <pubDate>Wed, 02 Sep 2015 11:43:14 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Hardware]]></category>
+            <category><![CDATA[acer chromebook r11]]></category>
+            <category><![CDATA[convertible]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7745</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/09/acer-r11-chromebook-350x200.png" width="350" height="200" />
+        </item>
+        <item>
+            <title>Chrome Will No Longer Autoplay Video in Background Tabs</title>
+            <link>http://www.omgchrome.com/chrome-no-longer-autoplay-video-background-tabs/</link>
+            <pubDate>Sun, 30 Aug 2015 20:26:43 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Development]]></category>
+            <category><![CDATA[background tabs]]></category>
+            <category><![CDATA[tab indicators]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7741</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/04/tab-mute1-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Chrome&#8217;s New Look Downloads Page Enabled By Default</title>
+            <link>http://www.omgchrome.com/material-design-downloads-page-chrome-canary/</link>
+            <pubDate>Thu, 27 Aug 2015 20:21:47 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[News]]></category>
+            <category><![CDATA[downloads page]]></category>
+            <category><![CDATA[material design]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7738</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2014/05/canary-tile-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Writer Is A Material Design Text Editor for Chrome</title>
+            <link>http://www.omgchrome.com/writer-material-design-text-editor-chrome/</link>
+            <pubDate>Wed, 26 Aug 2015 10:30:20 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Chrome Apps]]></category>
+            <category><![CDATA[material design]]></category>
+            <category><![CDATA[writer]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7726</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/writer-app-for-chrome-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Chrome for Mac Is Finally Getting Better</title>
+            <link>http://www.omgchrome.com/chrome-mac-46-memory-power-improvements/</link>
+            <pubDate>Mon, 24 Aug 2015 15:35:20 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Google Chrome]]></category>
+            <category><![CDATA[battery]]></category>
+            <category><![CDATA[mac]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7711</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/macbook-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Firefox Is Going To Support Chrome Extensions</title>
+            <link>http://www.omgchrome.com/firefox-will-soon-be-compatible-with-chrome-extensions/</link>
+            <pubDate>Fri, 21 Aug 2015 16:18:22 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Extensions]]></category>
+            <category><![CDATA[News]]></category>
+            <category><![CDATA[firefox]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7713</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/firefox-chrome-extensions-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Chromecast Is Now America&#8217;s Second Favourite Media Streamer</title>
+            <link>http://www.omgchrome.com/chromecast-is-now-americas-second-favourite-media-streamer/</link>
+            <pubDate>Fri, 21 Aug 2015 16:12:04 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[News]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7709</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2014/07/cast-news-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>There&#8217;s A New Way To Use Google Hangouts In Your Browser</title>
+            <link>http://www.omgchrome.com/google-hangouts-website-launched/</link>
+            <pubDate>Tue, 18 Aug 2015 14:10:42 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Google Apps]]></category>
+            <category><![CDATA[News]]></category>
+            <category><![CDATA[hangouts]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7705</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2013/05/hangouts-tile-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Google Chrome is Testing a &#8216;Material Design&#8217; Toolbar</title>
+            <link>http://www.omgchrome.com/google-chrome-material-design-toolbar/</link>
+            <pubDate>Mon, 17 Aug 2015 19:25:07 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Development]]></category>
+            <category><![CDATA[News]]></category>
+            <category><![CDATA[material design]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7668</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/Screenshot-2015-08-17-at-20.31.39-350x200.png" width="350" height="200" />
+        </item>
+        <item>
+            <title>Dell Chromebook 13 — The Mid-Range Chromebook of Your Dreams?</title>
+            <link>http://www.omgchrome.com/dell-chromebook-13-specs-price-release-date-2/</link>
+            <pubDate>Thu, 13 Aug 2015 18:03:57 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Hardware]]></category>
+            <category><![CDATA[News]]></category>
+            <category><![CDATA[dell]]></category>
+            <category><![CDATA[dell chromebook 13]]></category>
+            <category><![CDATA[IPS]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7685</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/Screen-Shot-2015-08-13-at-19.43.34-350x200.png" width="350" height="200" />
+        </item>
+        <item>
+            <title>Chromebooks Just Outsold Windows Laptops For the First Time</title>
+            <link>http://www.omgchrome.com/chromebooks-outsell-windows-notebooks-for-first-time/</link>
+            <pubDate>Thu, 13 Aug 2015 13:32:07 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[News]]></category>
+            <category><![CDATA[marketshare]]></category>
+            <category><![CDATA[npd]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7679</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2014/07/market-share-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Is The $169 Acer Cloudbook with Windows 10 a Chromebook Killer?</title>
+            <link>http://www.omgchrome.com/169-acer-cloudbook-is-a-windows-10-chromebook/</link>
+            <pubDate>Tue, 11 Aug 2015 08:53:08 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Hardware]]></category>
+            <category><![CDATA[acer]]></category>
+            <category><![CDATA[cloudbook]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7643</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/cloud-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Pokemon TV, HBO Now and Other New Chromecast Apps</title>
+            <link>http://www.omgchrome.com/pokemon-tv-hbo-now-more-add-chromecast-support/</link>
+            <pubDate>Tue, 11 Aug 2015 01:26:21 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Chromecast]]></category>
+            <category><![CDATA[chromecast apps for android]]></category>
+            <category><![CDATA[hasbro]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7667</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/02/cast-tile-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>The Number of Chromebook Developers Is Growing Fast</title>
+            <link>http://www.omgchrome.com/chromebook-developer-tools-codenvy-increase/</link>
+            <pubDate>Mon, 10 Aug 2015 14:30:58 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Development]]></category>
+            <category><![CDATA[News]]></category>
+            <category><![CDATA[codenvy]]></category>
+            <category><![CDATA[text editors]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7650</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2013/11/dev-tools-tile-350x200.jpg" width="350" height="200" />
+        </item>
+        <item>
+            <title>Sneak Peek at the New Look Chrome Download History Page</title>
+            <link>http://www.omgchrome.com/chromes-downloads-page-undergoes-material-design-makeover/</link>
+            <pubDate>Fri, 07 Aug 2015 16:45:44 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Development]]></category>
+            <category><![CDATA[Google Chrome]]></category>
+            <category><![CDATA[downloads page]]></category>
+            <category><![CDATA[history]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7659</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/Screenshot-2015-08-06-at-12.41.08-350x200.png" width="350" height="200" />
+        </item>
+        <item>
+            <title>Food Network Serves Up Chromecast Support Android, iPhone Apps</title>
+            <link>http://www.omgchrome.com/travel-channel-food-network-chromecast-support/</link>
+            <pubDate>Thu, 06 Aug 2015 02:16:29 +0000</pubDate>
+            <dc:creator>Joey-Elijah Sneddon</dc:creator>
+            <category><![CDATA[Chromecast]]></category>
+            <category><![CDATA[#nowcasting]]></category>
+            <category><![CDATA[chromecast apps for android]]></category>
+            <category><![CDATA[chromecast apps for iOS]]></category>
+            <category><![CDATA[food and cookery apps]]></category>
+            <guid isPermaLink="false">http://www.omgchrome.com/?p=7652</guid>
+            <media:thumbnail url="http://www.omgchrome.com/wp-content/uploads/2015/08/food-350x200.jpg" width="350" height="200" />
+        </item>
+    </channel>
+</rss>

@@ -1,6 +1,8 @@
 machine:
   node:
-    version: 0.10.30
-dependencies:
+    version: iojs-v1.3.0
+test:
   pre:
-    - npm install -g gulp karma 
+    - cp example.config.js config.js
+  post:
+    - cat coverage/coverage-final.json | ./node_modules/.bin/codecov

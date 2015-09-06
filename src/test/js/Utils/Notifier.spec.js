@@ -1,0 +1,1 @@
+import Notifier from 'js/Utils/Notifier';
