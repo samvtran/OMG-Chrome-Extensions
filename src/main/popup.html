@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Copyright (C) 2012 – 2013 Ohso Ltd
+<!-- Copyright (C) 2012 – 2015 Ohso Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,20 @@ under the License.
 <head>
     <meta charset="utf-8">
     <title>OMG! Extension</title>
-    <link rel="stylesheet" href="stylesheets/popup.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div id="popup"></div>
-<script type="text/javascript" src="scripts/react.min.js"></script>
-<script type="text/javascript" src="scripts/popup.js"></script>
+<body class="Popup">
+<div>
+  <header class="PopupHeader">
+    <button type="button" id="goToHome" class="PopupHeader-logo is-link" title="Visit <%= title %>"><img src="images/logo.svg" height="48" width="48" /><span class="u-a11yHidden"><%= title %></span></button>
+    <button type="button" id="refresh" class="PopupHeader-refresh is-link"><img src="images/refresh.svg" alt="Refresh"><span class="hide">Refresh</span></button>
+  </header>
+  <section class="Latest" id="articleList"></section>
+  <footer class="PopupFooter">
+    <button type="button" id="options" title="Change <%= name %> options" class="is-link">Options</button>
+    <button type="button" id="markAllAsRead" class="is-link u-right">Mark All As Read</button>
+  </footer>
+</div>
+<script type="text/javascript" src="popup.js"></script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+/*
+
+This is the main entry point for CSS. Here you can define variables available to the style sheets used for every flavor.
+
+Only a single file is generated, pulling in all of the CSS via sass/main.scss in the src/main folder.
+
+*/
+$accent: #dd4814;
+$header: #efefef;
+$link: #888;
+@import 'sass/main';

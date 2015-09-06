@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Copyright (C) 2012 – 2013 Ohso Ltd
+<!-- Copyright (C) 2012 – 2015 Ohso Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,13 +16,35 @@ under the License.
 -->
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="stylesheets/options.css">
-    <title>OMG! Extension Options</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <title>OMG! Extension Options</title>
 </head>
 <body>
-<div id="options"></div>
-<script type="text/javascript" src="scripts/react.min.js"></script>
-<script type="text/javascript" src="scripts/options.js"></script>
+<div class="Options">
+  <header>
+    <a target="_blank" href="<%= homepage %>" class="logo" title="Visit the <%= name %> website">
+      <img class="logo" src="images/icon_logo128.png" height="48" width="48"/>
+    </a>
+    <h1><%= title %> Extension Options</h1>
+  </header>
+  <h2>Options</h2>
+  <section>
+    <label class="Checkbox">
+      <input type="checkbox" id="notificationsEnabled">
+      <strong class="Checkbox-label">New Article Desktop Notifications <button type="button" id="testNotification" class="example">Example</button></strong>
+      <div class="Checkbox-state"></div>
+    </label>
+  </section>
+  <h2>About The Extension</h2>
+  <section>
+    <p>This extension is released under the Apache License 2.0 with source code available on <a
+        href="https://github.com/samvtran/OMG-Chrome-Extensions" title="OMG! Extensions on GitHub">GitHub</a>.</p>
+  </section>
+  <h2>About <%= title %></h2>
+  <section><%= aboutText %></section>
+</div>
+<script type="text/javascript" src="Options.js"></script>
 </body>
 </html>

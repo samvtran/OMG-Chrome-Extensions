@@ -1,4 +1,4 @@
-/*! Copyright (C) 2012 Ohso Ltd
+/*! Copyright (C) 2012 – 2015 Ohso Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,159 +13,119 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-@import "reset";
-@import "bourbon/bourbon";
-// #77216f or #5e2750 or #b53e7e
-@font-face {
-  font-family: 'omgregular';
-  src: url('../fonts/omg-regular.woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto-Regular.woff');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto-Light.woff');
-  font-weight: 300;
-  font-style: normal;
-}
-
-[class*="omgicon-"]:before {
-  font-family: 'omgregular';
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-}
-.omgicon-refresh:before { content: "\e204" }
-.omgicon-time:before { content: "\e205" }
-.omgicon-bookmark:before { content: "\e206" }
-
-//$purple: #5e2750;
-$orange: #f15d22;
-//$blue: #185c85;
-//$light-blue: #389bf0;
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track-piece { background-color: white }
-::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border: 1px solid #bfbfbf;
-}
-
-::-webkit-scrollbar-thumb:window-inactive {
-  background: #eee;
-}
-html { font-size: 12px; }
-body {
-  font-family: "Roboto", "Ubuntu","Helvetica Neue","Helvetica","Arial",sans-serif;
-  font-weight: 300;
+.Popup {
   width: 448px;
-  min-height: 512px;
-  overflow-y: scroll;
-  color: #555;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track-piece { background-color: white }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border: 1px solid #bfbfbf;
+  }
+
+  &::-webkit-scrollbar-thumb:window-inactive {
+    background: #eee;
+  }
 }
-h3 {
-  font-size: 18px;
-  line-height: 24px;
-}
-h3 > a {
-  display: block;
-  color: #333;
-}
-a {
-  text-decoration: none;
-  color: $link;
-}
-a:hover {
-  text-decoration: underline;
-}
-.right {
-  float: right;
-}
-.hide {
-  display: none;
-}
-.popup-header {
+.PopupHeader {
   z-index: 1;
-  height: 32px;
+  height: 36px;
   padding: 0 12px;
   background: $header;
   position: relative;
-  .logo {
-    outline: none;
-    img {
-      position: absolute;
-      width: auto;
-      height: 32px;
-    }
-  }
-  .refresh {
-    outline: none;
-    font-size: 24px;
-    line-height: 26px;
-    color: white;
+}
+.PopupHeader-logo {
+  outline: none;
+  img {
     position: absolute;
-    right: 12px;
-    top: 50%;
-    margin-top: -10px;
-    &:hover { text-decoration: none; }
+    width: auto;
+    height: 30px;
+    top: 3px;
+  }
+}
+.PopupHeader-refresh {
+  outline: none;
+  font-size: 24px;
+  line-height: 26px;
+  color: white;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  margin-top: -10px;
+  &:hover { text-decoration: none; }
+
+  img {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 0;
+    top: -2px;
+  }
+  &.is-refreshing img {
+    animation: rotation .5s infinite linear;
   }
 }
 
-.latest-news {
-  article {
-    border-bottom: 1px dotted #ddd;
-    padding: 6px 18px;
-    position: relative;
-    &:hover {
-      background: #efefef;
-    }
-    .unread-indicator {
-      position: absolute;
-      right: 0;
-      top: 1px;
-      font-size: 16px;
-      color: $orange;
-      width: 18px;
-      text-align: center;
-    }
-    h3 {
-      display: inline-block;
-      width: 75%;
-      vertical-align: middle;
-      padding-left: 10px;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-    }
-    .thumbnail-wrapper {
-      vertical-align: middle;
-      display: inline-block;
-      width: 100px;
-      height: 57px;
-      margin: 10px 0;
-      text-align: center;
-      img {
-        border: none;
-        max-height: 57px;
-        max-width: 100px;
-      }
-    }
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg) scale(1);
   }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.Latest {
   margin-bottom: 28px;
 }
+.Latest-article {
+  border-bottom: 1px dotted #ddd;
+  padding: 6px 18px;
+  position: relative;
+  &:hover {
+    background: #efefef;
+  }
+  h3 {
+    display: inline-block;
+    width: 75%;
+    vertical-align: middle;
+    padding-left: 10px;
+    box-sizing: border-box;
+  }
+}
+.Latest-unreadIndicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 16px;
+  color: $accent;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  display: none;
+  &.is-unread {
+    display: block;
+  }
+}
+.Latest-thumbnailWrapper {
+  vertical-align: middle;
+  display: inline-block;
+  width: 100px;
+  height: 57px;
+  margin: 10px 0;
+  text-align: center;
+  img {
+    border: none;
+    max-height: 57px;
+    max-width: 100px;
+  }
+}
 
-
-.popup-footer {
-  @include background-image(linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.25) 30%, white 50%, white));
+.PopupFooter {
+  background-image: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.25) 30%, white 50%, white);
   text-transform: uppercase;
   position: fixed;
   font-weight: 400;
