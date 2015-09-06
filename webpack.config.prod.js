@@ -19,9 +19,7 @@ module.exports = function(minify, flavor) {
     }
   }));
 
-  base.resolve.alias['Config.js'] = path.resolve('./flavors/' + flavor + "")
-
-  base.plugins.push(plugins);
+  base.plugins = base.plugins.concat(plugins);
 
   return base;
 };

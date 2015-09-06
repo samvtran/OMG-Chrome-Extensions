@@ -13,6 +13,8 @@ var replace = require('gulp-replace');
 var template = require('gulp-template');
 var gulpIf = require('gulp-if');
 var file = require('gulp-file');
+var merge = require('merge-stream');
+var stripDebug = require('gulp-strip-debug');
 
 var baseBuild = require('./webpack.config.base');
 var prodBuild = require('./webpack.config.prod');
@@ -38,8 +40,8 @@ function installBootstrap(filename) {
     .pipe(gulp.dest('dist/' + config.dev.name));
 }
 
-function buildSass(production) {
-  return gulp.src(['flavors/' + config.dev.directory + '/style.scss'])
+function buildSass(production, configObj) {
+  return gulp.src(['flavors/' + configObj.directory + '/style.scss'])
     .pipe(plumber())
     .pipe(sass({
       sourceComments: !production,
@@ -49,7 +51,7 @@ function buildSass(production) {
     .pipe(autoprefixer({
       browsers: ['last 2 Chrome versions', 'last 2 Opera versions']
     }))
-    .pipe(gulp.dest('./dist/' + config.dev.name));
+    .pipe(gulp.dest('./dist/' + configObj.name));
 }
 
 function getStatics(configObj) {
@@ -74,12 +76,8 @@ gulp.task('clean', function() {
   return del.sync(['dist']);
 });
 
-gulp.task('sass:prod', function() {
-  return buildSass(true);
-});
-
 gulp.task('sass:dev', function() {
-  return buildSass(false);
+  return buildSass(false, config.dev);
 });
 
 gulp.task('dev', ['clean', 'sass:dev'], function() {
@@ -91,7 +89,7 @@ gulp.task('dev', ['clean', 'sass:dev'], function() {
 
   watch(['flavors/' + config.dev.directory + '/sass/*.scss', 'src/main/sass/*.scss'], function() {
     console.log("Rebuilding Sass...");
-    return buildSass(false);
+    return buildSass(false, config.dev);
   });
 
   watch(['src/main/*.html', 'src/main/assets/**/*', 'flavors/' + config.dev.directory + "/assets/**/*"], function() {
@@ -101,14 +99,19 @@ gulp.task('dev', ['clean', 'sass:dev'], function() {
   new devServer(webpack(devBuild), { publicPath: 'http://localhost:3000/', hot: true }).listen(3000, 'localhost');
 });
 
-gulp.task('build', ['clean', 'sass:prod'], function(cb) {
-  //return gulp.src('/flavors/')
-  /*webpack(prodBuild, function(err, stats) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log("[webpack]", stats.toString());
-    cb();
-  });*/
+gulp.task('build', ['clean'], function() {
+  var merges = merge();
+
+  config.production.forEach(function(conf) {
+    merges.add(getStatics(conf));
+    merges.add(buildSass(true, conf));
+    merges.add(
+      gulp.src(['src/main/js/Popup.js'])
+        .pipe(gulpWebpack(prodBuild(conf.minify, conf.name), webpack))
+        .pipe(stripDebug())
+        .pipe(gulp.dest('dist/' + conf.name))
+    );
+  });
+
+  return merges;
 });
