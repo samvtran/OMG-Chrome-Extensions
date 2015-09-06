@@ -8,5 +8,6 @@ export default {
   homepage: '',
   feedUrl: '',
   aboutText: '',
-  parser: ''
+  parser: '',
+  opera: false
 }
