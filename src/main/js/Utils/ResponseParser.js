@@ -18,7 +18,7 @@ export function xmlParse(text) {
   const items = channel.querySelectorAll('item');
   if (!items) return [];
 
-  return Array.from(items).map((item) => {
+  return Array.prototype.map.call(items, (item) => {
     const thumbnail = item.querySelector('thumbnail');
     const id = ~~query.parse(query.extract(item.querySelector('guid').textContent)).p;
 

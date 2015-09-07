@@ -21,8 +21,11 @@ export function single(article) {
     type: 'basic',
     title: `New article on ${Config.title}`,
     message: article.title,
-    iconUrl: 'images/icon_logo128.png',
-    buttons: [
+    iconUrl: 'images/icon_logo128.png'
+  };
+
+  if (!Config.opera) {
+    options.buttons = [
       {
         title: 'Read',
         iconUrl: 'images/read.png'
@@ -32,7 +35,7 @@ export function single(article) {
         iconUrl: 'images/mark_as_read.png'
       }
     ]
-  };
+  }
 
   if (article.thumbnail && !Config.opera) { // Opera doesn't currently support image notifications  w
     options.type = 'image';
@@ -51,8 +54,10 @@ export function multi(articles) {
     title: `${articles.length} new articles on ${Config.title}`,
     message: `"${articles[0].title}" and ${articles.length - 1} other ${articles.length - 1 === 1 ? 'article' : 'articles'}`,
     iconUrl: 'images/icon_logo128.png',
-    items: articles.map((a) => ({title: a.title, message: ''})),
-    buttons: [
+    items: articles.map((a) => ({title: a.title, message: ''}))
+  };
+  if (!Config.opera) {
+    options.buttons = [
       {
         title: 'Read',
         iconUrl: 'images/read.png'
@@ -61,8 +66,8 @@ export function multi(articles) {
         title: 'Mark All As Read',
         iconUrl: 'images/mark_as_read.png'
       }
-    ]
-  };
+    ];
+  }
   Storage.setLastNotification({type: 'multi', lastId: articles[0].id});
   createRichNotification(options);
 }
