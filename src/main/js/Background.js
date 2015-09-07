@@ -31,9 +31,6 @@ chrome.runtime.onInstalled.addListener(onStart);
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === FETCH_ALARM) {
-    Articles.fetchArticles(() => {
-      Notifier.notifyUnread();
-      Messenger.updateUI();
-    });
+    onStart();
   }
 });
