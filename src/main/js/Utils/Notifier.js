@@ -37,7 +37,7 @@ export function single(article) {
     ]
   }
 
-  if (article.thumbnail && !Config.opera) { // Opera doesn't currently support image notifications  w
+  if (article.thumbnail && !Config.opera) { // Opera doesn't currently support image notifications
     options.type = 'image';
     options.imageUrl = article.thumbnail;
   }

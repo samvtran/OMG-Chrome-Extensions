@@ -1,7 +1,6 @@
 'use strict';
 var path = require('path');
 var webpack = require('webpack');
-var RewirePlugin = require('rewire-webpack');
 
 module.exports = {
   devtool: 'eval',
@@ -20,8 +19,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       "__DEV__": true
-    }),
-    new RewirePlugin()
+    })
   ],
   module: {
     preLoaders: [

@@ -1,7 +1,39 @@
 import * as Notifier from 'js/Utils/Notifier';
+import { lolex, stubChromeAPIs } from 'Helpers';
 
 describe('Notifier', () => {
-  it('should trigger a test notification');
+  let sandbox;
+  let chromeApis;
+  let timer;
+
+  beforeEach(() => {
+    chromeApis = stubChromeAPIs();
+    sandbox = sinon.sandbox.create();
+    timer = lolex.install();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    timer.uninstall();
+  });
+
+  it('should trigger a test notification and clear it after 5 seconds', () => {
+    const listen = {
+      single: () => {},
+      clear: () => {}
+    }
+
+    const stubSingle = sandbox.stub(chromeApis.notifications, 'create');
+    const stubClear = sandbox.stub(chromeApis.notifications, 'clear');
+    Notifier.testNotification();
+
+    expect(stubSingle).to.have.been.calledOnce;
+
+    timer.tick(5000);
+
+    expect(stubClear).to.have.been.calledOnce;
+
+  });
 
   it('should trigger a single notification');
 
@@ -10,7 +42,7 @@ describe('Notifier', () => {
   it('should trigger a single notification without an image or buttons when in Opera');
 
   it('should trigger a multi notification');
-  
+
   it('should trigger a multi notification without buttons when in Opera');
 
   it('should create the rich notification');
