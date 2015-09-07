@@ -10,7 +10,7 @@ export function testNotification() {
     id: 0,
     link: Config.homepage
   });
-  clearNotifications();
+  setTimeout(clearNotifications, 5000);
 }
 
 /**

@@ -36,6 +36,12 @@ function stubChromeAPIs() {
     },
     notifications: {
 
+    },
+    runtime: {
+      sendMessage: () => {},
+      onMessage: {
+        addListener: () => {}
+      }
     }
   }
 
