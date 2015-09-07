@@ -1,1 +1,1 @@
-import Articles from 'js/Components/Articles';
+import * as Articles from 'js/Components/Articles';

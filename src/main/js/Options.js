@@ -1,8 +1,6 @@
-import Storage from './Utils/Storage';
+import * as Storage from './Utils/Storage';
 import Config from 'config!./Config';
-import Notifier from './Utils/Notifier';
-
-Notifier.init();
+import * as Notifier from './Utils/Notifier';
 
 (() => {
   const notificationsEnabled = document.querySelector('#notificationsEnabled');

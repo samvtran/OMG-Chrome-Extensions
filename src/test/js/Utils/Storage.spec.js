@@ -1,4 +1,4 @@
-import Storage from 'js/Utils/Storage';
+import * as Storage from 'js/Utils/Storage';
 import { expect, rewireModule, stubChromeAPIs } from 'Helpers';
 import isEqual from 'lodash.isequal';
 
@@ -9,14 +9,6 @@ define('Storage', () => {
     localStorage.clear();
     sandbox = sinon.sandbox.create();
     chromeApis = stubChromeAPIs();
-    /*rewireModule(Storage, {
-      MenuBar: {
-        updateIcon: () => {},
-        setBadgeText: () => {},
-        setIcon: () => {}
-      }
-    });*/
-
   });
   afterEach(() => {
     sandbox.restore();

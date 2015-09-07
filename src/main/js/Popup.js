@@ -1,9 +1,9 @@
-import Articles from './Components/Articles';
-import MenuBar from './Components/MenuBar';
+import * as Articles from './Components/Articles';
+import * as MenuBar from './Components/MenuBar';
 import Config from 'config!./Config';
-import Messenger from './Utils/Messenger';
+import * as Messenger from './Utils/Messenger';
 import * as types from './Utils/MessageTypes';
-import Storage from './Utils/Storage';
+import * as Storage from './Utils/Storage';
 
 (function() {
   const refresh = document.querySelector('.PopupHeader-refresh');
