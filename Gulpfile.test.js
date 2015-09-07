@@ -14,11 +14,11 @@ var setupSingleFile = function(singleRun, done) {
   }, done).start();
 };
 
-gulp.task('single', function(done) {
+gulp.task('test:single', function(done) {
   setupSingleFile(true, done);
 });
 
-gulp.task('watch:single', function(done) {
+gulp.task('test:watchSingle', function(done) {
   setupSingleFile(false, done);
 });
 
@@ -30,7 +30,7 @@ gulp.task('test', function(done) {
   new Server(config, done).start();
 });
 
-gulp.task('watch', function(done) {
+gulp.task('test:watch', function(done) {
   new Server({
     configFile: __dirname + '/karma.conf.js'
   }, done).start();

@@ -1,12 +1,20 @@
-import Articles from './Components/Articles';
-import MenuBar from './Components/MenuBar';
-import Messenger from './Utils/Messenger';
-import Notifier from './Utils/Notifier';
-import Storage from './Utils/Storage';
+import * as Articles from './Components/Articles';
+import * as MenuBar from './Components/MenuBar';
+import * as Messenger from './Utils/Messenger';
+import * as Notifier from './Utils/Notifier';
+import * as Storage from './Utils/Storage';
 
 const FETCH_ALARM = 'FETCH_ALARM';
 
 Notifier.init();
+
+function onStart() {
+  Articles.fetchArticles(() => {
+    Notifier.notifyUnread();
+    Messenger.updateUI();
+    MenuBar.updateIcon(Articles.getArticles());
+  });
+}
 
 chrome.alarms.get(FETCH_ALARM, (alarm) => {
   const intervalInMillis = Storage.getPollInterval();
@@ -18,13 +26,8 @@ chrome.alarms.get(FETCH_ALARM, (alarm) => {
   }
 });
 
-chrome.runtime.onStartup.addListener(() => {
-  MenuBar.updateIcon(Articles.getArticles());
-})
-
-chrome.runtime.onInstalled.addListener(() => {
-  MenuBar.updateIcon(Articles.getArticles());
-});
+chrome.runtime.onStartup.addListener(onStart);
+chrome.runtime.onInstalled.addListener(onStart);
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === FETCH_ALARM) {

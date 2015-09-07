@@ -8,6 +8,6 @@ module.exports = function(file) {
     }
     return false;
   }.bind(this));
-  if (!configIdx) return file;
+  if (typeof configIdx === 'undefined') return file;
   return "module.exports = " + JSON.stringify(configFile.production[configIdx]);
 };

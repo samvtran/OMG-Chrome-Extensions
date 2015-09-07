@@ -10,6 +10,7 @@ button.is-link {
   text-align: left;
   box-shadow: none;
   cursor: pointer;
+  -webkit-font-smoothing: antialiased;
   &:hover {
     color: #333;
     text-decoration: underline;

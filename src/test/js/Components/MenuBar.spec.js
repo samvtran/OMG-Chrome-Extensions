@@ -1,1 +1,1 @@
-import MenuBar from 'js/Components/MenuBar';
+import * as MenuBar from 'js/Components/MenuBar';

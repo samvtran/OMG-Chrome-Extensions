@@ -1,1 +1,1 @@
-import Messenger from 'js/Utils/Messenger';
+import * as Messenger from 'js/Utils/Messenger';

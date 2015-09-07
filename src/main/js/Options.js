@@ -1,6 +1,6 @@
-import Storage from './Utils/Storage';
+import * as Storage from './Utils/Storage';
 import Config from 'config!./Config';
-import Notifier from './Utils/Notifier';
+import * as Notifier from './Utils/Notifier';
 
 Notifier.init();
 
